@@ -219,7 +219,7 @@ public class EntityCrackedZombie extends EntityMob {
 					strength = 15;
 				}
 
-				if (strength > 0) {
+				if (CrackedZombie.instance.getSickness()) {
 					((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.poison.id, strength * 20, 0));
 				}
 			}
