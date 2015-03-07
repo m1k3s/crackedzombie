@@ -53,7 +53,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class CrackedZombie {
 
 	public static final String mcversion = "1.8.0";
-	public static final String modversion = "3.1.0";
+	public static final String modversion = "3.1.1";
 	public static final String modid = "crackedzombiemod";
 	public static final String name = "Cracked Zombie Mod";
 	public static final String zombieName = "CrackedZombie";

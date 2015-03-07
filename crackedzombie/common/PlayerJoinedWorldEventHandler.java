@@ -35,7 +35,7 @@ public class PlayerJoinedWorldEventHandler {
 	
 	public PlayerJoinedWorldEventHandler()
 	{
-		CrackedZombie.proxy.info("PlayerJoinWorldEvent ctor");
+		CrackedZombie.proxy.info("PlayerJoinedWorldEvent ctor");
 	}
 	
 	@SubscribeEvent

@@ -77,6 +77,7 @@ public class EntityCrackedZombie extends EntityMob {
 	protected static final IAttribute reinforcements = (new RangedAttribute((IAttribute) null, "zombie.spawnReinforcements", 0.0D, 0.0D, 1.0D)).setDescription("Spawn Reinforcements Chance");
 	private static final UUID uuid = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
 	private static final AttributeModifier speedBoost = new AttributeModifier(uuid, "Baby speed boost", 0.1D, 0);
+	private final double noSpawnRadius = ConfigHandler.getTorchNoSpawnRadius();
 
 	private int conversionTime = 0;
 	private final float attackDistance = 16.0F;
@@ -220,7 +221,6 @@ public class EntityCrackedZombie extends EntityMob {
 					}
 				}
 			}
-
 			return true;
 		}
 		return false;
@@ -278,41 +278,48 @@ public class EntityCrackedZombie extends EntityMob {
 		super.onLivingUpdate();
 	}
 
-	@Override
-	protected boolean isValidLightLevel()
-	{
-		return true;
-	}
+//	@Override
+//	protected boolean isValidLightLevel()
+//	{
+//		return true;
+//	}
 
+	// spawns on grass, sand, dirt, clay and occasionally spawn on stone unless
+	// there are torches within the torch no-spawn radius
 	@Override
 	public boolean getCanSpawnHere()
 	{
-		boolean notColliding = worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox()).isEmpty();
-		boolean isLiquid = worldObj.isAnyLiquid(getEntityBoundingBox());
-		// spawns on grass, sand, dirt, clay and very occasionally spawn on stone
-		BlockPos bp = new BlockPos(posX, getEntityBoundingBox().minY - 1.0, posZ);
-		Block block = worldObj.getBlockState(bp).getBlock();
-		boolean isGrass = (block == Blocks.grass);
-		boolean isSand = (block == Blocks.sand);
-		boolean isClay = ((block == Blocks.hardened_clay) || (block == Blocks.stained_hardened_clay));
-		boolean isDirt = (block == Blocks.dirt);
-		boolean isStone = (rand.nextInt(8) == 0) && (block == Blocks.stone);
+		AxisAlignedBB entityAABB = getEntityBoundingBox();
+		
+		if (foundNearbyTorches(entityAABB)) {
+			return false;
+		} else {
+			boolean notColliding = worldObj.getCollidingBoundingBoxes(this, entityAABB).isEmpty();
+			boolean isLiquid = worldObj.isAnyLiquid(entityAABB);
+			// spawns on grass, sand, dirt, clay and very occasionally spawn on stone
+			BlockPos bp = new BlockPos(posX, entityAABB.minY - 1.0, posZ);
+			Block block = worldObj.getBlockState(bp).getBlock();
+			boolean isGrass = (block == Blocks.grass);
+			boolean isSand = (block == Blocks.sand);
+			boolean isClay = ((block == Blocks.hardened_clay) || (block == Blocks.stained_hardened_clay));
+			boolean isDirt = (block == Blocks.dirt);
+			boolean isStone = (rand.nextBoolean()) && (block == Blocks.stone);
 
-		return (isGrass || isSand || isStone || isClay || isDirt) && notColliding && !isLiquid;
+			return (isGrass || isSand || isStone || isClay || isDirt) && notColliding && !isLiquid;
+		}
 	}
 
-	public boolean checkForNearbyTorches()
+	// the aabb sould be the entity's boundingbox
+	public boolean foundNearbyTorches(AxisAlignedBB aabb)
 	{
 		boolean result = false;
-		final double radius = 2.0;
-		AxisAlignedBB aabb = getEntityBoundingBox();
 
-		int xMin = MathHelper.floor_double((aabb.minX - radius) / 16.0D);
-		int xMax = MathHelper.floor_double((aabb.maxX + radius) / 16.0D);
-		int yMin = MathHelper.floor_double((aabb.minY - radius) / 16.0D);
-		int yMax = MathHelper.floor_double((aabb.maxY + radius) / 16.0D);
-		int zMin = MathHelper.floor_double((aabb.minZ - radius) / 16.0D);
-		int zMax = MathHelper.floor_double((aabb.maxZ + radius) / 16.0D);
+		int xMin = MathHelper.floor_double(aabb.minX - noSpawnRadius);
+		int xMax = MathHelper.floor_double(aabb.maxX + noSpawnRadius);
+		int yMin = MathHelper.floor_double(aabb.minY - noSpawnRadius);
+		int yMax = MathHelper.floor_double(aabb.maxY + noSpawnRadius);
+		int zMin = MathHelper.floor_double(aabb.minZ - noSpawnRadius);
+		int zMax = MathHelper.floor_double(aabb.maxZ + noSpawnRadius);
 
 		for (int x = xMin; x <= xMax; x++) {
 			for (int y = yMin; y <= yMax; y++) {

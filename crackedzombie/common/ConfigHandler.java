@@ -40,6 +40,7 @@ public class ConfigHandler {
 	private static boolean enchantSword;
 	private static int minSpawn;
 	private static int maxSpawn;
+	private static double torchNoSpawnRadius;
 	
 	static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
 				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
@@ -67,6 +68,7 @@ public class ConfigHandler {
 	static final String maxSpawnComment = "maxSpawn, maximum number of crackedzombies per spawn event";
 	static final String startWithSwordComment = "Allows the player to spawn with a random type sword, handy in the apocalypse!";
 	static final String enchantSwordComment = "set true to enchant the sword given to the player";
+	static final String noSpawnRadiusComment = "set the radius in blocks for no spawning near torches";
 
 	public static void startConfig(FMLPreInitializationEvent event)
 	{
@@ -93,6 +95,7 @@ public class ConfigHandler {
 			enchantSword = config.get(Configuration.CATEGORY_GENERAL, "enchantSword", false, enchantSwordComment).getBoolean(false);
 			minSpawn = config.get(Configuration.CATEGORY_GENERAL, "minSpawn", 1, minSpawnComment).getInt();
 			maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxSpawn", 5, maxSpawnComment).getInt();
+			torchNoSpawnRadius = config.get(Configuration.CATEGORY_GENERAL, "noSpawnTorchRadius", 3.0, noSpawnRadiusComment).getDouble();
 		} catch (Exception e) {
 			CrackedZombie.proxy.info("failed to load or read the config file");
 		} finally {
@@ -175,5 +178,15 @@ public class ConfigHandler {
 	public static boolean getEnchantSword()
 	{
 		return enchantSword;
+	}
+	
+	public static int getMaximumZombiesAllowed()
+	{
+		return 60;
+	}
+	
+	public static double getTorchNoSpawnRadius()
+	{
+		return torchNoSpawnRadius;
 	}
 }
