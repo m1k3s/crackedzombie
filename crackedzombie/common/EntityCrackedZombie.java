@@ -22,7 +22,6 @@ package com.crackedzombie.common;
 import java.util.Calendar;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.block.Block;
@@ -74,13 +73,13 @@ import net.minecraftforge.common.ForgeModContainer;
 
 public class EntityCrackedZombie extends EntityMob {
 
-	protected static final IAttribute reinforcements = (new RangedAttribute((IAttribute) null, "zombie.spawnReinforcements", 0.0D, 0.0D, 1.0D)).setDescription("Spawn Reinforcements Chance");
+	protected static final IAttribute reinforcements = (new RangedAttribute(null, "zombie.spawnReinforcements", 0.0D, 0.0D, 1.0D)).setDescription("Spawn Reinforcements Chance");
 	private static final UUID uuid = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
 	private static final AttributeModifier speedBoost = new AttributeModifier(uuid, "Baby speed boost", 0.1D, 0);
 	private final double noSpawnRadius = ConfigHandler.getTorchNoSpawnRadius();
+	private final boolean allowChildSpawns = ConfigHandler.getAllowChildSpawns();
 
 	private int conversionTime = 0;
-	private final float attackDistance = 16.0F;
 	private float zombieWidth = -1.0f;
 	private float zombieHeight;
 
@@ -112,7 +111,7 @@ public class EntityCrackedZombie extends EntityMob {
 		tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0D, true));
 		tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityIronGolem.class, 1.0D, true));
 		tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
-		targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[] {EntityPigZombie.class}));
+		targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, EntityPigZombie.class));
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
@@ -133,6 +132,7 @@ public class EntityCrackedZombie extends EntityMob {
 	// arms go up when attacking another entity, i.e., has a target.
 	public boolean getHasTarget()
 	{
+		float attackDistance = 16.0F;
 		return isAttackableEntity(this, attackDistance);
 	}
 
@@ -140,9 +140,8 @@ public class EntityCrackedZombie extends EntityMob {
 	{
 		List list = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, getEntityBoundingBox().expand(distance, 4.0D, distance));
 
-		Iterator iter = list.iterator();
-		while (iter.hasNext()) {
-			Entity entity = (Entity) iter.next();
+		for (Object aList : list) {
+			Entity entity = (Entity) aList;
 			EntityLivingBase target = (EntityLivingBase) entity;
 			if (isGoodTarget(target)) {
 				double dist = target.getDistanceSq(entityLiving.posX, entityLiving.posY, entityLiving.posZ);
@@ -182,10 +181,6 @@ public class EntityCrackedZombie extends EntityMob {
 		if (super.attackEntityFrom(damageSource, damage)) {
 			EntityLivingBase entitylivingbase = getAttackTarget();
 
-			if (entitylivingbase == null && getAttackTarget() instanceof EntityLivingBase) {
-				entitylivingbase = (EntityLivingBase) getAttackTarget();
-			}
-
 			if (entitylivingbase == null && damageSource.getEntity() instanceof EntityLivingBase) {
 				entitylivingbase = (EntityLivingBase) damageSource.getEntity();
 			}
@@ -213,7 +208,7 @@ public class EntityCrackedZombie extends EntityMob {
 								&& !worldObj.isAnyLiquid(crackedZombie.getEntityBoundingBox())) {
 							worldObj.spawnEntityInWorld(crackedZombie);
 							crackedZombie.setAttackTarget(entitylivingbase);
-							crackedZombie.onSpawnFirstTime(worldObj.getDifficultyForLocation(new BlockPos(crackedZombie)), (IEntityLivingData)null);
+							crackedZombie.onSpawnFirstTime(worldObj.getDifficultyForLocation(new BlockPos(crackedZombie)), null);
 							getEntityAttribute(reinforcements).applyModifier(new AttributeModifier("Zombie reinforcement caller charge", -0.05D, 0));
 							crackedZombie.getEntityAttribute(reinforcements).applyModifier(new AttributeModifier("Zombie reinforcement callee charge", -0.05D, 0));
 							break;
@@ -264,7 +259,7 @@ public class EntityCrackedZombie extends EntityMob {
 
 						if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
 							renderBrokenItemStack(itemstack);
-							setCurrentItemOrArmor(4, (ItemStack) null);
+							setCurrentItemOrArmor(4, null);
 						}
 					}
 				}
@@ -369,17 +364,19 @@ public class EntityCrackedZombie extends EntityMob {
 
 	public void setChild(boolean childZombie)
 	{
-		getDataWatcher().updateObject(12, (byte) (childZombie ? 1 : 0));
+		if (allowChildSpawns) {
+			getDataWatcher().updateObject(12, (byte) (childZombie ? 1 : 0));
 
-		if (this.worldObj != null && !this.worldObj.isRemote) {
-			IAttributeInstance attributeinstance = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-			attributeinstance.removeModifier(speedBoost);
+			if (this.worldObj != null && !this.worldObj.isRemote) {
+				IAttributeInstance attributeinstance = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+				attributeinstance.removeModifier(speedBoost);
 
-			if (childZombie) {
-				attributeinstance.applyModifier(speedBoost);
+				if (childZombie) {
+					attributeinstance.applyModifier(speedBoost);
+				}
 			}
+			setChildSize(childZombie);
 		}
-		setChildSize(childZombie);
 	}
 
 	@Override
@@ -577,7 +574,7 @@ public class EntityCrackedZombie extends EntityMob {
 			EntityCrackedZombie crackedZombie = new EntityCrackedZombie(worldObj);
 			crackedZombie.copyLocationAndAnglesFrom(entityLiving);
 			worldObj.removeEntity(entityLiving);
-			crackedZombie.onSpawnFirstTime(this.worldObj.getDifficultyForLocation(new BlockPos(crackedZombie)), (IEntityLivingData) null);
+			crackedZombie.onSpawnFirstTime(this.worldObj.getDifficultyForLocation(new BlockPos(crackedZombie)), null);
 			crackedZombie.setVillager(true);
 
 			if (entityLiving.isChild()) {
@@ -585,7 +582,7 @@ public class EntityCrackedZombie extends EntityMob {
 			}
 
 			worldObj.spawnEntityInWorld(crackedZombie);
-			worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1016, new BlockPos(posX, posY, posZ), 0);
+			worldObj.playAuxSFXAtEntity(null, 1016, new BlockPos(posX, posY, posZ), 0);
 		}
 	}
 
@@ -626,7 +623,7 @@ public class EntityCrackedZombie extends EntityMob {
 				} else if ((double) worldObj.rand.nextFloat() < 0.05D) {
 					EntityChicken chicken = new EntityChicken(worldObj);
 					chicken.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
-					chicken.onSpawnFirstTime(difficulty, (IEntityLivingData) null);
+					chicken.onSpawnFirstTime(difficulty, null);
 					chicken.setChickenJockey(true);
 					
 					worldObj.spawnEntityInWorld(chicken);
@@ -674,7 +671,7 @@ public class EntityCrackedZombie extends EntityMob {
 			}
 
 			if (equippedItem.stackSize <= 0) {
-				entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, (ItemStack) null);
+				entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
 			}
 
 			if (!worldObj.isRemote) {
@@ -711,7 +708,7 @@ public class EntityCrackedZombie extends EntityMob {
 	{
 		EntityVillager villager = new EntityVillager(worldObj);
 		villager.copyLocationAndAnglesFrom(this);
-		villager.onSpawnFirstTime(this.worldObj.getDifficultyForLocation(new BlockPos(villager)), (IEntityLivingData) null);
+		villager.onSpawnFirstTime(this.worldObj.getDifficultyForLocation(new BlockPos(villager)), null);
 		villager.setLookingForHome();
 
 		if (isChild()) {
@@ -721,7 +718,7 @@ public class EntityCrackedZombie extends EntityMob {
 		worldObj.removeEntity(this);
 		worldObj.spawnEntityInWorld(villager);
 		villager.addPotionEffect(new PotionEffect(Potion.confusion.id, 200, 0));
-		worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1017, new BlockPos(posX, posY, posZ), 0);
+		worldObj.playAuxSFXAtEntity(null, 1017, new BlockPos(posX, posY, posZ), 0);
 	}
 
 	protected int getConversionTimeBoost()

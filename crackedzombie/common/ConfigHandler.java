@@ -41,6 +41,7 @@ public class ConfigHandler {
 	private static int minSpawn;
 	private static int maxSpawn;
 	private static double torchNoSpawnRadius;
+	private static boolean allowChildSpawns;
 	
 	static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
 				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
@@ -63,6 +64,7 @@ public class ConfigHandler {
 			+ " if you want to spawn witches";
 	static final String doorBustingComment = "doorBusting, set to true to have zombies try to break down doors,"
 			+ " otherwise set to false. It's quieter.";
+	static final String childComment = "allowChildSpawns, set to true to have child zombies, otherwise set to false.";
 	static final String sicknessComment = "Sickness, set to true to have contact with zombies poison the player.";
 	static final String minSpawnComment = "minSpawn, minimum number of crackedzombies per spawn event";
 	static final String maxSpawnComment = "maxSpawn, maximum number of crackedzombies per spawn event";
@@ -96,6 +98,7 @@ public class ConfigHandler {
 			minSpawn = config.get(Configuration.CATEGORY_GENERAL, "minSpawn", 1, minSpawnComment).getInt();
 			maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxSpawn", 5, maxSpawnComment).getInt();
 			torchNoSpawnRadius = config.get(Configuration.CATEGORY_GENERAL, "noSpawnTorchRadius", 3.0, noSpawnRadiusComment).getDouble();
+			allowChildSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowChildSpawns", true, childComment).getBoolean(true);
 		} catch (Exception e) {
 			CrackedZombie.proxy.info("failed to load or read the config file");
 		} finally {
@@ -188,5 +191,10 @@ public class ConfigHandler {
 	public static double getTorchNoSpawnRadius()
 	{
 		return torchNoSpawnRadius;
+	}
+
+	public static boolean getAllowChildSpawns()
+	{
+		return allowChildSpawns;
 	}
 }
