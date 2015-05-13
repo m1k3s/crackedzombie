@@ -64,6 +64,7 @@ public class EntityCrackedZombie extends EntityMob {
 	protected static final RangedAttribute reinforcements = (new RangedAttribute("zombie.spawnReinforcements", 0.0D, 0.0D, 1.0D)).setDescription("Spawn Reinforcements Chance");
 	private static final UUID uuid = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
 	private static final AttributeModifier speedBoost = new AttributeModifier(uuid, "Baby speed boost", 0.1D, 0);
+	private final boolean allowChildSpawns = CrackedZombie.instance.getAllowChildSpawns();
 
 	private int conversionTime = 0;
 	private final float attackDistance = 16.0F;
@@ -329,14 +330,16 @@ public class EntityCrackedZombie extends EntityMob {
 
 	public void setChild(boolean unused)
 	{
-		getDataWatcher().updateObject(12, (byte) (unused ? 1 : 0));
+		if (allowChildSpawns) {
+			getDataWatcher().updateObject(12, (byte) (unused ? 1 : 0));
 
-		if (this.worldObj != null && !this.worldObj.isRemote) {
-			IAttributeInstance attributeinstance = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-			attributeinstance.removeModifier(speedBoost);
+			if (this.worldObj != null && !this.worldObj.isRemote) {
+				IAttributeInstance attributeinstance = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+				attributeinstance.removeModifier(speedBoost);
 
-			if (unused) {
-				attributeinstance.applyModifier(speedBoost);
+				if (unused) {
+					attributeinstance.applyModifier(speedBoost);
+				}
 			}
 		}
 	}
