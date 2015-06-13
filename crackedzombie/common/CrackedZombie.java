@@ -57,6 +57,7 @@ public class CrackedZombie {
 	public static final String modid = "crackedzombiemod";
 	public static final String name = "Cracked Zombie Mod";
 	public static final String zombieName = "CrackedZombie";
+	private static int entityID = 0;
 	
 	@Mod.Instance(modid)
 	public static CrackedZombie instance;
@@ -134,9 +135,9 @@ public class CrackedZombie {
 
 		config.save();
 
-		int id = EntityRegistry.findGlobalUniqueEntityId();
-		EntityRegistry.registerGlobalEntityID(EntityCrackedZombie.class, zombieName, id, 0x00AFAF, 0x799C45);
-//		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, id, this, 80, 3, true);
+//		int id = EntityRegistry.findGlobalUniqueEntityId();
+//		EntityRegistry.registerGlobalEntityID(EntityCrackedZombie.class, zombieName, id, 0x00AFAF, 0x799C45);
+		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, entityID, this, 80, 3, true);
 
 		proxy.registerRenderers();
 //		proxy.registerWorldHandler();
