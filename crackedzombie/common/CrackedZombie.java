@@ -75,9 +75,7 @@ public class CrackedZombie {
 	{
 		ConfigHandler.startConfig(event);
 
-//		int id = EntityRegistry.findGlobalUniqueEntityId();
-//		EntityRegistry.registerGlobalEntityID(EntityCrackedZombie.class, zombieName, id, 0x00AFAF, 0x799C45);
-		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, zombieModID, this, 80, 3, true);
+		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, zombieModID, this, 80, 3, true, 0x00AFAF, 0x799C45);
 	}
 
 	@Mod.EventHandler
