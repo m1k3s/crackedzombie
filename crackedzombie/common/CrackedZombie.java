@@ -57,8 +57,9 @@ public class CrackedZombie {
 	public static final String modid = "crackedzombiemod";
 	public static final String name = "Cracked Zombie Mod";
 	public static final String zombieName = "CrackedZombie";
+	public static final String pigzombieName = "CrackedPigZombie";
 	public static final String guifactory = "com.crackedzombie.client.CrackedZombieConfigGUIFactory";
-	public static final int zombieModID = 0;
+	public int entityID = 0;
 	
 	@Mod.Instance(modid)
 	public static CrackedZombie instance;
@@ -75,7 +76,8 @@ public class CrackedZombie {
 	{
 		ConfigHandler.startConfig(event);
 
-		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, zombieModID, this, 80, 3, true, 0x00AFAF, 0x799C45);
+		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, entityID++, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
+		EntityRegistry.registerModEntity(EntityCrackedPigZombie.class, pigzombieName, entityID, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
 	}
 
 	@Mod.EventHandler
@@ -106,6 +108,7 @@ public class CrackedZombie {
 		int minSpawn = ConfigHandler.getMinSpawn();
 		int maxSpawn = ConfigHandler.getMaxSpawn();
 		EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
+		EntityRegistry.addSpawn(EntityCrackedPigZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
 		
 		// remove zombie spawning, we are replacing Minecraft zombies with CrackedZombies!
 		if (!ConfigHandler.getZombieSpawns()) {
