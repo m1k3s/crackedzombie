@@ -27,13 +27,14 @@ public class ConfigHandler {
 	public static Configuration config;
 	private static int zombieSpawnProb;
 	private static boolean zombieSpawns;
+	private static boolean pigZombieSpawns;
 	private static boolean spawnCreepers;
 	private static boolean spawnSkeletons;
 	private static boolean spawnEnderman;
 	private static boolean spawnSpiders;
 	private static boolean spawnSlime;
 	private static boolean spawnWitches;
-	private static boolean randomSkins;
+//	private static boolean randomSkins;
 	private static boolean doorBusting;
 	private static boolean sickness;
 	private static boolean startWithSword;
@@ -42,6 +43,7 @@ public class ConfigHandler {
 	private static int maxSpawn;
 	private static double torchNoSpawnRadius;
 	private static boolean allowChildSpawns;
+	private static boolean allowPigZombieSpawns;
 	
 	static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
 				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
@@ -50,6 +52,9 @@ public class ConfigHandler {
 	static final String zombieComment = "zombieSpawns allows/disallows vanilla zombies spawns, default is false,\n"
 			+ " no vanilla minecraft zombies will spawn. Only the " + CrackedZombie.zombieName + "s will spawn.\n"
 			+ " If set to true, fewer " + CrackedZombie.zombieName + "s will spawn.";
+	static final String pigZombieComment = "pigZombieSpawns allows/disallows vanilla pig zombies spawns, default is false,\n"
+			+ " no vanilla minecraft pig zombies will spawn. Only the " + CrackedZombie.pigzombieName + "s will spawn.\n"
+			+ " If set to true, fewer " + CrackedZombie.pigzombieName + "s will spawn.";
 	static final String creeperComment = "creeperSpawns, set to false to disable creeper spawning, set to true"
 			+ " if you want to spawn creepers";
 	static final String skeletonComment = "skeletonSpawns, set to false to disable skeleton spawning, set to true"
@@ -64,6 +69,7 @@ public class ConfigHandler {
 			+ " if you want to spawn witches";
 	static final String doorBustingComment = "doorBusting, set to true to have zombies try to break down doors,"
 			+ " otherwise set to false. It's quieter.";
+	static final String crackedPigZombieComment = "allow CrackedPigZombies to spawn";
 	static final String childComment = "allowChildSpawns, set to true to have child zombies, otherwise set to false.";
 	static final String sicknessComment = "Sickness, set to true to have contact with zombies poison the player.";
 	static final String minSpawnComment = "minSpawn, minimum number of crackedzombies per spawn event";
@@ -85,6 +91,7 @@ public class ConfigHandler {
 			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 			zombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawnProb", 5, spawnProbComment).getInt();
 			zombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawns", false, zombieComment).getBoolean(false);
+			pigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "pigZombieSpawns", false, pigZombieComment).getBoolean(false);
 			spawnCreepers = config.get(Configuration.CATEGORY_GENERAL, "spawnCreepers", false, creeperComment).getBoolean(false);
 			spawnSkeletons = config.get(Configuration.CATEGORY_GENERAL, "spawnSkeletons", false, skeletonComment).getBoolean(false);
 			spawnEnderman = config.get(Configuration.CATEGORY_GENERAL, "spawnEnderman", false, endermanComment).getBoolean(false);
@@ -99,6 +106,7 @@ public class ConfigHandler {
 			maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxSpawn", 5, maxSpawnComment).getInt();
 			torchNoSpawnRadius = config.get(Configuration.CATEGORY_GENERAL, "noSpawnTorchRadius", 3.0, noSpawnRadiusComment).getDouble();
 			allowChildSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowChildSpawns", true, childComment).getBoolean(true);
+			allowPigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowPigZombieSpawns", true, crackedPigZombieComment).getBoolean(true);
 		} catch (Exception e) {
 			CrackedZombie.proxy.info("failed to load or read the config file");
 		} finally {
@@ -157,11 +165,16 @@ public class ConfigHandler {
 	{
 		return zombieSpawns;
 	}
-	
-	public static boolean getRandomSkins()
+
+	public static boolean getPigZombieSpawns()
 	{
-		return randomSkins;
+		return pigZombieSpawns;
 	}
+	
+//	public static boolean getRandomSkins()
+//	{
+//		return randomSkins;
+//	}
 
 	public static boolean getDoorBusting()
 	{
@@ -196,5 +209,10 @@ public class ConfigHandler {
 	public static boolean getAllowChildSpawns()
 	{
 		return allowChildSpawns;
+	}
+
+	public static boolean getAllowPigZombieSpawns()
+	{
+		return allowPigZombieSpawns;
 	}
 }

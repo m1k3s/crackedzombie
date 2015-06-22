@@ -22,6 +22,7 @@ package com.crackedzombie.common;
 import static com.crackedzombie.common.ConfigHandler.updateConfigInfo;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
+import net.minecraft.entity.monster.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -29,13 +30,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.monster.EntityWitch;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
@@ -108,7 +102,12 @@ public class CrackedZombie {
 		int minSpawn = ConfigHandler.getMinSpawn();
 		int maxSpawn = ConfigHandler.getMaxSpawn();
 		EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
-		EntityRegistry.addSpawn(EntityCrackedPigZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
+		if (ConfigHandler.getAllowPigZombieSpawns()) {
+			proxy.info("*** Allowing " + pigzombieName + " spawns");
+			EntityRegistry.addSpawn(EntityCrackedPigZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
+		} else {
+			proxy.info("*** Not allowing " + pigzombieName + " spawns");
+		}
 		
 		// remove zombie spawning, we are replacing Minecraft zombies with CrackedZombies!
 		if (!ConfigHandler.getZombieSpawns()) {
@@ -116,7 +115,16 @@ public class CrackedZombie {
 			EntityRegistry.removeSpawn(EntityZombie.class, EnumCreatureType.MONSTER, allBiomes);
 			DungeonHooks.removeDungeonMob("Zombie");
 		} else {
-			proxy.info("NOT disabling default zombie spawns, there will be fewer crackedZombies!");
+			proxy.info("NOT disabling default zombie spawns, there will be fewer " + zombieName + "s!");
+		}
+
+		// remove pig zombie spawning, we are replacing Minecraft pig zombies with CrackedPigZombies!
+		if (!ConfigHandler.getPigZombieSpawns()) {
+			proxy.info("*** Disabling default pig zombie spawns for all biomes");
+			EntityRegistry.removeSpawn(EntityPigZombie.class, EnumCreatureType.MONSTER, allBiomes);
+//			DungeonHooks.removeDungeonMob("PigZombie");
+		} else {
+			proxy.info("NOT disabling default zombie spawns, there will be fewer " + pigzombieName + "s!");
 		}
 		
 		// optionally remove creeper, skeleton, enderman, spiders and slime spawns for these biomes
