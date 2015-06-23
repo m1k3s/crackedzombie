@@ -104,7 +104,7 @@ public class CrackedZombie {
 		EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
 		if (ConfigHandler.getAllowPigZombieSpawns()) {
 			proxy.info("*** Allowing " + pigzombieName + " spawns");
-			EntityRegistry.addSpawn(EntityCrackedPigZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.addSpawn(EntityCrackedPigZombie.class, zombieSpawnProb - 2, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
 		} else {
 			proxy.info("*** Not allowing " + pigzombieName + " spawns");
 		}
