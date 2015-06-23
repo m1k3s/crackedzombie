@@ -23,6 +23,7 @@ package com.crackedzombie.client;
 
 import com.crackedzombie.common.CommonProxyCrackedZombie;
 import com.crackedzombie.common.EntityCrackedZombie;
+import com.crackedzombie.common.EntityCrackedPigZombie;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 //import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 //import cpw.mods.fml.client.FMLClientHandler;
@@ -33,6 +34,7 @@ public class ClientProxyCrackedZombie extends CommonProxyCrackedZombie {
 	public void registerRenderers()
 	{
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrackedZombie.class, new RenderCrackedZombie());
+//		RenderingRegistry.registerEntityRenderingHandler(EntityCrackedPigZombie.class, new RenderCrackedPigZombie(rm));
 	}
 	
 }

@@ -20,6 +20,7 @@
 //
 package com.crackedzombie.client;
 
+import com.crackedzombie.common.EntityCrackedPigZombie;
 import com.crackedzombie.common.EntityCrackedZombie;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -43,6 +44,7 @@ public class RenderCrackedZombie extends RenderBiped {
 
 	private static final ResourceLocation zombieSkin = new ResourceLocation("textures/entity/zombie/zombie.png");
     private static final ResourceLocation zombieVillagerSkin = new ResourceLocation("textures/entity/zombie/zombie_villager.png");
+	private static final ResourceLocation zombiePigmanSkin = new ResourceLocation("textures/entity/zombie_pigman.png");
 	
 
 	public RenderCrackedZombie()
@@ -103,7 +105,7 @@ public class RenderCrackedZombie extends RenderBiped {
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity)
 	{
-		return ((EntityCrackedZombie) entity).isVillager() ? zombieVillagerSkin : zombieSkin;
+		return entity instanceof EntityCrackedPigZombie ? zombiePigmanSkin : ((EntityCrackedZombie) entity).isVillager() ? zombieVillagerSkin : zombieSkin;
 	}
 
 	@Override

@@ -29,13 +29,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.monster.EntityWitch;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
@@ -57,20 +51,22 @@ public class CrackedZombie {
 	public static final String modid = "crackedzombiemod";
 	public static final String name = "Cracked Zombie Mod";
 	public static final String zombieName = "CrackedZombie";
-	private static int entityID = 0;
+	public static final String pigzombieName = "CrackedPigZombie";
+	private int entityID = 0;
 	
 	@Mod.Instance(modid)
 	public static CrackedZombie instance;
 
 	private int zombieSpawnProb;
 	private boolean zombieSpawns;
+	private boolean pigzombieSpawns;
 	private boolean spawnCreepers;
 	private boolean spawnSkeletons;
 	private boolean spawnEnderman;
 	private boolean spawnSpiders;
 	private boolean spawnSlime;
 	private boolean spawnWitches;
-	private boolean randomSkins;
+//	private boolean randomSkins;
 	private boolean doorBusting;
 	private boolean allowChildSpawns;
 	private boolean sickness;
@@ -95,6 +91,9 @@ public class CrackedZombie {
 		String zombieComment = "zombieSpawns allows/disallows default zombies spawns, default is false,\n"
 				+ "no default minecraft zombies will spawn. Only the " + zombieName + "s will spawn.\n"
 				+ "If set to true, fewer CrackedZombies will spawn.";
+		String pigzombieComment = "pigzombieSpawns allows/disallows default pigzombies spawns, default is false,\n"
+				+ "no default minecraft pigzombies will spawn. Only the " + pigzombieName + "s will spawn.\n"
+				+ "If set to true, fewer CrackedPigZombies will spawn.";
 		String creeperComment = "creeperSpawns, set to false to disable creeper spawning, set to true\n"
 				+ "if you want to spawn creepers";
 		String skeletonComment = "skeletonSpawns, set to false to disable skeleton spawning, set to true\n"
@@ -119,6 +118,7 @@ public class CrackedZombie {
 
 		zombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawnProb", 15, spawnProbComment).getInt();
 		zombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawns", false, zombieComment).getBoolean(false);
+		pigzombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawns", false, pigzombieComment).getBoolean(false);
 		spawnCreepers = config.get(Configuration.CATEGORY_GENERAL, "spawnCreepers", false, creeperComment).getBoolean(false);
 		spawnSkeletons = config.get(Configuration.CATEGORY_GENERAL, "spawnSkeletons", false, skeletonComment).getBoolean(false);
 		spawnEnderman = config.get(Configuration.CATEGORY_GENERAL, "spawnEnderman", false, endermanComment).getBoolean(false);
@@ -135,9 +135,8 @@ public class CrackedZombie {
 
 		config.save();
 
-//		int id = EntityRegistry.findGlobalUniqueEntityId();
-//		EntityRegistry.registerGlobalEntityID(EntityCrackedZombie.class, zombieName, id, 0x00AFAF, 0x799C45);
-		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, entityID, this, 80, 3, true);
+		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, entityID++, this, 80, 3, true);
+		EntityRegistry.registerModEntity(EntityCrackedPigZombie.class, pigzombieName, entityID, this, 80, 3, true);
 
 		proxy.registerRenderers();
 //		proxy.registerWorldHandler();
@@ -164,6 +163,7 @@ public class CrackedZombie {
 		printBiomeList(allBiomes);
 
 		EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.monster, allBiomes);
+		EntityRegistry.addSpawn(EntityCrackedPigZombie.class, zombieSpawnProb - 2, minSpawn, maxSpawn, EnumCreatureType.monster, allBiomes);
 		
 		// remove zombie spawning, we are replacing Minecraft zombies with CrackedZombies!
 		if (!zombieSpawns) {
@@ -172,6 +172,15 @@ public class CrackedZombie {
 			DungeonHooks.removeDungeonMob("Zombie");
 		} else {
 			proxy.print("NOT disabling default zombie spawns, there will be fewer crackedZombies!");
+		}
+
+		// remove pigzombie spawning, we are replacing Minecraft pigzombies with CrackedPigZombies!
+		if (!pigzombieSpawns) {
+			proxy.print("*** Disabling default pigzombie spawns for all biomes");
+			EntityRegistry.removeSpawn(EntityPigZombie.class, EnumCreatureType.monster, allBiomes);
+//			DungeonHooks.removeDungeonMob("PigZombie");
+		} else {
+			proxy.print("NOT disabling default pigzombie spawns, there will be fewer crackedPigZombies!");
 		}
 		
 		// optionally remove creeper, skeleton, enderman, spaiders and slime spawns for these biomes
@@ -211,10 +220,10 @@ public class CrackedZombie {
 		}
 	}
 	
-	public boolean getRandomSkins()
-	{
-		return randomSkins;
-	}
+//	public boolean getRandomSkins()
+//	{
+//		return randomSkins;
+//	}
 
 	public boolean getDoorBusting()
 	{
