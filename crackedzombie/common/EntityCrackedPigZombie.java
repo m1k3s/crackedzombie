@@ -7,6 +7,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -45,7 +46,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getEntityAttribute(reinforcements).setBaseValue(0.0D);
-        getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.23000000417232513D);
+        getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.23D);
         getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
     }
 
@@ -92,7 +93,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         super.writeEntityToNBT(tagCompound);
         tagCompound.setShort("Anger", (short) angerLevel);
 
-        if (this.revengeTarget != null) {
+        if (revengeTarget != null) {
             tagCompound.setString("HurtBy", revengeTarget.toString());
         } else {
             tagCompound.setString("HurtBy", "");
@@ -107,7 +108,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         if (s.length() > 0) {
             revengeTarget = UUIDstring.fromString(s);
             EntityPlayer entityplayer = worldObj.getPlayerEntityByUUID(revengeTarget);
-            this.setRevengeTarget(entityplayer);
+            setRevengeTarget(entityplayer);
 
             if (entityplayer != null) {
                 attackingPlayer = entityplayer;
@@ -115,6 +116,19 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
             }
         }
     }
+    
+	public boolean attackEntityAsMob(Entity entity)
+	{
+		if (super.attackEntityAsMob(entity)) {
+			if (entity instanceof EntityLivingBase) {
+				if (ConfigHandler.getSickness()) {
+					((EntityLivingBase) entity).removePotionEffect(Potion.poison.id);
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 
     public boolean attackEntityFrom(DamageSource source, float amount) {
         if (isEntityInvulnerable(source)) {

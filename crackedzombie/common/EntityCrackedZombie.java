@@ -233,7 +233,6 @@ public class EntityCrackedZombie extends EntityMob {
 				} else if (worldObj.getDifficulty() == EnumDifficulty.HARD) {
 					strength = 15;
 				}
-
 				if (ConfigHandler.getSickness()) {
 					((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.poison.id, strength * 20, 0));
 				}
