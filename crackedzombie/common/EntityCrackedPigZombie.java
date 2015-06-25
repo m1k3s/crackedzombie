@@ -5,6 +5,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.potion.Potion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -138,6 +139,19 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
             return super.attackEntityFrom(damageSource, damage);
         }
     }
+    
+    public boolean attackEntityAsMob(Entity entity)
+	{
+		if (super.attackEntityAsMob(entity)) {
+			if (entity instanceof EntityLivingBase) {
+				if (CrackedZombie.instance.getSickness()) {
+					((EntityLivingBase) entity).removePotionEffect(Potion.poison.id);
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 
     /**
      * Causes this PigZombie to become angry at the supplied Entity (which will be a player).
