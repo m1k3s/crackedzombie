@@ -26,6 +26,7 @@ public class ConfigHandler {
 	
 	public static Configuration config;
 	private static int zombieSpawnProb;
+	private static int pigzombieSpawnProb;
 	private static boolean zombieSpawns;
 	private static boolean pigZombieSpawns;
 	private static boolean spawnCreepers;
@@ -34,13 +35,15 @@ public class ConfigHandler {
 	private static boolean spawnSpiders;
 	private static boolean spawnSlime;
 	private static boolean spawnWitches;
-//	private static boolean randomSkins;
 	private static boolean doorBusting;
 	private static boolean sickness;
+	private static boolean pzSickness;
 	private static boolean startWithSword;
 	private static boolean enchantSword;
 	private static int minSpawn;
 	private static int maxSpawn;
+	private static int minPZSpawn;
+	private static int maxPZSpawn;
 	private static double torchNoSpawnRadius;
 	private static boolean allowChildSpawns;
 	private static boolean allowPigZombieSpawns;
@@ -49,6 +52,8 @@ public class ConfigHandler {
 				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
 	static final String spawnProbComment = "zombieSpawnProb adjust to probability of zombies spawning\n"
 			+ "The higher the number the more likely zombies will spawn.";
+	static final String pzSpawnProbComment = "pigzombieSpawnProb adjust to probability of pigzombies spawning\n"
+			+ "The higher the number the more likely pigzombies will spawn.";
 	static final String zombieComment = "zombieSpawns allows/disallows vanilla zombies spawns, default is false,\n"
 			+ " no vanilla minecraft zombies will spawn. Only the " + CrackedZombie.zombieName + "s will spawn.\n"
 			+ " If set to true, fewer " + CrackedZombie.zombieName + "s will spawn.";
@@ -74,6 +79,9 @@ public class ConfigHandler {
 	static final String sicknessComment = "Sickness, set to true to have contact with zombies poison the player.";
 	static final String minSpawnComment = "minSpawn, minimum number of crackedzombies per spawn event";
 	static final String maxSpawnComment = "maxSpawn, maximum number of crackedzombies per spawn event";
+	static final String pzSicknessComment = "Pig Zombie Sickness, set to true to have contact with pigzombies poison the player.";
+	static final String minPZSpawnComment = "minPZSpawn, minimum number of crackedpigzombies per spawn event";
+	static final String maxPZSpawnComment = "maxPZSpawn, maximum number of crackedpigzombies per spawn event";
 	static final String startWithSwordComment = "Allows the player to spawn with a random type sword, handy in the apocalypse!";
 	static final String enchantSwordComment = "set true to enchant the sword given to the player";
 	static final String noSpawnRadiusComment = "set the radius in blocks for no spawning near torches";
@@ -90,6 +98,7 @@ public class ConfigHandler {
 		try {
 			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 			zombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawnProb", 5, spawnProbComment).getInt();
+			pigzombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawnProb", 5, pzSpawnProbComment).getInt();
 			zombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawns", false, zombieComment).getBoolean(false);
 			pigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "pigZombieSpawns", false, pigZombieComment).getBoolean(false);
 			spawnCreepers = config.get(Configuration.CATEGORY_GENERAL, "spawnCreepers", false, creeperComment).getBoolean(false);
@@ -100,10 +109,13 @@ public class ConfigHandler {
 			spawnWitches = config.get(Configuration.CATEGORY_GENERAL, "spawnWitches", true, witchComment).getBoolean(true);
 			doorBusting = config.get(Configuration.CATEGORY_GENERAL, "doorBusting", false, doorBustingComment).getBoolean(false);
 			sickness = config.get(Configuration.CATEGORY_GENERAL, "sickness", false, sicknessComment).getBoolean(false);
+			pzSickness = config.get(Configuration.CATEGORY_GENERAL, "pzSickness", false, pzSicknessComment).getBoolean(false);
 			startWithSword = config.get(Configuration.CATEGORY_GENERAL, "startWithSword", false, startWithSwordComment).getBoolean(false);
 			enchantSword = config.get(Configuration.CATEGORY_GENERAL, "enchantSword", false, enchantSwordComment).getBoolean(false);
 			minSpawn = config.get(Configuration.CATEGORY_GENERAL, "minSpawn", 1, minSpawnComment).getInt();
 			maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxSpawn", 5, maxSpawnComment).getInt();
+			minPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "minPZSpawn", 1, minPZSpawnComment).getInt();
+			maxPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxPZSpawn", 5, maxPZSpawnComment).getInt();
 			torchNoSpawnRadius = config.get(Configuration.CATEGORY_GENERAL, "noSpawnTorchRadius", 3.0, noSpawnRadiusComment).getDouble();
 			allowChildSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowChildSpawns", true, childComment).getBoolean(true);
 			allowPigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowPigZombieSpawns", true, crackedPigZombieComment).getBoolean(true);
@@ -156,9 +168,24 @@ public class ConfigHandler {
 		return maxSpawn;
 	}
 	
+	public static int getMinPZSpawn()
+	{
+		return minPZSpawn;
+	}
+	
+	public static int getMaxPZSpawn()
+	{
+		return maxPZSpawn;
+	}
+	
 	public static int getZombieSpawnProbility()
 	{
 		return zombieSpawnProb;
+	}
+	
+	public static int getPigZombieSpawnProbility()
+	{
+		return pigzombieSpawnProb;
 	}
 	
 	public static boolean getZombieSpawns()
@@ -171,11 +198,6 @@ public class ConfigHandler {
 		return pigZombieSpawns;
 	}
 	
-//	public static boolean getRandomSkins()
-//	{
-//		return randomSkins;
-//	}
-
 	public static boolean getDoorBusting()
 	{
 		return doorBusting;
@@ -184,6 +206,11 @@ public class ConfigHandler {
 	public static boolean getSickness()
 	{
 		return sickness;
+	}
+	
+	public static boolean getPZSickness()
+	{
+		return pzSickness;
 	}
 	
 	public static boolean getStartWithSword()

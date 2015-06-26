@@ -121,7 +121,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
 	{
 		if (super.attackEntityAsMob(entity)) {
 			if (entity instanceof EntityLivingBase) {
-				if (ConfigHandler.getSickness()) {
+				if (!ConfigHandler.getPZSickness()) {
 					((EntityLivingBase) entity).removePotionEffect(Potion.poison.id);
 				}
 			}

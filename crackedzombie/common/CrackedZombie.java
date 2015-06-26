@@ -47,7 +47,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class CrackedZombie {
 
 	public static final String mcversion = "1.8.0";
-	public static final String modversion = "3.1.1";
+	public static final String modversion = "3.1.3";
 	public static final String modid = "crackedzombiemod";
 	public static final String name = "Cracked Zombie Mod";
 	public static final String zombieName = "CrackedZombie";
@@ -99,12 +99,15 @@ public class CrackedZombie {
 		printBiomeList(allBiomes);
 
 		int zombieSpawnProb = ConfigHandler.getZombieSpawnProbility();
+		int pigzombieSpawnProb = ConfigHandler.getPigZombieSpawnProbility();
 		int minSpawn = ConfigHandler.getMinSpawn();
 		int maxSpawn = ConfigHandler.getMaxSpawn();
+		int minPZSpawn = ConfigHandler.getMinPZSpawn();
+		int maxPZSpawn = ConfigHandler.getMaxPZSpawn();
 		EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
 		if (ConfigHandler.getAllowPigZombieSpawns()) {
 			proxy.info("*** Allowing " + pigzombieName + " spawns");
-			EntityRegistry.addSpawn(EntityCrackedPigZombie.class, zombieSpawnProb - 2, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.addSpawn(EntityCrackedPigZombie.class, pigzombieSpawnProb, minPZSpawn, maxPZSpawn, EnumCreatureType.MONSTER, allBiomes);
 		} else {
 			proxy.info("*** Not allowing " + pigzombieName + " spawns");
 		}
