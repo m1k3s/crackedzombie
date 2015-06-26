@@ -58,6 +58,7 @@ public class CrackedZombie {
 	public static CrackedZombie instance;
 
 	private int zombieSpawnProb;
+	private int pigzombieSpawnProb;
 	private boolean zombieSpawns;
 	private boolean pigzombieSpawns;
 	private boolean spawnCreepers;
@@ -66,12 +67,14 @@ public class CrackedZombie {
 	private boolean spawnSpiders;
 	private boolean spawnSlime;
 	private boolean spawnWitches;
-//	private boolean randomSkins;
 	private boolean doorBusting;
 	private boolean allowChildSpawns;
 	private boolean sickness;
 	private int minSpawn;
 	private int maxSpawn;
+	private boolean pzSickness;
+	private int minPZSpawn;
+	private int maxPZSpawn;
 
 	
 	@SidedProxy(
@@ -88,6 +91,8 @@ public class CrackedZombie {
 				+ " For Minecraft Version " + CrackedZombie.version + "\n";
 		String spawnProbComment = "zombieSpawnProb adjust to probability of zombies spawning\n"
 				+ "The higher the number the more likely zombies will spawn.";
+				String pzSpawnProbComment = "pigzombieSpawnProb adjust to probability of pigzombies spawning\n"
+				+ "The higher the number the more likely pigzombies will spawn.";
 		String zombieComment = "zombieSpawns allows/disallows default zombies spawns, default is false,\n"
 				+ "no default minecraft zombies will spawn. Only the " + zombieName + "s will spawn.\n"
 				+ "If set to true, fewer CrackedZombies will spawn.";
@@ -109,14 +114,18 @@ public class CrackedZombie {
 		String doorBustingComment = "doorBusting, set to true to have zombies try to break down doors,\n"
 				+ "otherwise set to false. It's quieter.";
 		String sicknessComment = "Sickness, set to true to have contact with zombies poison the player.";
+		String pzSicknessComment = "pzSickness, set to true to have contact with pigzombies poison the player.";
 		String childComment = "allowChildSpawns, set to true to have child zombies, otherwise set to false.";
 		String minSpawnComment = "minSpawn, minimum number of crackedzombies per spawn event";
 		String maxSpawnComment = "maxSpawn, maximum number of crackedzombies per spawn event";
+		String minPZSpawnComment = "minPZSpawn, minimum number of crackedpigzombies per spawn event";
+		String maxPZSpawnComment = "maxPZSpawn, maximum number of crackedpigzombies per spawn event";
 
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 
 		zombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawnProb", 15, spawnProbComment).getInt();
+		pigzombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawnProb", 15, pzSpawnProbComment).getInt();
 		zombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawns", false, zombieComment).getBoolean(false);
 		pigzombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawns", false, pigzombieComment).getBoolean(false);
 		spawnCreepers = config.get(Configuration.CATEGORY_GENERAL, "spawnCreepers", false, creeperComment).getBoolean(false);
@@ -129,6 +138,9 @@ public class CrackedZombie {
 		sickness = config.get(Configuration.CATEGORY_GENERAL, "sickness", false, sicknessComment).getBoolean(false);
 		minSpawn = config.get(Configuration.CATEGORY_GENERAL, "minSpawn", 2, minSpawnComment).getInt();
 		maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxSpawn", 10, maxSpawnComment).getInt();
+		pzSickness = config.get(Configuration.CATEGORY_GENERAL, "pzSickness", false, pzSicknessComment).getBoolean(false);
+		minPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "minPZSpawn", 2, minPZSpawnComment).getInt();
+		maxPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxPZSpawn", 10, maxPZSpawnComment).getInt();
 		allowChildSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowChildSpawns", true, childComment).getBoolean(true);
 
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
@@ -163,7 +175,7 @@ public class CrackedZombie {
 		printBiomeList(allBiomes);
 
 		EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.monster, allBiomes);
-		EntityRegistry.addSpawn(EntityCrackedPigZombie.class, zombieSpawnProb - 2, minSpawn, maxSpawn, EnumCreatureType.monster, allBiomes);
+		EntityRegistry.addSpawn(EntityCrackedPigZombie.class, pigzombieSpawnProb, minPZSpawn, maxPZSpawn, EnumCreatureType.monster, allBiomes);
 		
 		// remove zombie spawning, we are replacing Minecraft zombies with CrackedZombies!
 		if (!zombieSpawns) {
@@ -220,11 +232,6 @@ public class CrackedZombie {
 		}
 	}
 	
-//	public boolean getRandomSkins()
-//	{
-//		return randomSkins;
-//	}
-
 	public boolean getDoorBusting()
 	{
 		return doorBusting;
@@ -233,6 +240,11 @@ public class CrackedZombie {
 	public boolean getSickness()
 	{
 		return sickness;
+	}
+	
+	public boolean getPZSickness()
+	{
+		return pzSickness;
 	}
 	
 	public boolean getAllowChildSpawns()
