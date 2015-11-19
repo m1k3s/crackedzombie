@@ -32,7 +32,7 @@ public class RenderCrackedPigZombie extends RenderBiped {
         return func_177119_a((EntityCrackedPigZombie) entity);
     }
 
-    protected ResourceLocation getEntityTexture(Entity entity) {
-        return func_177119_a((EntityCrackedPigZombie) entity);
-    }
+//    protected ResourceLocation getEntityTexture(Entity entity) {
+//        return func_177119_a((EntityCrackedPigZombie) entity);
+//    }
 }

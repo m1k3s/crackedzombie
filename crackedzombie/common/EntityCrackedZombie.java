@@ -285,7 +285,7 @@ public class EntityCrackedZombie extends EntityMob {
 	{
 		AxisAlignedBB entityAABB = getEntityBoundingBox();
 		
-		if (foundNearbyTorches(entityAABB)) {
+		if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
 			return false;
 		} else {
 			boolean notColliding = worldObj.getCollidingBoundingBoxes(this, entityAABB).isEmpty();

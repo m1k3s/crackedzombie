@@ -84,7 +84,7 @@ public class ConfigHandler {
 	static final String maxPZSpawnComment = "maxPZSpawn, maximum number of crackedpigzombies per spawn event";
 	static final String startWithSwordComment = "Allows the player to spawn with a random type sword, handy in the apocalypse!";
 	static final String enchantSwordComment = "set true to enchant the sword given to the player";
-	static final String noSpawnRadiusComment = "set the radius in blocks for no spawning near torches";
+	static final String noSpawnRadiusComment = "set the radius in blocks for no spawning near torches, zero enables spawing near torches";
 
 	public static void startConfig(FMLPreInitializationEvent event)
 	{
