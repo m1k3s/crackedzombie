@@ -75,6 +75,11 @@ public class CrackedZombie {
 	private boolean pzSickness;
 	private int minPZSpawn;
 	private int maxPZSpawn;
+	private double followRange;
+	private double movementSpeed;
+	private double attackDamage;
+	private double pzMovementSpeed;
+	private double pzAttackDamage;
 
 	
 	@SidedProxy(
@@ -120,6 +125,12 @@ public class CrackedZombie {
 		String maxSpawnComment = "maxSpawn, maximum number of crackedzombies per spawn event";
 		String minPZSpawnComment = "minPZSpawn, minimum number of crackedpigzombies per spawn event";
 		String maxPZSpawnComment = "maxPZSpawn, maximum number of crackedpigzombies per spawn event";
+		String movementSpeedComment = "how fast zombies walk";
+		String followRangeComment = "how far away zombies will follow you";
+		String attackDamageComment = "how much damage a zombie will cause";
+		String pzMoveSpeedComment = "how fast pigzombies walk";
+		String pzAttackDamageComment = "how much damage a pigzombie will cause";
+		
 
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
@@ -142,6 +153,11 @@ public class CrackedZombie {
 		minPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "minPZSpawn", 2, minPZSpawnComment).getInt();
 		maxPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxPZSpawn", 10, maxPZSpawnComment).getInt();
 		allowChildSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowChildSpawns", true, childComment).getBoolean(true);
+		followRange = config.get(Configuration.CATEGORY_GENERAL, "followRange", 40.0, followRangeComment).getDouble();
+		movementSpeed = config.get(Configuration.CATEGORY_GENERAL, "movementSpeed", 0.5, movementSpeedComment).getDouble();
+		attackDamage = config.get(Configuration.CATEGORY_GENERAL, "attackDamage", 3.0, attackDamageComment).getDouble();
+		pzMovementSpeed = config.get(Configuration.CATEGORY_GENERAL, "pzMovementSpeed", 0.5, pzMoveSpeedComment).getDouble();
+		pzAttackDamage = config.get(Configuration.CATEGORY_GENERAL, "pzAttackDamage", 5.0, pzAttackDamageComment).getDouble();
 
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
 
@@ -251,5 +267,29 @@ public class CrackedZombie {
 	{
 		return allowChildSpawns;
 	}
+	
+	public double getMovementSpeed()
+	{
+		return movementSpeed;
+	}
+	
+	public double getFollowRange()
+	{
+		return followRange;
+	}
+	
+	public double getAttackDamage()
+	{
+		return attackDamage;
+	}
+	
+	public double getPZMoveSpeed()
+	{
+		return pzMovementSpeed;
+	}
 
+	public double getPZAttackDamage()
+	{
+		return pzAttackDamage;
+	}
 }

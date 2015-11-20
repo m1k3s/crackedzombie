@@ -102,9 +102,9 @@ public class EntityCrackedZombie extends EntityMob {
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(40.0); // follow range
-		getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25); // movement speed
-		getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0);  // attack damage
+		getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(CrackedZombie.instance.getFollowRange()); // follow range
+		getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(CrackedZombie.instance.getMovementSpeed()); // movement speed
+		getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(CrackedZombie.instance.getAttackDamage());  // attack damage
 		getAttributeMap().registerAttribute(reinforcements).setBaseValue(rand.nextDouble() * 0.1); // reinforcements
 	}
 
