@@ -46,8 +46,8 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getEntityAttribute(reinforcements).setBaseValue(0.0D);
-        getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.23D);
-        getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
+        getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(ConfigHandler.getPZMovementSpeed());
+        getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(ConfigHandler.getPZAttackDamage());
     }
 
     public void onUpdate() {

@@ -47,6 +47,11 @@ public class ConfigHandler {
 	private static double torchNoSpawnRadius;
 	private static boolean allowChildSpawns;
 	private static boolean allowPigZombieSpawns;
+	private static double followRange;
+	private static double moveSpeed;
+	private static double attackDamage;
+	private static double pzMoveSpeed;
+	private static double pzAttackDamage;
 	
 	static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
 				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
@@ -85,6 +90,11 @@ public class ConfigHandler {
 	static final String startWithSwordComment = "Allows the player to spawn with a random type sword, handy in the apocalypse!";
 	static final String enchantSwordComment = "set true to enchant the sword given to the player";
 	static final String noSpawnRadiusComment = "set the radius in blocks for no spawning near torches, zero enables spawing near torches";
+	static final String followRangeComment = "set the follow range of the zombies";
+	static final String moveSpeedComment = "set the movement speed of the zombies";
+	static final String attackDamageComment = "set the initial attack damage caused by the zombies";
+	static final String pzMoveSpeedComment = "set the movement speed of the pig zombies";
+	static final String pzAttackDamageComment = "set the initial attack damage caused by the pig zombies";
 
 	public static void startConfig(FMLPreInitializationEvent event)
 	{
@@ -119,6 +129,11 @@ public class ConfigHandler {
 			torchNoSpawnRadius = config.get(Configuration.CATEGORY_GENERAL, "noSpawnTorchRadius", 3.0, noSpawnRadiusComment).getDouble();
 			allowChildSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowChildSpawns", true, childComment).getBoolean(true);
 			allowPigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowPigZombieSpawns", true, crackedPigZombieComment).getBoolean(true);
+			followRange = config.get(Configuration.CATEGORY_GENERAL, "followRange", 32.0, followRangeComment).getDouble();
+			moveSpeed =  config.get(Configuration.CATEGORY_GENERAL, "moveSpeed", 0.25, moveSpeedComment).getDouble();
+			attackDamage = config.get(Configuration.CATEGORY_GENERAL, "attackDamage", 3.0, attackDamageComment).getDouble();
+			pzMoveSpeed =  config.get(Configuration.CATEGORY_GENERAL, "pzMoveSpeed", 0.23, pzMoveSpeedComment).getDouble();
+			pzAttackDamage = config.get(Configuration.CATEGORY_GENERAL, "pzAttackDamage", 5.0, pzAttackDamageComment).getDouble();
 		} catch (Exception e) {
 			CrackedZombie.proxy.info("failed to load or read the config file");
 		} finally {
@@ -241,5 +256,30 @@ public class ConfigHandler {
 	public static boolean getAllowPigZombieSpawns()
 	{
 		return allowPigZombieSpawns;
+	}
+	
+	public static double getMovementSpeed()
+	{
+		return moveSpeed;
+	}
+	
+	public static double getPZMovementSpeed()
+	{
+		return pzMoveSpeed;
+	}
+	
+	public static double getFollowRange()
+	{
+		return followRange;
+	}
+	
+	public static double getAttackDamage()
+	{
+		return attackDamage;
+	}
+	
+	public static double getPZAttackDamage()
+	{
+		return pzAttackDamage;
 	}
 }
