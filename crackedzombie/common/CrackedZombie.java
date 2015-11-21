@@ -28,10 +28,13 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.*;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -163,8 +166,10 @@ public class CrackedZombie {
 
 		config.save();
 
-		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, entityID++, this, 80, 3, true);
-		EntityRegistry.registerModEntity(EntityCrackedPigZombie.class, pigzombieName, entityID, this, 80, 3, true);
+//		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, entityID++, this, 80, 3, true);
+//		EntityRegistry.registerModEntity(EntityCrackedPigZombie.class, pigzombieName, entityID, this, 80, 3, true);
+		registerEntity(EntityCrackedZombie.class, zombieName, 0x00AFAF, 0x799C45);
+		registerEntity(EntityCrackedPigZombie.class, pigzombieName, 0x00AFAF, 0xCD853F);
 
 		proxy.registerRenderers();
 //		proxy.registerWorldHandler();
@@ -239,6 +244,15 @@ public class CrackedZombie {
 			EntityRegistry.removeSpawn(EntityWitch.class, EnumCreatureType.monster, allBiomes);
 			proxy.print("*** Removing witch spawns");
 		}
+	}
+	
+	public void registerEntity(Class<? extends Entity> entityClass, String entityName, int bkEggColor, int fgEggColor)
+	{
+		EntityRegistry.registerModEntity(entityClass, entityName, entityID++, this, 80, 3, true);
+		Item spawnEgg = new CrackedSpawnEgg(entityName, bkEggColor, fgEggColor);
+		spawnEgg.setUnlocalizedName("spawn_egg_" + entityName.toLowerCase());
+		spawnEgg.setTextureName(modid + ":spawn_egg");
+		GameRegistry.registerItem(spawnEgg, "spawnEgg" + entityName);
 	}
 	
 	public void printBiomeList(BiomeGenBase[] biomes)
