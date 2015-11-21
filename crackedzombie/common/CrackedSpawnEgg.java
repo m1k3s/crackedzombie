@@ -37,43 +37,43 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
         super();
     }
     
-    public CrackedSpawnEgg(String parEntityToSpawnName, int parPrimaryColor, int parSecondaryColor)
+    public CrackedSpawnEgg(String EntityToSpawnName, int PrimaryColor, int SecondaryColor)
     {
         setHasSubtypes(false);
         maxStackSize = 64;
         setCreativeTab(CreativeTabs.tabMisc);
-        setEntityToSpawnName(parEntityToSpawnName);
-        colorBase = parPrimaryColor;
-        colorSpots = parSecondaryColor;
+        setEntityToSpawnName(EntityToSpawnName);
+        colorBase = PrimaryColor;
+        colorSpots = SecondaryColor;
     }
 
     @Override
-    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer,
-                             World par3World, int par4, int par5, int par6, int par7, float par8,
-                             float par9, float par10)
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer,
+                             World world, int x, int y, int z, int idx, float unused1,
+                             float unused2, float unused3)
     {
-        if (par3World.isRemote) {
+        if (world.isRemote) {
             return true;
         } else {
-            Block block = par3World.getBlock(par4, par5, par6);
-            par4 += Facing.offsetsXForSide[par7];
-            par5 += Facing.offsetsYForSide[par7];
-            par6 += Facing.offsetsZForSide[par7];
+            Block block = world.getBlock(x, y, z);
+            x += Facing.offsetsXForSide[idx];
+            y += Facing.offsetsYForSide[idx];
+            z += Facing.offsetsZForSide[idx];
             double d0 = 0.0D;
 
-            if (par7 == 1 && block.getRenderType() == 11) {
+            if (idx == 1 && block.getRenderType() == 11) {
                 d0 = 0.5D;
             }
 
-            Entity entity = spawnEntity(par3World, par4 + 0.5D, par5 + d0, par6 + 0.5D);
+            Entity entity = spawnEntity(world, x + 0.5D, y + d0, z + 0.5D);
 
             if (entity != null) {
-                if (entity instanceof EntityLivingBase && par1ItemStack.hasDisplayName()) {
-                    ((EntityLiving)entity).setCustomNameTag(par1ItemStack.getDisplayName());
+                if (entity instanceof EntityLivingBase && itemStack.hasDisplayName()) {
+                    ((EntityLiving)entity).setCustomNameTag(itemStack.getDisplayName());
                 }
 
-                if (!par2EntityPlayer.capabilities.isCreativeMode) {
-                    --par1ItemStack.stackSize;
+                if (!entityPlayer.capabilities.isCreativeMode) {
+                    --itemStack.stackSize;
                 }
             }
 
@@ -82,64 +82,57 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, 
-          EntityPlayer par3EntityPlayer)
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
     {
-        if (par2World.isRemote) {
-            return par1ItemStack;
+        if (world.isRemote) {
+            return itemStack;
         } else {
-            MovingObjectPosition movingobjectposition = 
-                  getMovingObjectPositionFromPlayer(par2World, par3EntityPlayer, true);
+            MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(world, entityPlayer, true);
 
             if (movingobjectposition == null) {
-                return par1ItemStack;
+                return itemStack;
             } else {
                 if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                     int i = movingobjectposition.blockX;
                     int j = movingobjectposition.blockY;
                     int k = movingobjectposition.blockZ;
 
-                    if (!par2World.canMineBlock(par3EntityPlayer, i, j, k)) {
-                        return par1ItemStack;
+                    if (!world.canMineBlock(entityPlayer, i, j, k)) {
+                        return itemStack;
                     }
 
-                    if (!par3EntityPlayer.canPlayerEdit(i, j, k, movingobjectposition.sideHit, par1ItemStack)) {
-                        return par1ItemStack;
+                    if (!entityPlayer.canPlayerEdit(i, j, k, movingobjectposition.sideHit, itemStack)) {
+                        return itemStack;
                     }
 
-                    if (par2World.getBlock(i, j, k) instanceof BlockLiquid) {
-                        Entity entity = spawnEntity(par2World, i, j, k);
+                    if (world.getBlock(i, j, k) instanceof BlockLiquid) {
+                        Entity entity = spawnEntity(world, i, j, k);
 
                         if (entity != null) {
-                            if (entity instanceof EntityLivingBase && par1ItemStack.hasDisplayName()) {
-                                ((EntityLiving)entity).setCustomNameTag(par1ItemStack
-                                      .getDisplayName());
+                            if (entity instanceof EntityLivingBase && itemStack.hasDisplayName()) {
+                                ((EntityLiving)entity).setCustomNameTag(itemStack.getDisplayName());
                             }
 
-                            if (!par3EntityPlayer.capabilities.isCreativeMode) {
-                                --par1ItemStack.stackSize;
+                            if (!entityPlayer.capabilities.isCreativeMode) {
+                                --itemStack.stackSize;
                             }
                         }
                     }
                 }
 
-                return par1ItemStack;
+                return itemStack;
             }
         }
     }
 
-    public Entity spawnEntity(World parWorld, double parX, double parY, double parZ)
+    public Entity spawnEntity(World world, double X, double Y, double Z)
     {
-     
-       if (!parWorld.isRemote) {
+       if (!world.isRemote) {
             entityToSpawnNameFull = CrackedZombie.modid + "."+ entityToSpawnName;
             if (EntityList.stringToClassMapping.containsKey(entityToSpawnNameFull)) {
-                entityToSpawn = (EntityLiving) EntityList
-                      .createEntityByName(entityToSpawnNameFull, parWorld);
-                entityToSpawn.setLocationAndAngles(parX, parY, parZ, 
-                      MathHelper.wrapAngleTo180_float(parWorld.rand.nextFloat()
-                      * 360.0F), 0.0F);
-                parWorld.spawnEntityInWorld(entityToSpawn);
+                entityToSpawn = (EntityLiving) EntityList.createEntityByName(entityToSpawnNameFull, world);
+                entityToSpawn.setLocationAndAngles(X, Y, Z, MathHelper.wrapAngleTo180_float(world.rand.nextFloat() * 360.0F), 0.0F);
+                world.spawnEntityInWorld(entityToSpawn);
                 entityToSpawn.onSpawnWithEgg((IEntityLivingData)null);
                 entityToSpawn.playLivingSound();
             } else {
@@ -153,16 +146,16 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item parItem, CreativeTabs parTab, List parList)
+    public void getSubItems(Item item, CreativeTabs tab, List list)
     {
-        parList.add(new ItemStack(parItem, 1, 0));     
+        list.add(new ItemStack(item, 1, 0));     
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int getColorFromItemStack(ItemStack par1ItemStack, int parColorType)
+    public int getColorFromItemStack(ItemStack itemStack, int ColorType)
     {
-        return (parColorType == 0) ? colorBase : colorSpots;
+        return (ColorType == 0) ? colorBase : colorSpots;
     }
 
     @Override
@@ -175,7 +168,7 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
     @Override
     // Doing this override means that there is no localization for language
     // unless you specifically check for localization here and convert
-    public String getItemStackDisplayName(ItemStack par1ItemStack)
+    public String getItemStackDisplayName(ItemStack itemStack)
     {
         return "Spawn "+entityToSpawnName;
     }  
@@ -183,38 +176,38 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister par1IconRegister)
+    public void registerIcons(IIconRegister iconRegister)
     {
-        super.registerIcons(par1IconRegister);
-        theIcon = par1IconRegister.registerIcon(getIconString() + "_overlay");
+        super.registerIcons(iconRegister);
+        theIcon = iconRegister.registerIcon(getIconString() + "_overlay");
     }
     
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamageForRenderPass(int parDamageVal, int parRenderPass)
+    public IIcon getIconFromDamageForRenderPass(int DamageVal, int RenderPass)
     {
-        return parRenderPass > 0 ? theIcon : super.getIconFromDamageForRenderPass(parDamageVal, parRenderPass);
+        return RenderPass > 0 ? theIcon : super.getIconFromDamageForRenderPass(DamageVal, RenderPass);
     }
     
-    public void setColors(int parColorBase, int parColorSpots)
+    public void setColors(int ColorBase, int ColorSpots)
     {
-     colorBase = parColorBase;
-     colorSpots = parColorSpots;
+		colorBase = ColorBase;
+		colorSpots = ColorSpots;
     }
     
     public int getColorBase()
     {
-     return colorBase;
+		return colorBase;
     }
     
     public int getColorSpots()
     {
-     return colorSpots;
+		return colorSpots;
     }
     
-    public void setEntityToSpawnName(String parEntityToSpawnName)
+    public void setEntityToSpawnName(String EntityToSpawnName)
     {
-        entityToSpawnName = parEntityToSpawnName;
+        entityToSpawnName = EntityToSpawnName;
         entityToSpawnNameFull = CrackedZombie.modid + "." + entityToSpawnName;
     }
 
