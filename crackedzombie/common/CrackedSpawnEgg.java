@@ -45,8 +45,6 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
         setEntityToSpawnName(parEntityToSpawnName);
         colorBase = parPrimaryColor;
         colorSpots = parSecondaryColor;
-        // DEBUG
-        System.out.println("Spawn egg constructor for "+entityToSpawnName);
     }
 
     @Override
@@ -54,34 +52,27 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
                              World par3World, int par4, int par5, int par6, int par7, float par8,
                              float par9, float par10)
     {
-        if (par3World.isRemote)
-        {
+        if (par3World.isRemote) {
             return true;
-        }
-        else
-        {
+        } else {
             Block block = par3World.getBlock(par4, par5, par6);
             par4 += Facing.offsetsXForSide[par7];
             par5 += Facing.offsetsYForSide[par7];
             par6 += Facing.offsetsZForSide[par7];
             double d0 = 0.0D;
 
-            if (par7 == 1 && block.getRenderType() == 11)
-            {
+            if (par7 == 1 && block.getRenderType() == 11) {
                 d0 = 0.5D;
             }
 
             Entity entity = spawnEntity(par3World, par4 + 0.5D, par5 + d0, par6 + 0.5D);
 
-            if (entity != null)
-            {
-                if (entity instanceof EntityLivingBase && par1ItemStack.hasDisplayName())
-                {
+            if (entity != null) {
+                if (entity instanceof EntityLivingBase && par1ItemStack.hasDisplayName()) {
                     ((EntityLiving)entity).setCustomNameTag(par1ItemStack.getDisplayName());
                 }
 
-                if (!par2EntityPlayer.capabilities.isCreativeMode)
-                {
+                if (!par2EntityPlayer.capabilities.isCreativeMode) {
                     --par1ItemStack.stackSize;
                 }
             }
@@ -94,54 +85,38 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, 
           EntityPlayer par3EntityPlayer)
     {
-        if (par2World.isRemote)
-        {
+        if (par2World.isRemote) {
             return par1ItemStack;
-        }
-        else
-        {
+        } else {
             MovingObjectPosition movingobjectposition = 
                   getMovingObjectPositionFromPlayer(par2World, par3EntityPlayer, true);
 
-            if (movingobjectposition == null)
-            {
+            if (movingobjectposition == null) {
                 return par1ItemStack;
-            }
-            else
-            {
-                if (movingobjectposition.typeOfHit == MovingObjectPosition
-                      .MovingObjectType.BLOCK)
-                {
+            } else {
+                if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                     int i = movingobjectposition.blockX;
                     int j = movingobjectposition.blockY;
                     int k = movingobjectposition.blockZ;
 
-                    if (!par2World.canMineBlock(par3EntityPlayer, i, j, k))
-                    {
+                    if (!par2World.canMineBlock(par3EntityPlayer, i, j, k)) {
                         return par1ItemStack;
                     }
 
-                    if (!par3EntityPlayer.canPlayerEdit(i, j, k, movingobjectposition
-                          .sideHit, par1ItemStack))
-                    {
+                    if (!par3EntityPlayer.canPlayerEdit(i, j, k, movingobjectposition.sideHit, par1ItemStack)) {
                         return par1ItemStack;
                     }
 
-                    if (par2World.getBlock(i, j, k) instanceof BlockLiquid)
-                    {
+                    if (par2World.getBlock(i, j, k) instanceof BlockLiquid) {
                         Entity entity = spawnEntity(par2World, i, j, k);
 
-                        if (entity != null)
-                        {
-                            if (entity instanceof EntityLivingBase && par1ItemStack
-                                  .hasDisplayName())
-                            {
+                        if (entity != null) {
+                            if (entity instanceof EntityLivingBase && par1ItemStack.hasDisplayName()) {
                                 ((EntityLiving)entity).setCustomNameTag(par1ItemStack
                                       .getDisplayName());
                             }
 
-                            if (!par3EntityPlayer.capabilities.isCreativeMode)
-                            {
+                            if (!par3EntityPlayer.capabilities.isCreativeMode) {
                                 --par1ItemStack.stackSize;
                             }
                         }
@@ -156,11 +131,9 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
     public Entity spawnEntity(World parWorld, double parX, double parY, double parZ)
     {
      
-       if (!parWorld.isRemote) // never spawn entity on client side
-       {
+       if (!parWorld.isRemote) {
             entityToSpawnNameFull = CrackedZombie.modid + "."+ entityToSpawnName;
-            if (EntityList.stringToClassMapping.containsKey(entityToSpawnNameFull))
-            {
+            if (EntityList.stringToClassMapping.containsKey(entityToSpawnNameFull)) {
                 entityToSpawn = (EntityLiving) EntityList
                       .createEntityByName(entityToSpawnNameFull, parWorld);
                 entityToSpawn.setLocationAndAngles(parX, parY, parZ, 
@@ -169,10 +142,7 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
                 parWorld.spawnEntityInWorld(entityToSpawn);
                 entityToSpawn.onSpawnWithEgg((IEntityLivingData)null);
                 entityToSpawn.playLivingSound();
-            }
-            else
-            {
-                //DEBUG
+            } else {
                 System.out.println("Entity not found "+entityToSpawnName);
             }
         }
@@ -223,8 +193,7 @@ public class CrackedSpawnEgg extends ItemMonsterPlacer
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamageForRenderPass(int parDamageVal, int parRenderPass)
     {
-        return parRenderPass > 0 ? theIcon : super.getIconFromDamageForRenderPass(parDamageVal, 
-              parRenderPass);
+        return parRenderPass > 0 ? theIcon : super.getIconFromDamageForRenderPass(parDamageVal, parRenderPass);
     }
     
     public void setColors(int parColorBase, int parColorSpots)
