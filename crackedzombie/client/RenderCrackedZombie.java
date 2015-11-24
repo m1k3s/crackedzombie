@@ -42,10 +42,6 @@ public class RenderCrackedZombie extends RenderBiped {
 
 	private final ModelBiped currentModel;
 	private final ModelCrackedZombieVillager zombieVillager;
-	protected ModelBiped adultCrackedZombie;
-	protected ModelBiped childCrackedZombie;
-	protected ModelBiped adultZombieVillager;
-	protected ModelBiped childZombieVillager;
 	private final List list1;
 	private final List list2;
 
@@ -64,8 +60,8 @@ public class RenderCrackedZombie extends RenderBiped {
 			@Override
 			protected void func_177177_a()
 			{
-				childCrackedZombie = new ModelCrackedZombie(0.5F, true);
-				adultCrackedZombie = new ModelCrackedZombie(1.0F, true);
+				field_177189_c = new ModelCrackedZombie(0.5F, true);
+				field_177186_d = new ModelCrackedZombie(1.0F, true);
 			}
 		};
 		addLayer(layerbipedarmor);
@@ -81,19 +77,19 @@ public class RenderCrackedZombie extends RenderBiped {
 		list2 = Lists.newArrayList(layerRenderers);
 	}
 
-	protected void rotateCorpse(EntityCrackedZombie entityCrackedZombie, float par2, float par3, float par4)
+	protected void rotateCorpse(EntityCrackedZombie entityCrackedZombie, float x, float y, float z)
 	{
 		if (entityCrackedZombie.isConverting()) {
-			par3 += (float) (Math.cos((double) entityCrackedZombie.ticksExisted * 3.25D) * Math.PI * 0.25D);
+			y += (float) (Math.cos((double) entityCrackedZombie.ticksExisted * 3.25D) * Math.PI * 0.25D);
 		}
 
-		super.rotateCorpse(entityCrackedZombie, par2, par3, par4);
+		super.rotateCorpse(entityCrackedZombie, x, y, z);
 	}
 
 	private void getRenderLayer(EntityCrackedZombie zombie)
 	{
 		if (zombie.isVillager()) {
-			mainModel = adultZombieVillager;
+			mainModel = zombieVillager;
 			layerRenderers = list1;
 		} else {
 			mainModel = currentModel;
@@ -104,32 +100,44 @@ public class RenderCrackedZombie extends RenderBiped {
 	}
 
 	@Override
-	protected void rotateCorpse(EntityLivingBase entityLivingBase, float par2, float par3, float par4)
+	protected void rotateCorpse(EntityLivingBase entityLivingBase, float x, float y, float z)
 	{
-		rotateCorpse((EntityCrackedZombie) entityLivingBase, par2, par3, par4);
+		rotateCorpse((EntityCrackedZombie) entityLivingBase, x, y, z);
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityLiving entity)
 	{
-		return func_180578_a((EntityCrackedZombie) entity);
+		return getEntitySkinType((EntityCrackedZombie) entity);
 	}
 
-	protected ResourceLocation func_180578_a(EntityCrackedZombie entity)
+	protected ResourceLocation getEntitySkinType(EntityCrackedZombie entity)
 	{
 		return entity.isVillager() ? zombieVillagerSkin : zombieSkin;
 	}
+	
+//	@Override
+//	public void doRender(Entity entity, double x, double y, double z, float facing, float partialTicks)
+//    {
+//        this.doRender((EntityCrackedZombie)entity, x, y, z, facing, partialTicks);
+//    }
 
 	@Override
-	public void doRender(EntityLiving entity, double x, double y, double z, float par8, float par9)
+	public void doRender(EntityLiving entity, double x, double y, double z, float facing, float partialTicks)
 	{
-		this.doRender((EntityCrackedZombie) entity, x, y, z, par8, par9);
+		this.doRender((EntityCrackedZombie) entity, x, y, z, facing, partialTicks);
 	}
+	
+//	@Override
+//	public void doRender(EntityLivingBase entity, double x, double y, double z, float facing, float partialTicks)
+//    {
+//        this.doRender((EntityCrackedZombie)entity, x, y, z, facing, partialTicks);
+//    }
 
-	public void doRender(EntityCrackedZombie entity, double x, double y, double z, float par8, float par9)
+	public void doRender(EntityCrackedZombie zombie, double x, double y, double z, float facing, float partialTicks)
 	{
-		getRenderLayer(entity);
-		super.doRender((EntityLiving) entity, x, y, z, par8, par9);
+		getRenderLayer(zombie);
+		super.doRender(zombie, x, y, z, facing, partialTicks);
 	}
 
 }

@@ -22,6 +22,7 @@
 package com.crackedzombie.client;
 
 import com.crackedzombie.common.CommonProxyCrackedZombie;
+import com.crackedzombie.common.EntityCrackedPigZombie;
 import com.crackedzombie.common.EntityCrackedZombie;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -34,6 +35,7 @@ public class ClientProxyCrackedZombie extends CommonProxyCrackedZombie {
 	{
 		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrackedZombie.class, new RenderCrackedZombie(rm));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCrackedPigZombie.class, new RenderCrackedPigZombie(rm));
 	}
 	
 }
