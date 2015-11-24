@@ -157,9 +157,9 @@ public class CrackedZombie {
 		maxPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxPZSpawn", 10, maxPZSpawnComment).getInt();
 		allowChildSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowChildSpawns", true, childComment).getBoolean(true);
 		followRange = config.get(Configuration.CATEGORY_GENERAL, "followRange", 40.0, followRangeComment).getDouble();
-		movementSpeed = config.get(Configuration.CATEGORY_GENERAL, "movementSpeed", 0.5, movementSpeedComment).getDouble();
+		movementSpeed = config.get(Configuration.CATEGORY_GENERAL, "movementSpeed", 0.23, movementSpeedComment).getDouble();
 		attackDamage = config.get(Configuration.CATEGORY_GENERAL, "attackDamage", 3.0, attackDamageComment).getDouble();
-		pzMovementSpeed = config.get(Configuration.CATEGORY_GENERAL, "pzMovementSpeed", 0.5, pzMoveSpeedComment).getDouble();
+		pzMovementSpeed = config.get(Configuration.CATEGORY_GENERAL, "pzMovementSpeed", 0.23, pzMoveSpeedComment).getDouble();
 		pzAttackDamage = config.get(Configuration.CATEGORY_GENERAL, "pzAttackDamage", 5.0, pzAttackDamageComment).getDouble();
 
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
