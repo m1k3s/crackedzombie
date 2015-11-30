@@ -58,7 +58,7 @@ public class RenderCrackedZombie extends RenderBiped {
 		addLayer(new LayerHeldItem(this));
 		LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this) {
 			@Override
-			protected void func_177177_a()
+			protected void initArmor()
 			{
 				field_177189_c = new ModelCrackedZombie(0.5F, true);
 				field_177186_d = new ModelCrackedZombie(1.0F, true);

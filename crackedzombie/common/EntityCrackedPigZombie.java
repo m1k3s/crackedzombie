@@ -58,12 +58,12 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         IAttributeInstance iattributeinstance = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
 
         if (isAngry()) {
-            if (!isChild() && !iattributeinstance.func_180374_a(runningModifier)) {
+            if (!isChild() && !iattributeinstance.hasModifier(runningModifier)) {
                 iattributeinstance.applyModifier(runningModifier);
             }
 
             --angerLevel;
-        } else if (iattributeinstance.func_180374_a(runningModifier)) {
+        } else if (iattributeinstance.hasModifier(runningModifier)) {
             iattributeinstance.removeModifier(runningModifier);
         }
 
@@ -82,7 +82,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
     }
 
     public boolean getCanSpawnHere() {
-        return worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
+        return super.getCanSpawnHere() && worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
     }
 
     public boolean handleLavaMovement() {
@@ -197,8 +197,8 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
     }
 
     @Override
-    public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficultyInstance, IEntityLivingData livingdata) {
-        super.onSpawnFirstTime(difficultyInstance, livingdata);
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficultyInstance, IEntityLivingData livingdata) {
+        super.onInitialSpawn(difficultyInstance, livingdata);
         setVillager(false);
         return livingdata;
     }
@@ -208,8 +208,8 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
             super(EntityCrackedPigZombie.this, true, new Class[0]);
         }
 
-        protected void func_179446_a(EntityCreature entityCreature, EntityLivingBase entityLivingBase) {
-            super.func_179446_a(entityCreature, entityLivingBase);
+        protected void setEntityAttackTarget(EntityCreature entityCreature, EntityLivingBase entityLivingBase) {
+            super.setEntityAttackTarget(entityCreature, entityLivingBase);
 
             if (entityCreature instanceof EntityPigZombie) {
                 ((EntityCrackedPigZombie) entityCreature).becomeAngryAt(entityLivingBase);

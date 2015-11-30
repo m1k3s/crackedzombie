@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
-import net.minecraft.command.IEntitySelector;
+//import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -66,6 +66,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -93,7 +94,7 @@ public class EntityCrackedZombie extends EntityMob {
 			((PathNavigateGround) getNavigator()).setBreakDoors(true);
 			tasks.addTask(6, new EntityAIBreakDoor(this));
 		}
-		tasks.addTask(2, aiAvoidExplodingCreepers);
+//		tasks.addTask(2, aiAvoidExplodingCreepers);
 		tasks.addTask(2, new EntityAILeapAtTarget(this, 0.4F));
 		tasks.addTask(3, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.2, false));
 		tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0, true));
@@ -208,7 +209,7 @@ public class EntityCrackedZombie extends EntityMob {
 								&& !worldObj.isAnyLiquid(crackedZombie.getEntityBoundingBox())) {
 							worldObj.spawnEntityInWorld(crackedZombie);
 							crackedZombie.setAttackTarget(entitylivingbase);
-							crackedZombie.onSpawnFirstTime(worldObj.getDifficultyForLocation(new BlockPos(crackedZombie)), null);
+							crackedZombie.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(crackedZombie)), null);
 							getEntityAttribute(reinforcements).applyModifier(new AttributeModifier("Zombie reinforcement caller charge", -0.05D, 0));
 							crackedZombie.getEntityAttribute(reinforcements).applyModifier(new AttributeModifier("Zombie reinforcement callee charge", -0.05D, 0));
 							break;
@@ -488,20 +489,20 @@ public class EntityCrackedZombie extends EntityMob {
 		return EnumCreatureAttribute.UNDEAD;
 	}
 
-	@Override
-	protected void addRandomArmor()
-	{
-		switch (rand.nextInt(3)) {
-			case 0:
-				dropItem(Items.iron_ingot, 1);
-				break;
-			case 1:
-				dropItem(Items.carrot, 1);
-				break;
-			case 2:
-				dropItem(Items.potato, 1);
-		}
-	}
+//	@Override
+//	protected void addRandomArmor()
+//	{
+//		switch (rand.nextInt(3)) {
+//			case 0:
+//				dropItem(Items.iron_ingot, 1);
+//				break;
+//			case 1:
+//				dropItem(Items.carrot, 1);
+//				break;
+//			case 2:
+//				dropItem(Items.potato, 1);
+//		}
+//	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt)
@@ -573,7 +574,7 @@ public class EntityCrackedZombie extends EntityMob {
 			EntityCrackedZombie crackedZombie = new EntityCrackedZombie(worldObj);
 			crackedZombie.copyLocationAndAnglesFrom(entityLiving);
 			worldObj.removeEntity(entityLiving);
-			crackedZombie.onSpawnFirstTime(this.worldObj.getDifficultyForLocation(new BlockPos(crackedZombie)), null);
+			crackedZombie.onInitialSpawn(this.worldObj.getDifficultyForLocation(new BlockPos(crackedZombie)), null);
 			crackedZombie.setVillager(true);
 
 			if (entityLiving.isChild()) {
@@ -591,9 +592,9 @@ public class EntityCrackedZombie extends EntityMob {
 	}
 
 	@Override
-	public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficulty, IEntityLivingData livingdata)
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
 	{
-		Object zombieGroupData = super.onSpawnFirstTime(difficulty, livingdata);
+		Object zombieGroupData = super.onInitialSpawn(difficulty, livingdata);
 		float additionalDifficulty = difficulty.getClampedAdditionalDifficulty();
 		setCanPickUpLoot(rand.nextFloat() < 0.55F * additionalDifficulty);
 
@@ -612,7 +613,7 @@ public class EntityCrackedZombie extends EntityMob {
 				setChild(true);
 
 				if ((double) worldObj.rand.nextFloat() < 0.05D) {
-					List list = worldObj.getEntitiesWithinAABB(EntityChicken.class, getEntityBoundingBox().expand(5.0D, 3.0D, 5.0D), IEntitySelector.IS_STANDALONE);
+					List<EntityChicken> list = this.worldObj.<EntityChicken>getEntitiesWithinAABB(EntityChicken.class, this.getEntityBoundingBox().expand(5.0D, 3.0D, 5.0D), EntitySelectors.IS_STANDALONE);
 
 					if (!list.isEmpty()) {
 						EntityChicken entitychicken = (EntityChicken) list.get(0);
@@ -622,7 +623,7 @@ public class EntityCrackedZombie extends EntityMob {
 				} else if ((double) worldObj.rand.nextFloat() < 0.05D) {
 					EntityChicken chicken = new EntityChicken(worldObj);
 					chicken.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
-					chicken.onSpawnFirstTime(difficulty, null);
+					chicken.onInitialSpawn(difficulty, null);
 					chicken.setChickenJockey(true);
 					
 					worldObj.spawnEntityInWorld(chicken);
@@ -707,7 +708,7 @@ public class EntityCrackedZombie extends EntityMob {
 	{
 		EntityVillager villager = new EntityVillager(worldObj);
 		villager.copyLocationAndAnglesFrom(this);
-		villager.onSpawnFirstTime(this.worldObj.getDifficultyForLocation(new BlockPos(villager)), null);
+		villager.onInitialSpawn(this.worldObj.getDifficultyForLocation(new BlockPos(villager)), null);
 		villager.setLookingForHome();
 
 		if (isChild()) {
