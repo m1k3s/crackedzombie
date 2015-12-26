@@ -78,6 +78,8 @@ public class EntityCrackedZombie extends EntityMob {
 	private static final AttributeModifier speedBoost = new AttributeModifier(uuid, "Baby speed boost", 0.1D, 0);
 	private final double noSpawnRadius = ConfigHandler.getTorchNoSpawnRadius();
 	private final boolean allowChildSpawns = ConfigHandler.getAllowChildSpawns();
+	private final boolean attackPigs = ConfigHandler.getAttackPigs();
+	private final boolean attackVillagers = ConfigHandler.getAttackVillagers();
 
 	private int conversionTime = 0;
 	private float zombieWidth = -1.0f;
@@ -93,11 +95,15 @@ public class EntityCrackedZombie extends EntityMob {
 			((PathNavigateGround) getNavigator()).setBreakDoors(true);
 			tasks.addTask(6, new EntityAIBreakDoor(this));
 		}
-		tasks.addTask(2, aiAvoidExplodingCreepers);
+//		tasks.addTask(2, aiAvoidExplodingCreepers);
 		tasks.addTask(2, new EntityAILeapAtTarget(this, 0.4F));
 		tasks.addTask(3, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.2, false));
-		tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0, true));
-		tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityPig.class, 1.0, false));
+		if (attackVillagers) {
+			tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0, true));
+		}
+		if (attackPigs) {
+			tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityPig.class, 1.0, false));
+		}
 		tasks.addTask(7, new EntityAIMigrate(this, 0.8));
 		tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		tasks.addTask(8, new EntityAILookIdle(this));
@@ -108,14 +114,19 @@ public class EntityCrackedZombie extends EntityMob {
 
 	private void applyEntityAI()
 	{
-		tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0D, true));
+		if (attackVillagers) {
+		    tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0D, true));
+		    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
+		}
 		tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityIronGolem.class, 1.0D, true));
 		tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
 		targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, EntityPigZombie.class));
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
-		targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPig.class, false));
+		if (attackPigs) {
+			targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPig.class, false));
+		}
 	}
 
 	@Override
@@ -159,8 +170,8 @@ public class EntityCrackedZombie extends EntityMob {
 			return false;
 		} else {
 			boolean player = (target instanceof EntityPlayer);
-			boolean villager = (target instanceof EntityVillager);
-			boolean pig = (target instanceof EntityPig);
+			boolean villager = attackVillagers && (target instanceof EntityVillager);
+			boolean pig = attackPigs && (target instanceof EntityPig);
 
 			if (player) {
 				if (((EntityPlayer) target).capabilities.isCreativeMode) {
