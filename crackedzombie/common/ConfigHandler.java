@@ -52,7 +52,9 @@ public class ConfigHandler {
 	private static double attackDamage;
 	private static double pzMoveSpeed;
 	private static double pzAttackDamage;
-	
+	private static boolean attackPigs;
+	private static boolean attackVillagers;
+
 	static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
 				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
 	static final String spawnProbComment = "zombieSpawnProb adjust to probability of zombies spawning\n"
@@ -95,6 +97,8 @@ public class ConfigHandler {
 	static final String attackDamageComment = "set the initial attack damage caused by the zombies";
 	static final String pzMoveSpeedComment = "set the movement speed of the pig zombies";
 	static final String pzAttackDamageComment = "set the initial attack damage caused by the pig zombies";
+    static final String attackPigsComment = "Attack and kill pigs";
+    static final String attackVillagersComment = "Attack and convert villagers";
 
 	public static void startConfig(FMLPreInitializationEvent event)
 	{
@@ -134,6 +138,8 @@ public class ConfigHandler {
 			attackDamage = config.get(Configuration.CATEGORY_GENERAL, "attackDamage", 3.0, attackDamageComment).getDouble();
 			pzMoveSpeed =  config.get(Configuration.CATEGORY_GENERAL, "pzMoveSpeed", 0.23, pzMoveSpeedComment).getDouble();
 			pzAttackDamage = config.get(Configuration.CATEGORY_GENERAL, "pzAttackDamage", 5.0, pzAttackDamageComment).getDouble();
+            attackPigs = config.get(Configuration.CATEGORY_GENERAL, "attackPigs", true, attackPigsComment).getBoolean(true);
+            attackVillagers = config.get(Configuration.CATEGORY_GENERAL, "attackVillagers", true, attackVillagersComment).getBoolean(true);
 		} catch (Exception e) {
 			CrackedZombie.proxy.info("failed to load or read the config file");
 		} finally {
@@ -282,4 +288,14 @@ public class ConfigHandler {
 	{
 		return pzAttackDamage;
 	}
+
+    public static boolean getAttackPigs()
+    {
+        return attackPigs;
+    }
+
+    public static boolean getAttackVillagers()
+    {
+        return attackVillagers;
+    }
 }

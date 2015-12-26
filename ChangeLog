@@ -1,0 +1,503 @@
+commit 3eb30976d236afada301a78eed18d342daf3850b
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Tue Jun 23 11:53:33 2015 -0400
+
+    working on crackedpigzombies
+
+commit b7cfa4f99fafe0bd747fd9633044b4a22087be56
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Mon Jun 22 16:21:12 2015 -0400
+
+    Added config options to disallow spawning the crackedpigzombies and
+    disallow spawing of the vanilla pig zombies.
+
+commit e97c2004e6ed99a54f75577c9e83a8caec4bf536
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Mon Jun 22 15:01:35 2015 -0400
+
+    Added CrackedPigZombies.
+
+commit 6c4a313872b052c3ad4bebef07cd154d4a4cf663
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Fri Jun 19 20:30:43 2015 -0400
+
+    updated to forge 1468 and added spawn eggs to entity registration.
+
+commit c749055f23ba3ff909daf1f1d7913f0e2d27b1e7
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Sat Jun 13 19:40:32 2015 -0400
+
+    changed entity registration to mod level IDs
+
+commit f7ee8c63714006f39a26863b09e0b3764cf36352
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Wed May 13 11:35:44 2015 -0400
+
+    added a config option to disable child zombie spawns.
+
+commit c3da81adf5eb94f6f7c97b4679b8ae05f6bc4832
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Sat Mar 7 08:03:08 2015 -0500
+
+    commiting earlier changes. Minor changes.
+
+commit 186ccd8958d2842658730786270b7790a1aa5d52
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Sun Jan 18 11:45:37 2015 -0500
+
+    Added optional enchantments to the sword. Controlled by the config.
+
+commit 39dccb806bad2d05d0d0dd9015e9bc454e237f6d
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Sat Jan 17 14:12:19 2015 -0500
+
+    added option to allow player spawning with random type sword.
+
+commit c83f385f8cd4424306d7d15b943dec6adc14c405
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Wed Jan 14 19:58:13 2015 -0500
+
+    fixed sickness issue, checking for the flag now.
+
+commit da37724f372954b387947b02a16165410e1e22d8
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Tue Jan 13 20:05:10 2015 -0500
+
+    Fixed the sickness bug, failed to test for the sickness flag.
+
+commit 89571f05f2866a5593688f1c1105ee63f9b7f0ff
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Tue Jan 13 13:15:46 2015 -0500
+
+    Added mod GUI config and supporting files.
+
+commit 5d1f15c77d480c3a9499a64a83ee453e60e55540
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Mon Jan 12 17:42:27 2015 -0500
+
+    Added a restart warning to the config GUI as a second title.
+
+commit f218f0f4c0b821d242432f6189079a7b8962f4d0
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Mon Jan 12 17:26:22 2015 -0500
+
+    Moved config fields and methods to ConfigHandler class. Added a config
+    GUI to the mod.
+
+commit a6721fbb4fd3304290fa1f9baf38ead475791d82
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Wed Dec 10 16:55:01 2014 -0500
+
+    Fixed spawning code. :(
+
+commit 62d532a44dc4a02f516973bd035d8939f3916d39
+Merge: 4beaca5 0af6018
+Author: m1k3s <pbrane0@gmail.com>
+Date:   Sun Nov 2 19:40:18 2014 -0500
+
+    Merge branch '1.7.10' of github.com:m1k3s/crackedzombie into 1.7.10
+
+    Conflicts:
+	README.md
+
+    re-creating github
+
+commit 0af6018342853e6461ecefa5d7dc509da5b1dc5e
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sun Nov 2 19:35:51 2014 -0500
+
+    Create README.md
+
+commit 3458b0d87c7365933d64e6271af0670036ce912a
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sun Nov 2 19:33:59 2014 -0500
+
+    Initial commit
+
+commit 4beaca50f9029220c277aca5890d7f24aa8cf41b
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Wed Jun 25 16:37:21 2014 -0400
+
+    Updated to 1.7.10-pre4 and branched
+
+commit 1380ec54e33a33427ae2a19c74a9c75562eeacbf
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Thu Jun 12 13:20:29 2014 -0400
+
+    Added min and max spawn parameters to config file.
+
+commit a1b638efbbdd8615bfd9c836eeeab33482eba3d8
+Merge: d9f71ea 74e2d1a
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sun Jun 1 14:11:22 2014 -0400
+
+    Merge pull request #1 from Adaptivity/patch-1
+
+    Create ru_RU.lang
+
+commit 74e2d1a92aef2f50e1bbec4cf2ff6671d284020e
+Author: Anton <verybigbro@gmail.com>
+Date:	Sun Jun 1 14:20:07 2014 +0000
+
+    Create ru_RU.lang
+
+commit d9f71ea3edfd9e09ef39189a8b8754a05aa6060f
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Fri May 30 17:38:13 2014 -0400
+
+    Removed spawner code, using vanilla. Modified migrate code,
+    works better. added an option to make a player "sick" if hit by a
+    zombie. Fixed up render code.
+
+commit 855a5c595c56a4b081ccaa2300759f8cec719bf2
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Mon Apr 14 21:48:02 2014 -0400
+
+    Fix a really stupid event handling error. Now the zombies should
+    spawn correctly.
+
+commit bc93e3e67afc14356128f076861b8e4b578f534a
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Mon Apr 14 12:27:31 2014 -0400
+
+    renamed the logo png file
+
+commit 8ff0d8a7ee494c9a7b2d78250f2f1703f21f1c92
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Mon Apr 14 12:26:10 2014 -0400
+
+    Added in the newly renamed directories and files.
+
+commit 9f6e4e1b2214126c77d8b7faed33e75fca5cbb8b
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Mon Apr 14 12:15:50 2014 -0400
+
+    Complete rename of mod. All occurrences of "walking",
+    "dead", or "walkers" has been replaced with Cracked, Zombie, or
+    zombie. Apparently AMC Films LLC has an issue with me using the words
+    "walking" and/or "dead" together in the mod. It's a shame that an
+    entertainment company can trademark ordinary English words or phrases.
+
+commit 7b80d2754bc6fb77da2e7e550c4e93e31d596d1d
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Wed Mar 5 16:50:09 2014 -0500
+
+    added:
+			FMLClientHandler.instance().setDefaultMissingAction(FMLMissingMappingsEvent.Action.IGNORE);
+			to FMLInitializationEvent handler. This allows
+			the mod to load when there are missing item|block
+			mappings.
+
+commit bb78053d192c63c053c274944bc6cdfd048d6e59
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Mon Mar 3 17:40:33 2014 -0500
+
+    removed walker textures
+
+commit 73638f8ce022aae7fc7e5aa96f346d51360219d0
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Mon Mar 3 17:10:40 2014 -0500
+
+    Now using the current resource pack textures. Removed getting all
+    biomes to remove spawns. This doesn't work.
+
+commit 2f93410577e558aa6c0516b0973fa5f8af15c2f1
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Mon Mar 3 11:04:06 2014 -0500
+
+    Changed Zomebie spawn removal to include all known biomes.
+
+commit 6f5d329dc98da7e8859b72e7989330be89db85c3
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Sun Mar 2 14:26:06 2014 -0500
+
+    Added "exclude" logging to biome selection.
+
+commit 983c1a0a31cf5fac04dd5b042cb836ce80ba93dd
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Sun Mar 2 12:20:24 2014 -0500
+
+    Improved spawning in biomes. Realized that the Forge registerAllBiomes
+    has been replaced with registerAllBiomesAndGenerateEvents.
+
+commit 666970dcb2ab15459380e89b4ed503ca9f84e6e9
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Sun Mar 2 07:54:01 2014 -0500
+
+    Had to register the new 1.7 biomes that are not being picked up by
+    Forge BiomeDictionary.
+
+commit 0fa9abe002bed1b547fb82c4ea383eecd187a58b
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Sat Mar 1 14:35:11 2014 -0500
+
+    re-added logging capabilities.
+
+commit 7d2751e4cce584c4e631d5c97ad397ac0919bcfd
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Sat Mar 1 13:59:32 2014 -0500
+
+    changes to CREDITS file
+
+commit ba83b4cc89044dea2566c304a2e97f1a8b5c07cf
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Sat Mar 1 11:47:54 2014 -0500
+
+    changes to mcmod.info file
+
+commit 7993c7a1084513af695279739c3fd18a342d4b30
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Sat Mar 1 10:47:16 2014 -0500
+
+    Added correct mcmod.info file and pack files.
+
+commit 288c7960a3aef50fbf01efaa8141b0377406a4dd
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Wed Feb 26 10:50:24 2014 -0500
+
+    changed directory structure, added stuff back in.
+
+commit eec27c1bb4771a46630b94c90303acccc55d6da9
+Author: m1k3s <pbrane0@gmail.com>
+Date:	Wed Feb 26 10:49:13 2014 -0500
+
+    updated to minecraftforge 1.7.2. re-formatted source.
+
+commit a9e48958e90177bf16e7790cdda13cb624404dd8
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Tue Jul 23 11:45:54 2013 -0400
+
+    more code cleanup, changed biome scanning to use BiomeDictionary
+
+commit 70bc8796e33d899ff25f24b2ab57c1f9779d7b2d
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Mon Jul 22 18:22:27 2013 -0400
+
+    more code cleanup, remove unused imports etc.
+
+commit 1bed4ff187159045cb0d04b2bf3bcad1bd3c681e
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Wed Jul 17 09:47:20 2013 -0400
+
+    added assets directory
+
+commit b7d0ba2199927367fb85b738b2969a448dbd21f3
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Wed Jul 17 09:45:29 2013 -0400
+
+    updated to 1.6.2
+
+commit 52465faa336d35afb74039e3501d7001f71a49b4
+Merge: f9603b0 43a3fbc
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sat Jun 8 19:03:46 2013 -0400
+
+    added option to use external textures
+
+commit f9603b00535948726716a5e425373dd5743b2840
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Wed Jun 5 10:42:18 2013 -0400
+
+    version 1.5.2. added option to use external texture pack skins
+
+commit 43a3fbc6da411e4b506fd3bdecdd1ce524b1d845
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Wed Jan 23 07:53:03 2013 -0500
+
+    changed walker behaviour to not attack every pig and chicken.
+
+commit 1b02ca49ef5dd181781e130c9143cd0790ff8522
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Tue Jan 15 08:17:21 2013 -0500
+
+    changed walker_villager textures, originally added the wrong
+    ones. oops.
+
+commit f1cd8f81a97311b17007599bb02c676d9f0053f8
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Mon Jan 7 16:28:56 2013 -0500
+
+    added random damage from arrows. An arrow can cause 1, 2, or 3 times
+    normal damage.
+
+commit a78d1a6ebb0d72a2bc18d97e1fff9880fdd23a56
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sun Jan 6 14:57:47 2013 -0500
+
+    increased moveSpeed
+
+commit 27fca68a47ee1cf70656c51944794a5b99b460a9
+Merge: 37b662e 48a6a25
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sun Jan 6 07:56:58 2013 -0500
+
+    Merge branch 'master' of https://github.com/m1k3s/walkingdead
+
+commit 37b662ee469ab0a8653520d31cff1aa01b7ca5c4
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sun Jan 6 07:56:25 2013 -0500
+
+    mkjar.sh edit
+
+commit 48a6a256649582377c121dc8b5a4cb1103dc1cf9
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sun Jan 6 07:52:28 2013 -0500
+
+    Update mkjar.sh
+
+commit dc9ac5f6a03a5c6845b93384d8fb7e6dfa1c02ca
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sat Jan 5 16:09:23 2013 -0500
+
+    added creative commons license text and removed my copyright info
+    from java files.
+
+commit 4df107bff64577fedb668253e3814ab74040df7c
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sat Jan 5 15:29:25 2013 -0500
+
+    modified the onStruckByLightning code, using
+    worldObj.newExplosion. Walker will produce a smaller explosion and
+    catch the ground on fire with smoke.
+
+commit 108004d807e69335be4cfdde04993fe02219ac7a
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sat Jan 5 10:52:09 2013 -0500
+
+    now scans for all biomes that are descendants of BiomeGenBase. This
+    will allow the walkers to spawn in all biomes.
+
+commit 428fe6dadfab46226c1f49955fa9d077f8a0107f
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Fri Jan 4 13:55:11 2013 -0500
+
+    added entity network registration
+
+commit 09abc9516fd50e37e848f3c3f4f078e452fa4ed9
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Tue Jan 1 16:01:33 2013 -0500
+
+    needed to remove some textures from the texture directory.
+
+commit d33768a55ba0fb1d22865d4916d257a67fa807df
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Tue Jan 1 15:59:00 2013 -0500
+
+    forgot to add the texture directory.
+
+commit 7cceb7d3f1f95488ea2443e3da74429492283014
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Tue Jan 1 15:57:48 2013 -0500
+
+    forgot to add some files
+
+commit 7df34a43b242ab56445643f59b1828b296ee4784
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Tue Jan 1 15:34:17 2013 -0500
+
+    moved model and render classes to client directory.
+
+commit f57e1f112e2fc1314297c5a5524dfcbedd6f3117
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Tue Jan 1 15:32:41 2013 -0500
+
+    walkers now wander with their arms hanging down and pick their arms
+    up when attacking.
+
+commit 7d2a8221a971e4e0920195c3738d4221af832268
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Mon Dec 31 09:08:46 2012 -0500
+
+    added addtional monsters to spawn config. Tweaked spawning. Added
+    EntityAIMigrate, causes walkers to wander more. Added an explosion
+    effect if walker is struck by lightning.
+
+commit 0be7083669d167d14622f29de832289883b65b77
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sat Dec 29 16:42:17 2012 -0500
+
+    updated to MC version 1.4.7. Added spiders and enderman to the
+    spawning control in config file.
+
+commit 0f008411080b7e50a2cfc7017f7adb224e33a7e3
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Fri Dec 28 13:46:10 2012 -0500
+
+    added function to add all biomes to a list object to use in the
+    removeSpawn functions.
+
+commit 07b26ff92d9a298c01e31ac966c26e1e8d95961b
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Wed Dec 26 19:43:28 2012 -0500
+
+    more spawning changes, removed a check in
+    EntityWalkingDead.getCanSpawnHere code. Added variables to config
+    file for disabling spawning of creepers, zombies, and skeletons.
+
+commit d71c2d9f52927fa266bd98e0b462493d00746ba3
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Fri Dec 21 12:18:49 2012 -0500
+
+    added credits for two functions modified from DrZharks Custom
+    Mob Spawner
+
+commit 3b7637657e3be356a23417efb66807d0a412c370
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Fri Dec 21 12:02:46 2012 -0500
+
+    more custom spawning tweaks. Updated for minecraft version 1.4.6
+
+commit 7ae211b09c8ca6879c171d0b01faeaec48ca288e
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Tue Dec 18 19:16:10 2012 -0500
+
+    changes to custom spawning
+
+commit 13a33db2de3d48669a2ab63ff8830cefecd10cae
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sat Dec 15 14:10:36 2012 -0500
+
+    code cleanup. test commit in eclipse.
+
+commit 503fec94623444b565183526561629ebaeca88f0
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Sat Dec 15 12:43:29 2012 -0500
+
+    updated imports for forge-6.4.2-445
+
+commit 61532fe8f20c9030904d12f831cca18cd7935816
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Fri Dec 14 19:19:38 2012 -0500
+
+    modified the spawning algorithm again
+
+commit 76245b15a861ffda935ea0a7544ee91214a3033e
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Thu Dec 13 19:49:11 2012 -0500
+
+    added README
+
+commit 7911c6eb71c440389ed2656905cfd0dc1d017824
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Thu Dec 13 19:46:58 2012 -0500
+
+    changed AI and spawning
+
+commit e10085e056eb040673c6f8db7b53c48ad53694ab
+Merge: 400bf55 86463c1
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Thu Dec 13 19:45:07 2012 -0500
+
+    Merge branch 'master' of https://github.com/m1k3s/walkingdead
+
+commit 400bf558018d53369760af84fc83db4234b4d139
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Thu Dec 13 19:40:02 2012 -0500
+
+    initial commit
+
+commit 86463c171e4f4be0516704649292d415f35da270
+Author: Michael Sheppard <pbrane0@gmail.com>
+Date:	Thu Dec 13 16:36:54 2012 -0800
+
+    Initial commit
