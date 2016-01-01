@@ -77,6 +77,7 @@ public class RenderCrackedZombie extends RenderBiped {
 		list2 = Lists.newArrayList(layerRenderers);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void rotateCorpse(EntityCrackedZombie entityCrackedZombie, float x, float y, float z)
 	{
 		if (entityCrackedZombie.isConverting()) {
@@ -134,6 +135,7 @@ public class RenderCrackedZombie extends RenderBiped {
 //        this.doRender((EntityCrackedZombie)entity, x, y, z, facing, partialTicks);
 //    }
 
+	@SuppressWarnings("unchecked")
 	public void doRender(EntityCrackedZombie zombie, double x, double y, double z, float facing, float partialTicks)
 	{
 		getRenderLayer(zombie);

@@ -244,10 +244,10 @@ public class ConfigHandler {
 		return enchantSword;
 	}
 	
-	public static int getMaximumZombiesAllowed()
-	{
-		return 60;
-	}
+//	public static int getMaximumZombiesAllowed()
+//	{
+//		return 60;
+//	}
 	
 	public static double getTorchNoSpawnRadius()
 	{

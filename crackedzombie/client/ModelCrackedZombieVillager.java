@@ -55,6 +55,7 @@ public class ModelCrackedZombieVillager extends ModelBiped {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public int getMaxCrackedZombieVillagers()
 	{
 		return 10;

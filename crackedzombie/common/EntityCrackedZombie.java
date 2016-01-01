@@ -20,8 +20,8 @@
 package com.crackedzombie.common;
 
 import java.util.Calendar;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+//import net.minecraftforge.fml.relauncher.Side;
+//import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.block.Block;
@@ -113,6 +113,7 @@ public class EntityCrackedZombie extends EntityMob {
 		setSize(0.6F, 1.8F);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void applyEntityAI()
 	{
         if (attackVillagers) {
@@ -445,17 +446,17 @@ public class EntityCrackedZombie extends EntityMob {
 		setFire(8);
 	}
 
-	public int getAttackStrength(Entity entity)
-	{
-		ItemStack itemstack = getHeldItem();
-		int strength = 4;
-
-		if (itemstack != null) {
-			strength += 2; // would be nice to add the held item's damage capability
-		}
-
-		return strength;
-	}
+//	public int getAttackStrength(Entity entity)
+//	{
+//		ItemStack itemstack = getHeldItem();
+//		int strength = 4;
+//
+//		if (itemstack != null) {
+//			strength += 2; // would be nice to add the held item's damage capability
+//		}
+//
+//		return strength;
+//	}
 
 	@Override
 	protected String getLivingSound()
@@ -623,7 +624,7 @@ public class EntityCrackedZombie extends EntityMob {
 				setChild(true);
 
 				if ((double) worldObj.rand.nextFloat() < 0.05D) {
-					List<EntityChicken> list = this.worldObj.<EntityChicken>getEntitiesWithinAABB(EntityChicken.class, this.getEntityBoundingBox().expand(5.0D, 3.0D, 5.0D), EntitySelectors.IS_STANDALONE);
+					List<EntityChicken> list = worldObj.getEntitiesWithinAABB(EntityChicken.class, getEntityBoundingBox().expand(5.0D, 3.0D, 5.0D), EntitySelectors.IS_STANDALONE);
 
 					if (!list.isEmpty()) {
 						EntityChicken entitychicken = list.get(0);
@@ -646,7 +647,7 @@ public class EntityCrackedZombie extends EntityMob {
 		setEnchantmentBasedOnDifficulty(difficulty);
 
         if (getEquipmentInSlot(4) == null) {
-            Calendar calendar = this.worldObj.getCurrentDate();
+            Calendar calendar = worldObj.getCurrentDate();
 			int day = calendar.get(Calendar.DAY_OF_MONTH);
 			int month = calendar.get(Calendar.MONTH) + 1 ;
 
@@ -703,16 +704,16 @@ public class EntityCrackedZombie extends EntityMob {
 		worldObj.setEntityState(this, (byte) 16);
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void handleHealthUpdate(byte health)
-	{
-		if (health == 16) {
-			worldObj.playSound(posX + 0.5D, posY + 0.5D, posZ + 0.5D, "mob.zombie.remedy", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
-		} else {
-			super.handleHealthUpdate(health);
-		}
-	}
+//	@SideOnly(Side.CLIENT)
+//	@Override
+//	public void handleHealthUpdate(byte health)
+//	{
+//		if (health == 16) {
+//			worldObj.playSound(posX + 0.5D, posY + 0.5D, posZ + 0.5D, "mob.zombie.remedy", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+//		} else {
+//			super.handleHealthUpdate(health);
+//		}
+//	}
 
 	protected void convertToVillager()
 	{
@@ -771,6 +772,7 @@ public class EntityCrackedZombie extends EntityMob {
 			this.isVillager = setVillager;
 		}
 
+		@SuppressWarnings("unused")
 		GroupData(boolean setChild, boolean setVillager, Object object)
 		{
 			this(setChild, setVillager);

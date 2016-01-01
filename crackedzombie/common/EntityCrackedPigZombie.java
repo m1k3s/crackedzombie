@@ -5,7 +5,6 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.init.Items;
@@ -38,10 +37,10 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         }
     }
 
-    protected void applyEntityAI() {
-        targetTasks.addTask(1, new EntityCrackedPigZombie.AIHurtByAggressor());
-        targetTasks.addTask(2, new EntityCrackedPigZombie.AITargetAggressor());
-    }
+//    protected void applyEntityAI() {
+//        targetTasks.addTask(1, new EntityCrackedPigZombie.AIHurtByAggressor());
+//        targetTasks.addTask(2, new EntityCrackedPigZombie.AITargetAggressor());
+//    }
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -85,9 +84,9 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         return super.getCanSpawnHere() && worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
     }
 
-    public boolean handleLavaMovement() {
-        return worldObj.checkNoEntityCollision(getEntityBoundingBox(), this) && worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox()).isEmpty() && !worldObj.isAnyLiquid(getEntityBoundingBox());
-    }
+//    public boolean handleLavaMovement() {
+//        return worldObj.checkNoEntityCollision(getEntityBoundingBox(), this) && worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox()).isEmpty() && !worldObj.isAnyLiquid(getEntityBoundingBox());
+//    }
 
     public void writeEntityToNBT(NBTTagCompound tagCompound) {
         super.writeEntityToNBT(tagCompound);
@@ -106,7 +105,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         String s = tagCompund.getString("HurtBy");
 
         if (s.length() > 0) {
-            revengeTarget = UUIDstring.fromString(s);
+            revengeTarget = UUID.fromString(s);
             EntityPlayer entityplayer = worldObj.getPlayerEntityByUUID(revengeTarget);
             setRevengeTarget(entityplayer);
 
@@ -188,11 +187,13 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         return false;
     }
 
-    protected void addRandomArmor() {
+    @Override
+    protected void addRandomDrop() {
         dropItem(Items.gold_ingot, 1);
     }
 
-    protected void func_180481_a(DifficultyInstance unused) {
+    @Override
+    protected void setEquipmentBasedOnDifficulty(DifficultyInstance unused) {
         setCurrentItemOrArmor(0, new ItemStack(Items.diamond_sword));
     }
 
@@ -203,27 +204,29 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         return livingdata;
     }
 
+    @SuppressWarnings("unused")
     class AIHurtByAggressor extends EntityAIHurtByTarget {
         public AIHurtByAggressor() {
-            super(EntityCrackedPigZombie.this, true, new Class[0]);
+            super(EntityCrackedPigZombie.this, true);
         }
 
         protected void setEntityAttackTarget(EntityCreature entityCreature, EntityLivingBase entityLivingBase) {
             super.setEntityAttackTarget(entityCreature, entityLivingBase);
 
-            if (entityCreature instanceof EntityPigZombie) {
+            if (entityCreature instanceof EntityCrackedPigZombie) {
                 ((EntityCrackedPigZombie) entityCreature).becomeAngryAt(entityLivingBase);
             }
         }
     }
 
+    @SuppressWarnings("unused,unchecked")
     class AITargetAggressor extends EntityAINearestAttackableTarget {
         public AITargetAggressor() {
             super(EntityCrackedPigZombie.this, EntityPlayer.class, true);
         }
 
         public boolean shouldExecute() {
-            return ((EntityPigZombie) taskOwner).isAngry() && super.shouldExecute();
+            return ((EntityCrackedPigZombie) taskOwner).isAngry() && super.shouldExecute();
         }
     }
 }

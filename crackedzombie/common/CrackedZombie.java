@@ -39,15 +39,14 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod( modid = CrackedZombie.modid, name = CrackedZombie.name, version = CrackedZombie.modversion, guiFactory = CrackedZombie.guifactory )
 
 public class CrackedZombie {
 
-	public static final String mcversion = "1.8.0";
-	public static final String modversion = "3.1.3";
+	public static final String mcversion = "1.8.9";
+	public static final String modversion = "3.2.4";
 	public static final String modid = "crackedzombiemod";
 	public static final String name = "Cracked Zombie Mod";
 	public static final String zombieName = "CrackedZombie";
@@ -65,6 +64,7 @@ public class CrackedZombie {
 
 	public static CommonProxyCrackedZombie proxy;
 
+	@SuppressWarnings("unused")
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -74,10 +74,11 @@ public class CrackedZombie {
 		EntityRegistry.registerModEntity(EntityCrackedPigZombie.class, pigzombieName, entityID, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
 	}
 
+	@SuppressWarnings("unused")
 	@Mod.EventHandler
 	public void Init(FMLInitializationEvent evt)
 	{
-		FMLCommonHandler.instance().bus().register(CrackedZombie.instance);
+		MinecraftForge.EVENT_BUS.register(CrackedZombie.instance);
 		if (ConfigHandler.getStartWithSword()) {
 			MinecraftForge.EVENT_BUS.register(new PlayerJoinedWorldEventHandler());
 		}
@@ -88,7 +89,8 @@ public class CrackedZombie {
 		// add steel swords to the loot. you may need these.
 		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(Items.iron_sword), 1, 1, 4));
 	}
-	
+
+	@SuppressWarnings("unused")
     @Mod.EventHandler
 	public void PostInit(FMLPostInitializationEvent event)
 	{
@@ -125,7 +127,6 @@ public class CrackedZombie {
 		if (!ConfigHandler.getPigZombieSpawns()) {
 			proxy.info("*** Disabling default pig zombie spawns for all biomes");
 			EntityRegistry.removeSpawn(EntityPigZombie.class, EnumCreatureType.MONSTER, allBiomes);
-//			DungeonHooks.removeDungeonMob("PigZombie");
 		} else {
 			proxy.info("NOT disabling default zombie spawns, there will be fewer " + pigzombieName + "s!");
 		}
@@ -168,6 +169,7 @@ public class CrackedZombie {
 	}
 	
 	// user has changed entries in the GUI config. save the results.
+	@SuppressWarnings("unused")
 	@SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.modID.equals(CrackedZombie.modid)) {

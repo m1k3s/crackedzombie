@@ -28,6 +28,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
+@SuppressWarnings("unused,unchecked")
 public class ClientProxyCrackedZombie extends CommonProxyCrackedZombie {
 
 	@Override

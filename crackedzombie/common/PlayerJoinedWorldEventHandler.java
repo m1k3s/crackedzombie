@@ -37,7 +37,8 @@ public class PlayerJoinedWorldEventHandler {
 	{
 		CrackedZombie.proxy.info("PlayerJoinedWorldEvent ctor");
 	}
-	
+
+	@SuppressWarnings("unused")
 	@SubscribeEvent
 	public void onPlayerJoinedEvent(EntityJoinWorldEvent event)
 	{
