@@ -20,13 +20,10 @@
 package com.crackedzombie.common;
 
 import java.util.Calendar;
-//import net.minecraftforge.fml.relauncher.Side;
-//import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
-//import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -71,6 +68,8 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityCrackedZombie extends EntityMob {
 
@@ -96,7 +95,6 @@ public class EntityCrackedZombie extends EntityMob {
 			((PathNavigateGround) getNavigator()).setBreakDoors(true);
 			tasks.addTask(6, new EntityAIBreakDoor(this));
 		}
-//		tasks.addTask(2, aiAvoidExplodingCreepers);
 		tasks.addTask(2, new EntityAILeapAtTarget(this, 0.4F));
 		tasks.addTask(3, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.2, false));
 		if (attackVillagers) {
@@ -284,12 +282,6 @@ public class EntityCrackedZombie extends EntityMob {
 		super.onLivingUpdate();
 	}
 
-//	@Override
-//	protected boolean isValidLightLevel()
-//	{
-//		return true;
-//	}
-
 	// spawns on grass, sand, dirt, clay and occasionally spawn on stone unless
 	// there are torches within the torch no-spawn radius
 	@Override
@@ -446,18 +438,6 @@ public class EntityCrackedZombie extends EntityMob {
 		setFire(8);
 	}
 
-//	public int getAttackStrength(Entity entity)
-//	{
-//		ItemStack itemstack = getHeldItem();
-//		int strength = 4;
-//
-//		if (itemstack != null) {
-//			strength += 2; // would be nice to add the held item's damage capability
-//		}
-//
-//		return strength;
-//	}
-
 	@Override
 	protected String getLivingSound()
 	{
@@ -596,6 +576,18 @@ public class EntityCrackedZombie extends EntityMob {
 			worldObj.playAuxSFXAtEntity(null, 1016, new BlockPos(posX, posY, posZ), 0);
 		}
 	}
+	
+	@SideOnly(Side.CLIENT)
+    public void handleStatusUpdate(byte id)
+    {
+        if (id == 16) {
+            if (!isSilent()) {
+                worldObj.playSound(posX + 0.5D, posY + 0.5D, posZ + 0.5D, "mob.zombie.remedy", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+            }
+        } else {
+            super.handleStatusUpdate(id);
+        }
+    }
 
 	public boolean isConverting()
 	{
@@ -703,17 +695,6 @@ public class EntityCrackedZombie extends EntityMob {
 		addPotionEffect(new PotionEffect(Potion.damageBoost.id, conTime, Math.min(worldObj.getDifficulty().getDifficultyId() - 1, 0)));
 		worldObj.setEntityState(this, (byte) 16);
 	}
-
-//	@SideOnly(Side.CLIENT)
-//	@Override
-//	public void handleHealthUpdate(byte health)
-//	{
-//		if (health == 16) {
-//			worldObj.playSound(posX + 0.5D, posY + 0.5D, posZ + 0.5D, "mob.zombie.remedy", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
-//		} else {
-//			super.handleHealthUpdate(health);
-//		}
-//	}
 
 	protected void convertToVillager()
 	{
