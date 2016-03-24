@@ -258,8 +258,12 @@ public class EntityCrackedZombie extends EntityMob {
 		if (worldObj.isDaytime() && !worldObj.isRemote && !isChild()) {
 			float brightness = getBrightness(1.0F);
 			BlockPos blockpos = new BlockPos(posX, (double) Math.round(posY), posZ);
-
+            boolean setFire = false;
+            
 			if (brightness > 0.5F && rand.nextFloat() * 30.0F < (brightness - 0.4F) * 2.0F && worldObj.canSeeSky(blockpos)) {
+			    if (ConfigHandler.getNightSpawnOnly()) {
+			        setFire = true;
+			    }
 				ItemStack itemstack = getEquipmentInSlot(4);
 
 				if (itemstack != null) {
@@ -271,6 +275,10 @@ public class EntityCrackedZombie extends EntityMob {
 							setCurrentItemOrArmor(4, null);
 						}
 					}
+					setFire = false;
+				}
+				if (setFire) {
+				    setFire(8);
 				}
 			}
 		}
@@ -283,7 +291,8 @@ public class EntityCrackedZombie extends EntityMob {
 	}
 
 	// spawns on grass, sand, dirt, clay and occasionally spawn on stone unless
-	// there are torches within the torch no-spawn radius
+	// there are torches within the torch no-spawn radius, also won't spawn during
+	// daytime if nightOnly flag is set.
 	@Override
 	public boolean getCanSpawnHere()
 	{
@@ -291,6 +300,8 @@ public class EntityCrackedZombie extends EntityMob {
 		
 		if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
 			return false;
+		} else if (ConfigHandler.getNightSpawnOnly()) { // standard zombie spawn
+			return super.getCanSpawnHere();
 		} else {
 			boolean notColliding = worldObj.getCollidingBoundingBoxes(this, entityAABB).isEmpty();
 			boolean isLiquid = worldObj.isAnyLiquid(entityAABB);

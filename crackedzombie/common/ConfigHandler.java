@@ -54,6 +54,7 @@ public class ConfigHandler {
 	private static double pzAttackDamage;
 	private static boolean attackPigs;
 	private static boolean attackVillagers;
+	private static boolean nightSpawnOnly;
 
 	static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
 				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
@@ -99,6 +100,7 @@ public class ConfigHandler {
 	static final String pzAttackDamageComment = "set the initial attack damage caused by the pig zombies";
     static final String attackPigsComment = "Attack and kill pigs";
     static final String attackVillagersComment = "Attack and convert villagers";
+	static final String nightSpawnOnlyComment = "Spawn cracked zombies at night only";
 
 	public static void startConfig(FMLPreInitializationEvent event)
 	{
@@ -140,6 +142,7 @@ public class ConfigHandler {
 			pzAttackDamage = config.get(Configuration.CATEGORY_GENERAL, "pzAttackDamage", 5.0, pzAttackDamageComment).getDouble();
             attackPigs = config.get(Configuration.CATEGORY_GENERAL, "attackPigs", true, attackPigsComment).getBoolean(true);
             attackVillagers = config.get(Configuration.CATEGORY_GENERAL, "attackVillagers", true, attackVillagersComment).getBoolean(true);
+			nightSpawnOnly = config.get(Configuration.CATEGORY_GENERAL, "nightSpawnOnly", false, nightSpawnOnlyComment).getBoolean(false);
 		} catch (Exception e) {
 			CrackedZombie.proxy.info("failed to load or read the config file");
 		} finally {
@@ -244,11 +247,6 @@ public class ConfigHandler {
 		return enchantSword;
 	}
 	
-//	public static int getMaximumZombiesAllowed()
-//	{
-//		return 60;
-//	}
-	
 	public static double getTorchNoSpawnRadius()
 	{
 		return torchNoSpawnRadius;
@@ -298,4 +296,9 @@ public class ConfigHandler {
     {
         return attackVillagers;
     }
+
+	public static boolean getNightSpawnOnly()
+	{
+		return nightSpawnOnly;
+	}
 }
