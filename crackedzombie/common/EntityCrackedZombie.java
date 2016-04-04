@@ -232,7 +232,7 @@ public class EntityCrackedZombie extends EntityMob {
 
                         if (!worldObj.isAnyPlayerWithinRangeAt((double) i1, (double) j1, (double) k1, 7.0D) && worldObj.checkNoEntityCollision(entityzombie.getEntityBoundingBox(), entityzombie) && worldObj.getCubes(entityzombie, entityzombie.getEntityBoundingBox()).isEmpty() && !worldObj.isAnyLiquid(entityzombie.getEntityBoundingBox())) {
                             worldObj.spawnEntityInWorld(entityzombie);
-                            if (entitylivingbase != null) entityzombie.setAttackTarget(entitylivingbase);
+                            entityzombie.setAttackTarget(entitylivingbase);
                             entityzombie.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(entityzombie)), null);
                             getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Zombie reinforcement caller charge", -0.05000000074505806D, 0));
                             entityzombie.getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Zombie reinforcement callee charge", -0.05000000074505806D, 0));
@@ -298,72 +298,77 @@ public class EntityCrackedZombie extends EntityMob {
             }
         }
 
-//        if (isRiding() && getAttackTarget() != null && getRidingEntity() instanceof EntityChicken) {
-//            ((EntityLiving) getRidingEntity()).getNavigator().setPath(getNavigator().getPath(), 1.5D);
-//        }
-
         super.onLivingUpdate();
     }
 
-    @Override
-    protected boolean isValidLightLevel() {
-        AxisAlignedBB entityAABB = getEntityBoundingBox();
-        if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
-            return false;
-        } else if (ConfigHandler.getNightSpawnOnly()) { // standard zombie spawn
-            BlockPos blockpos = new BlockPos(posX, getEntityBoundingBox().minY, posZ);
-
-            if (worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > rand.nextInt(32)) {
-                return false;
-            } else {
-                int i = worldObj.getLightFromNeighbors(blockpos);
-
-                if (worldObj.isThundering()) {
-                    int j = worldObj.getSkylightSubtracted();
-                    worldObj.setSkylightSubtracted(10);
-                    i = worldObj.getLightFromNeighbors(blockpos);
-                    worldObj.setSkylightSubtracted(j);
-                }
-
-                return i <= rand.nextInt(8);
-            }
-        } else {
-            return true;
-        }
-    }
-
 //    @Override
-//    public boolean getCanSpawnHere()
-//    {
-//        return worldObj.getDifficulty() != EnumDifficulty.PEACEFUL && isValidLightLevel() && super.getCanSpawnHere();
+//    protected boolean isValidLightLevel() {
+//        AxisAlignedBB entityAABB = getEntityBoundingBox();
+//        if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
+//            return false;
+//        } else if (ConfigHandler.getNightSpawnOnly()) { // standard zombie spawn
+//            BlockPos blockpos = new BlockPos(posX, getEntityBoundingBox().minY, posZ);
+//
+//            if (worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > rand.nextInt(32)) {
+//                return false;
+//            } else {
+//                int i = worldObj.getLightFromNeighbors(blockpos);
+//
+//                if (worldObj.isThundering()) {
+//                    int j = worldObj.getSkylightSubtracted();
+//                    worldObj.setSkylightSubtracted(10);
+//                    i = worldObj.getLightFromNeighbors(blockpos);
+//                    worldObj.setSkylightSubtracted(j);
+//                }
+//
+//                return i <= rand.nextInt(8);
+//            }
+//        } else {
+//            return true;
+//        }
 //    }
 
     // spawns on grass, sand, dirt, clay and occasionally spawn on stone unless
     // there are torches within the torch no-spawn radius, also won't spawn during
     // daytime if nightOnly flag is set.
-//    @Override
-//    public boolean getCanSpawnHere() {
-//        AxisAlignedBB entityAABB = getEntityBoundingBox();
-//
-//        if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
-//            return false;
-//        } else if (ConfigHandler.getNightSpawnOnly()) { // standard zombie spawn
-//            return super.getCanSpawnHere();
-//        } else {
-//            boolean notColliding = worldObj.getCollisionBoxes(entityAABB).isEmpty();
-//            boolean isLiquid = worldObj.isAnyLiquid(entityAABB);
-//            // spawns on grass, sand, dirt, clay and very occasionally spawn on stone
-//            BlockPos bp = new BlockPos(posX, entityAABB.minY - 1.0, posZ);
-//            Block block = worldObj.getBlockState(bp).getBlock();
-//            boolean isGrass = (block == Blocks.grass);
-//            boolean isSand = (block == Blocks.sand);
-//            boolean isClay = ((block == Blocks.hardened_clay) || (block == Blocks.stained_hardened_clay));
-//            boolean isDirt = (block == Blocks.dirt);
-//            boolean isStone = (rand.nextBoolean()) && (block == Blocks.stone);
-//
-//            return (isGrass || isSand || isStone || isClay || isDirt) && notColliding && !isLiquid;
-//        }
-//    }
+    @Override
+    public boolean getCanSpawnHere() {
+        AxisAlignedBB entityAABB = getEntityBoundingBox();
+
+        if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
+            return false;
+        } else if (ConfigHandler.getNightSpawnOnly()) { // standard zombie spawn
+            BlockPos blockpos = new BlockPos(posX, entityAABB.minY, posZ);
+
+            if (worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > rand.nextInt(32)) {
+                return false;
+            } else {
+                int lightFromNeighbors = worldObj.getLightFromNeighbors(blockpos);
+
+                if (worldObj.isThundering()) {
+                    int skylightSubtracted = worldObj.getSkylightSubtracted();
+                    worldObj.setSkylightSubtracted(10);
+                    lightFromNeighbors = worldObj.getLightFromNeighbors(blockpos);
+                    worldObj.setSkylightSubtracted(skylightSubtracted);
+                }
+
+                return lightFromNeighbors <= rand.nextInt(8);
+            }
+        } else {
+            boolean notColliding = worldObj.getCollisionBoxes(entityAABB).isEmpty();
+            boolean isLiquid = worldObj.isAnyLiquid(entityAABB);
+            // spawns on grass, sand, dirt, clay and very occasionally spawn on stone
+            BlockPos bp = new BlockPos(posX, entityAABB.minY - 1.0, posZ);
+            Block block = worldObj.getBlockState(bp).getBlock();
+            boolean isGrass = (block == Blocks.grass);
+            boolean isSand = (block == Blocks.sand);
+            boolean isClay = ((block == Blocks.hardened_clay) || (block == Blocks.stained_hardened_clay));
+            boolean isDirt = (block == Blocks.dirt);
+            boolean isStone = (rand.nextBoolean()) && (block == Blocks.stone);
+
+            return (isGrass || isSand || isStone || isClay || isDirt) && notColliding && !isLiquid;
+        }
+    }
 
     // the aabb sould be the entity's boundingbox
     public boolean foundNearbyTorches(AxisAlignedBB aabb) {
@@ -541,20 +546,6 @@ public class EntityCrackedZombie extends EntityMob {
     {
         return LootTableList.ENTITIES_ZOMBIE;
     }
-
-//    @Override
-//    protected void addRandomDrop() {
-//        switch (rand.nextInt(3)) {
-//            case 0:
-//                dropItem(Items.iron_ingot, 1);
-//                break;
-//            case 1:
-//                dropItem(Items.carrot, 1);
-//                break;
-//            case 2:
-//                dropItem(Items.potato, 1);
-//        }
-//    }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound tagCompound) {

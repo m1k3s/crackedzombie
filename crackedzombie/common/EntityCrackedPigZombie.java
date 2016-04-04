@@ -194,6 +194,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         }
     }
 
+    @SuppressWarnings("unchecked")
     static class AITargetAggressor extends EntityAINearestAttackableTarget {
         public AITargetAggressor(EntityCrackedPigZombie crackedPigZombie) {
             super(crackedPigZombie, EntityPlayer.class, true);

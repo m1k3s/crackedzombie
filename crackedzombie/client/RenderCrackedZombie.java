@@ -85,6 +85,7 @@ public class RenderCrackedZombie extends RenderBiped<EntityCrackedZombie> {
 		super.rotateCorpse(entityCrackedZombie, x, y, z);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getRenderLayer(EntityCrackedZombie zombie)
 	{
 		if (zombie.isVillager()) {
@@ -98,11 +99,12 @@ public class RenderCrackedZombie extends RenderBiped<EntityCrackedZombie> {
 		modelBipedMain = (ModelBiped)mainModel;
 	}
 
-	protected ResourceLocation getEntitySkinType(EntityCrackedZombie entity)
+	@Override
+	protected ResourceLocation getEntityTexture(EntityCrackedZombie zombie)
 	{
-		return entity.isVillager() ? zombieVillagerSkin : zombieSkin;
+		return zombie.isVillager() ? zombieVillagerSkin : zombieSkin;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void doRender(EntityCrackedZombie zombie, double x, double y, double z, float facing, float partialTicks)
 	{

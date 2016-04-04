@@ -176,7 +176,7 @@ public class CrackedZombie {
 //	}
 
 	public BiomeGenBase[] getBiomes(BiomeDictionary.Type... types) {
-		LinkedList<BiomeGenBase> list = new LinkedList();
+		LinkedList<BiomeGenBase> list = new LinkedList<>();
 		for (BiomeDictionary.Type t : types) {
 			BiomeGenBase[] biomes = BiomeDictionary.getBiomesForType(t);
 			for (BiomeGenBase bgb : biomes) {

@@ -5,12 +5,11 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderCrackedPigZombie extends RenderBiped<EntityCrackedPigZombie> {
 
-    private static final ResourceLocation resourceLocation = new ResourceLocation("textures/entity/zombie_pigman.png");
+    private static final ResourceLocation crackedPigZombieSkin = new ResourceLocation("textures/entity/zombie_pigman.png");
 
     public RenderCrackedPigZombie(RenderManager renderManager) {
         super(renderManager, new ModelCrackedZombie(), 0.5F, 1.0F);
@@ -24,9 +23,12 @@ public class RenderCrackedPigZombie extends RenderBiped<EntityCrackedPigZombie> 
         });
     }
 
-    @SuppressWarnings("unused")
-    protected ResourceLocation func_177119_a(EntityCrackedPigZombie entityCrackedPigZombie) {
-        return resourceLocation;
+    @Override
+    protected ResourceLocation getEntityTexture(EntityCrackedPigZombie zombie)
+    {
+        return crackedPigZombieSkin;
     }
+
+
 
 }
