@@ -27,6 +27,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -42,16 +43,16 @@ public class PlayerJoinedWorldEventHandler {
 	@SubscribeEvent
 	public void onPlayerJoinedEvent(EntityJoinWorldEvent event)
 	{
-		if (event.entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer)event.entity;
+		if (event.getEntity() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer)event.getEntity();
 			if (!inventoryContainsSword(player.inventory)) {
 				ItemStack itemstack = new ItemStack(chooseRandomSwordType());
 				if (ConfigHandler.getEnchantSword()) { // you must like this player!
-					itemstack.addEnchantment(Enchantment.unbreaking, 3);
-					itemstack.addEnchantment(Enchantment.knockback, 2);
-					itemstack.addEnchantment(Enchantment.flame, 2);
+					itemstack.addEnchantment(Enchantment.getEnchantmentByLocation("unbreaking"), 3);
+					itemstack.addEnchantment(Enchantment.getEnchantmentByLocation("knockback"), 2);
+					itemstack.addEnchantment(Enchantment.getEnchantmentByLocation("flame"), 2);
 				}
-				player.setCurrentItemOrArmor(0, itemstack);
+				player.setHeldItem(EnumHand.MAIN_HAND, itemstack);
 			}
 		}
 	}

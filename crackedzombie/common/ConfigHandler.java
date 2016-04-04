@@ -56,51 +56,51 @@ public class ConfigHandler {
 	private static boolean attackVillagers;
 	private static boolean nightSpawnOnly;
 
-	static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
+	private static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
 				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
-	static final String spawnProbComment = "zombieSpawnProb adjust to probability of zombies spawning\n"
+	private static final String spawnProbComment = "zombieSpawnProb adjust to probability of zombies spawning\n"
 			+ "The higher the number the more likely zombies will spawn.";
-	static final String pzSpawnProbComment = "pigzombieSpawnProb adjust to probability of pigzombies spawning\n"
+	private static final String pzSpawnProbComment = "pigzombieSpawnProb adjust to probability of pigzombies spawning\n"
 			+ "The higher the number the more likely pigzombies will spawn.";
-	static final String zombieComment = "zombieSpawns allows/disallows vanilla zombies spawns, default is false,\n"
+	private static final String zombieComment = "zombieSpawns allows/disallows vanilla zombies spawns, default is false,\n"
 			+ " no vanilla minecraft zombies will spawn. Only the " + CrackedZombie.zombieName + "s will spawn.\n"
 			+ " If set to true, fewer " + CrackedZombie.zombieName + "s will spawn.";
-	static final String pigZombieComment = "pigZombieSpawns allows/disallows vanilla pig zombies spawns, default is false,\n"
+	private static final String pigZombieComment = "pigZombieSpawns allows/disallows vanilla pig zombies spawns, default is false,\n"
 			+ " no vanilla minecraft pig zombies will spawn. Only the " + CrackedZombie.pigzombieName + "s will spawn.\n"
 			+ " If set to true, fewer " + CrackedZombie.pigzombieName + "s will spawn.";
-	static final String creeperComment = "creeperSpawns, set to false to disable creeper spawning, set to true"
+	private static final String creeperComment = "creeperSpawns, set to false to disable creeper spawning, set to true"
 			+ " if you want to spawn creepers";
-	static final String skeletonComment = "skeletonSpawns, set to false to disable skeleton spawning, set to true"
+	private static final String skeletonComment = "skeletonSpawns, set to false to disable skeleton spawning, set to true"
 			+ " if you want to spawn skeletons";
-	static final String endermanComment = "endermanSpawns, set to false to disable enderman spawning, set to true"
+	private static final String endermanComment = "endermanSpawns, set to false to disable enderman spawning, set to true"
 			+ " if you want to spawn enderman";
-	static final String spiderComment = "spiderSpawns, set to false to disable spider spawning, set to true"
+	private static final String spiderComment = "spiderSpawns, set to false to disable spider spawning, set to true"
 			+ " if you want to spawn spiders";
-	static final String slimeComment = "slimeSpawns, set to false to disable slime spawning, set to true"
+	private static final String slimeComment = "slimeSpawns, set to false to disable slime spawning, set to true"
 			+ " if you want to spawn slimes";
-	static final String witchComment = "witchSpawns, set to false to disable witch spawning, set to true"
+	private static final String witchComment = "witchSpawns, set to false to disable witch spawning, set to true"
 			+ " if you want to spawn witches";
-	static final String doorBustingComment = "doorBusting, set to true to have zombies try to break down doors,"
+	private static final String doorBustingComment = "doorBusting, set to true to have zombies try to break down doors,"
 			+ " otherwise set to false. It's quieter.";
-	static final String crackedPigZombieComment = "allow CrackedPigZombies to spawn";
-	static final String childComment = "allowChildSpawns, set to true to have child zombies, otherwise set to false.";
-	static final String sicknessComment = "Sickness, set to true to have contact with zombies poison the player.";
-	static final String minSpawnComment = "minSpawn, minimum number of crackedzombies per spawn event";
-	static final String maxSpawnComment = "maxSpawn, maximum number of crackedzombies per spawn event";
-	static final String pzSicknessComment = "Pig Zombie Sickness, set to true to have contact with pigzombies poison the player.";
-	static final String minPZSpawnComment = "minPZSpawn, minimum number of crackedpigzombies per spawn event";
-	static final String maxPZSpawnComment = "maxPZSpawn, maximum number of crackedpigzombies per spawn event";
-	static final String startWithSwordComment = "Allows the player to spawn with a random type sword, handy in the apocalypse!";
-	static final String enchantSwordComment = "set true to enchant the sword given to the player";
-	static final String noSpawnRadiusComment = "set the radius in blocks for no spawning near torches, zero enables spawing near torches";
-	static final String followRangeComment = "set the follow range of the zombies";
-	static final String moveSpeedComment = "set the movement speed of the zombies";
-	static final String attackDamageComment = "set the initial attack damage caused by the zombies";
-	static final String pzMoveSpeedComment = "set the movement speed of the pig zombies";
-	static final String pzAttackDamageComment = "set the initial attack damage caused by the pig zombies";
-    static final String attackPigsComment = "Attack and kill pigs";
-    static final String attackVillagersComment = "Attack and convert villagers";
-	static final String nightSpawnOnlyComment = "Spawn cracked zombies at night only";
+	private static final String crackedPigZombieComment = "allow CrackedPigZombies to spawn";
+	private static final String childComment = "allowChildSpawns, set to true to have child zombies, otherwise set to false.";
+	private static final String sicknessComment = "Sickness, set to true to have contact with zombies poison the player.";
+	private static final String minSpawnComment = "minSpawn, minimum number of crackedzombies per spawn event";
+	private static final String maxSpawnComment = "maxSpawn, maximum number of crackedzombies per spawn event";
+	private static final String pzSicknessComment = "Pig Zombie Sickness, set to true to have contact with pigzombies poison the player.";
+	private static final String minPZSpawnComment = "minPZSpawn, minimum number of crackedpigzombies per spawn event";
+	private static final String maxPZSpawnComment = "maxPZSpawn, maximum number of crackedpigzombies per spawn event";
+	private static final String startWithSwordComment = "Allows the player to spawn with a random type sword, handy in the apocalypse!";
+	private static final String enchantSwordComment = "set true to enchant the sword given to the player";
+	private static final String noSpawnRadiusComment = "set the radius in blocks for no spawning near torches, zero enables spawing near torches";
+	private static final String followRangeComment = "set the follow range of the zombies";
+	private static final String moveSpeedComment = "set the movement speed of the zombies";
+	private static final String attackDamageComment = "set the initial attack damage caused by the zombies";
+	private static final String pzMoveSpeedComment = "set the movement speed of the pig zombies";
+	private static final String pzAttackDamageComment = "set the initial attack damage caused by the pig zombies";
+    private static final String attackPigsComment = "Attack and kill pigs";
+    private static final String attackVillagersComment = "Attack and convert villagers";
+	private static final String nightSpawnOnlyComment = "Spawn cracked zombies at night only";
 
 	public static void startConfig(FMLPreInitializationEvent event)
 	{
@@ -135,8 +135,8 @@ public class ConfigHandler {
 			torchNoSpawnRadius = config.get(Configuration.CATEGORY_GENERAL, "noSpawnTorchRadius", 3.0, noSpawnRadiusComment).getDouble();
 			allowChildSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowChildSpawns", true, childComment).getBoolean(true);
 			allowPigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowPigZombieSpawns", true, crackedPigZombieComment).getBoolean(true);
-			followRange = config.get(Configuration.CATEGORY_GENERAL, "followRange", 32.0, followRangeComment).getDouble();
-			moveSpeed =  config.get(Configuration.CATEGORY_GENERAL, "moveSpeed", 0.25, moveSpeedComment).getDouble();
+			followRange = config.get(Configuration.CATEGORY_GENERAL, "followRange", 35.0, followRangeComment).getDouble();
+			moveSpeed =  config.get(Configuration.CATEGORY_GENERAL, "moveSpeed", 0.23, moveSpeedComment).getDouble();
 			attackDamage = config.get(Configuration.CATEGORY_GENERAL, "attackDamage", 3.0, attackDamageComment).getDouble();
 			pzMoveSpeed =  config.get(Configuration.CATEGORY_GENERAL, "pzMoveSpeed", 0.23, pzMoveSpeedComment).getDouble();
 			pzAttackDamage = config.get(Configuration.CATEGORY_GENERAL, "pzAttackDamage", 5.0, pzAttackDamageComment).getDouble();

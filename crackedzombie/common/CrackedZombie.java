@@ -20,8 +20,8 @@
 package com.crackedzombie.common;
 
 import static com.crackedzombie.common.ConfigHandler.updateConfigInfo;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterators;
+//import com.google.common.base.Predicates;
+//import com.google.common.collect.Iterators;
 import net.minecraft.entity.monster.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -30,29 +30,34 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.LinkedList;
+
 @Mod( modid = CrackedZombie.modid, name = CrackedZombie.name, version = CrackedZombie.modversion, guiFactory = CrackedZombie.guifactory )
 
 public class CrackedZombie {
 
-	public static final String mcversion = "1.8.9";
-	public static final String modversion = "3.2.4";
+	public static final String mcversion = "1.9";
+	public static final String modversion = "3.4.0";
 	public static final String modid = "crackedzombiemod";
 	public static final String name = "Cracked Zombie Mod";
 	public static final String zombieName = "CrackedZombie";
 	public static final String pigzombieName = "CrackedPigZombie";
 	public static final String guifactory = "com.crackedzombie.client.CrackedZombieConfigGUIFactory";
-	public int entityID = 0;
+	private int entityID = 0;
+
+	private BiomeDictionary.Type biometypes[] = {BiomeDictionary.Type.BEACH, BiomeDictionary.Type.COLD, BiomeDictionary.Type.CONIFEROUS, BiomeDictionary.Type.DEAD,
+			BiomeDictionary.Type.DENSE, BiomeDictionary.Type.DRY, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.HILLS, BiomeDictionary.Type.HOT,
+			BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.LUSH, BiomeDictionary.Type.MESA, BiomeDictionary.Type.MOUNTAIN, BiomeDictionary.Type.MUSHROOM,
+			BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.RIVER, BiomeDictionary.Type.SANDY, BiomeDictionary.Type.SAVANNA, BiomeDictionary.Type.SNOWY,
+			BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.WASTELAND
+	};
 	
 	@Mod.Instance(modid)
 	public static CrackedZombie instance;
@@ -71,7 +76,8 @@ public class CrackedZombie {
 		ConfigHandler.startConfig(event);
 
 		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, entityID++, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
-		EntityRegistry.registerModEntity(EntityCrackedPigZombie.class, pigzombieName, entityID, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
+		EntityRegistry.registerModEntity(EntityCrackedPigZombie.class, pigzombieName, entityID, CrackedZombie.instance, 80, 3, true, 0x799C45, 0x00AFAF);
+		proxy.registerRenderers();
 	}
 
 	@SuppressWarnings("unused")
@@ -83,11 +89,11 @@ public class CrackedZombie {
 			MinecraftForge.EVENT_BUS.register(new PlayerJoinedWorldEventHandler());
 		}
 		
-		proxy.registerRenderers();
+//		proxy.registerRenderers();
 		// zombies should spawn in dungeon spawners
 		DungeonHooks.addDungeonMob(zombieName, 200);
 		// add steel swords to the loot. you may need these.
-		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(Items.iron_sword), 1, 1, 4));
+//		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(Items.iron_sword), 1, 1, 4));
 	}
 
 	@SuppressWarnings("unused")
@@ -97,8 +103,9 @@ public class CrackedZombie {
 		BiomeDictionary.registerAllBiomesAndGenerateEvents();
 		
 		proxy.info("*** Scanning for available biomes");
-		BiomeGenBase[] allBiomes = Iterators.toArray(Iterators.filter(Iterators.forArray(BiomeGenBase.getBiomeGenArray()),	Predicates.notNull()), BiomeGenBase.class);
-		printBiomeList(allBiomes);
+//		BiomeGenBase[] allBiomes = new ArrayList<>(BiomeGenBase.explorationBiomesList).toArray(new BiomeGenBase[BiomeGenBase.explorationBiomesList.size()]);
+//		printBiomeList(allBiomes);
+		BiomeGenBase[] allBiomes = getBiomes(biometypes);
 
 		int zombieSpawnProb = ConfigHandler.getZombieSpawnProbility();
 		int pigzombieSpawnProb = ConfigHandler.getPigZombieSpawnProbility();
@@ -161,19 +168,33 @@ public class CrackedZombie {
 		}
 	}
 	
-	public void printBiomeList(BiomeGenBase[] biomes)
-	{
-		for (BiomeGenBase bgb : biomes) {
-			proxy.info("  >>> Including biome " + bgb.biomeName + " for spawning");
+//	public void printBiomeList(BiomeGenBase[] biomes)
+//	{
+//		for (BiomeGenBase bgb : biomes) {
+//			proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
+//		}
+//	}
+
+	public BiomeGenBase[] getBiomes(BiomeDictionary.Type... types) {
+		LinkedList<BiomeGenBase> list = new LinkedList();
+		for (BiomeDictionary.Type t : types) {
+			BiomeGenBase[] biomes = BiomeDictionary.getBiomesForType(t);
+			for (BiomeGenBase bgb : biomes) {
+				if (!list.contains(bgb)) {
+					list.add(bgb);
+					proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
+				}
+			}
 		}
+		return list.toArray(new BiomeGenBase[0]);
 	}
 	
 	// user has changed entries in the GUI config. save the results.
 	@SuppressWarnings("unused")
 	@SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.modID.equals(CrackedZombie.modid)) {
-			if (event.requiresMcRestart) {
+        if (event.getModID().equals(CrackedZombie.modid)) {
+			if (event.isRequiresMcRestart()) {
 				CrackedZombie.proxy.info("The configuration changes require a Minecraft restart!");
 			}
 			CrackedZombie.proxy.info("Configuration changes have been updated for the " + CrackedZombie.name);

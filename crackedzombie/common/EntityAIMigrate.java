@@ -24,7 +24,7 @@ package com.crackedzombie.common;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 public class EntityAIMigrate extends EntityAIBase {
 
@@ -56,7 +56,7 @@ public class EntityAIMigrate extends EntityAIBase {
 		} else if (entity.getRNG().nextInt(distance) != 0) {
 			return false;
 		} else {
-			Vec3 vec = RandomPositionGenerator.findRandomTarget(entity, 16, 8);
+			Vec3d vec = RandomPositionGenerator.findRandomTarget(entity, 16, 8);
 
 			if (vec == null) {
 				return false;

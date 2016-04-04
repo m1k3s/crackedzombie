@@ -24,8 +24,6 @@ package com.crackedzombie.client;
 import com.crackedzombie.common.CommonProxyCrackedZombie;
 import com.crackedzombie.common.EntityCrackedPigZombie;
 import com.crackedzombie.common.EntityCrackedZombie;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 @SuppressWarnings("unused,unchecked")
@@ -34,9 +32,8 @@ public class ClientProxyCrackedZombie extends CommonProxyCrackedZombie {
 	@Override
 	public void registerRenderers()
 	{
-		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
-		RenderingRegistry.registerEntityRenderingHandler(EntityCrackedZombie.class, new RenderCrackedZombie(rm));
-		RenderingRegistry.registerEntityRenderingHandler(EntityCrackedPigZombie.class, new RenderCrackedPigZombie(rm));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCrackedZombie.class, RenderCrackedZombie::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityCrackedPigZombie.class, RenderCrackedPigZombie::new);
 	}
 	
 }

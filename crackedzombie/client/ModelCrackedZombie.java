@@ -20,12 +20,11 @@
 package com.crackedzombie.client;
 
 import com.crackedzombie.common.EntityCrackedZombie;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.MathHelper;
 
 @SideOnly(Side.CLIENT)
 public class ModelCrackedZombie extends ModelBiped {
@@ -37,15 +36,9 @@ public class ModelCrackedZombie extends ModelBiped {
 		this(0.0F, false);
 	}
 
-	@SuppressWarnings("unused")
-	protected ModelCrackedZombie(float par1, float par2, int par3, int par4)
+	public ModelCrackedZombie(float size, boolean isChild)
 	{
-		super(par1, par2, par3, par4);
-	}
-
-	public ModelCrackedZombie(float par1, boolean par2)
-	{
-		super(par1, 0.0F, 64, par2 ? 32 : 64);
+		super(size, 0.0F, 64, isChild ? 32 : 64);
 	}
 
 	@Override
@@ -53,31 +46,21 @@ public class ModelCrackedZombie extends ModelBiped {
 	{
 		super.setRotationAngles(par1, par2, par3, par4, par5, par6, entity);
 
+		boolean hasTarget = ((entity instanceof EntityCrackedZombie) && ((EntityCrackedZombie)entity).getHasTarget());
 		float rightArmRotation = MathHelper.sin(swingProgress * (float) Math.PI);
 		float leftARmRotation = MathHelper.sin((1.0F - (1.0F - swingProgress) * (1.0F - swingProgress)) * (float) Math.PI);
 		bipedRightArm.rotateAngleZ = 0.0F;
 		bipedLeftArm.rotateAngleZ = 0.0F;
 		bipedRightArm.rotateAngleY = -(0.1F - rightArmRotation * 0.6F);
 		bipedLeftArm.rotateAngleY = 0.1F - rightArmRotation * 0.6F;
-		bipedRightArm.rotateAngleX = armAngle;//-((float) Math.PI / 2F);	
-		bipedLeftArm.rotateAngleX = armAngle;//-((float) Math.PI / 2F);
+		bipedRightArm.rotateAngleX = hasTarget ? -((float) Math.PI / 1.5F) : 0.0F; //armAngle;
+		bipedLeftArm.rotateAngleX = hasTarget ? -((float) Math.PI / 1.5F) : 0.0F; //armAngle;
 		bipedRightArm.rotateAngleX -= rightArmRotation * 1.2F - leftARmRotation * 0.4F;
 		bipedLeftArm.rotateAngleX -= rightArmRotation * 1.2F - leftARmRotation * 0.4F;
 		bipedRightArm.rotateAngleZ += MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
 		bipedLeftArm.rotateAngleZ -= MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
 		bipedRightArm.rotateAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
 		bipedLeftArm.rotateAngleX -= MathHelper.sin(par3 * 0.067F) * 0.05F;
-	}
-
-	@Override
-	public void setLivingAnimations(EntityLivingBase entityliving, float f, float f1, float f2)
-	{
-		EntityCrackedZombie zombie = (EntityCrackedZombie) entityliving;
-		if (zombie.getHasTarget()) {
-			armAngle = -((float) Math.PI / 2F);
-		} else {
-			armAngle = 0.0F;
-		}
 	}
 
 }

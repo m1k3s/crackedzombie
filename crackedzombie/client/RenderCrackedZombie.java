@@ -33,12 +33,10 @@ import net.minecraft.client.renderer.entity.layers.LayerCustomHead;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerVillagerArmor;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
-public class RenderCrackedZombie extends RenderBiped {
+public class RenderCrackedZombie extends RenderBiped<EntityCrackedZombie> {
 
 	private final ModelBiped currentModel;
 	private final ModelCrackedZombieVillager zombieVillager;
@@ -60,8 +58,8 @@ public class RenderCrackedZombie extends RenderBiped {
 			@Override
 			protected void initArmor()
 			{
-				field_177189_c = new ModelCrackedZombie(0.5F, true);
-				field_177186_d = new ModelCrackedZombie(1.0F, true);
+				modelLeggings = new ModelCrackedZombie(0.5F, true);
+				modelArmor = new ModelCrackedZombie(1.0F, true);
 			}
 		};
 		addLayer(layerbipedarmor);
@@ -100,41 +98,11 @@ public class RenderCrackedZombie extends RenderBiped {
 		modelBipedMain = (ModelBiped)mainModel;
 	}
 
-	@Override
-	protected void rotateCorpse(EntityLivingBase entityLivingBase, float x, float y, float z)
-	{
-		rotateCorpse((EntityCrackedZombie) entityLivingBase, x, y, z);
-	}
-
-	@Override
-	protected ResourceLocation getEntityTexture(EntityLiving entity)
-	{
-		return getEntitySkinType((EntityCrackedZombie) entity);
-	}
-
 	protected ResourceLocation getEntitySkinType(EntityCrackedZombie entity)
 	{
 		return entity.isVillager() ? zombieVillagerSkin : zombieSkin;
 	}
 	
-//	@Override
-//	public void doRender(Entity entity, double x, double y, double z, float facing, float partialTicks)
-//    {
-//        this.doRender((EntityCrackedZombie)entity, x, y, z, facing, partialTicks);
-//    }
-
-	@Override
-	public void doRender(EntityLiving entity, double x, double y, double z, float facing, float partialTicks)
-	{
-		this.doRender((EntityCrackedZombie) entity, x, y, z, facing, partialTicks);
-	}
-	
-//	@Override
-//	public void doRender(EntityLivingBase entity, double x, double y, double z, float facing, float partialTicks)
-//    {
-//        this.doRender((EntityCrackedZombie)entity, x, y, z, facing, partialTicks);
-//    }
-
 	@SuppressWarnings("unchecked")
 	public void doRender(EntityCrackedZombie zombie, double x, double y, double z, float facing, float partialTicks)
 	{

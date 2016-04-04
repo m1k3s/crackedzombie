@@ -32,17 +32,10 @@ public class CommonProxyCrackedZombie {
 	{
 	}
 	
-//	public void registerWorldHandler()
-//	{
-//	}
-	
+
 	public void info(String s)
 	{
 		logger.info(s);
 	}
 	
-//	public void warn(String s)
-//	{
-//		logger.warn(s);
-//	}
 }
