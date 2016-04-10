@@ -86,7 +86,7 @@ public class EntityCrackedZombie extends EntityMob {
     private final boolean attackPigs = ConfigHandler.getAttackPigs();
     private final boolean attackVillagers = ConfigHandler.getAttackVillagers();
 
-    private boolean isBreakDoorsTaskSet = false;
+    private boolean isBreakDoorsTaskSet = ConfigHandler.getDoorBusting();
     private int conversionTime = 0;
     private float zombieWidth = -1.0f;
     private float zombieHeight;
@@ -193,15 +193,12 @@ public class EntityCrackedZombie extends EntityMob {
     }
 
     public void setBreakDoorsAItask(boolean breakDoorsAItask) {
-        if (isBreakDoorsTaskSet != breakDoorsAItask) {
-            isBreakDoorsTaskSet = breakDoorsAItask;
-            ((PathNavigateGround) getNavigator()).setBreakDoors(breakDoorsAItask);
+        ((PathNavigateGround) getNavigator()).setBreakDoors(breakDoorsAItask);
 
-            if (breakDoorsAItask) {
-                tasks.addTask(1, breakDoor);
-            } else {
-                tasks.removeTask(breakDoor);
-            }
+        if (breakDoorsAItask) {
+            tasks.addTask(1, breakDoor);
+        } else {
+            tasks.removeTask(breakDoor);
         }
     }
 
@@ -542,8 +539,7 @@ public class EntityCrackedZombie extends EntityMob {
     }
 
     @Override
-    protected ResourceLocation getLootTable()
-    {
+    protected ResourceLocation getLootTable() {
         return LootTableList.ENTITIES_ZOMBIE;
     }
 
@@ -655,8 +651,8 @@ public class EntityCrackedZombie extends EntityMob {
     @Override
     public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
         livingdata = super.onInitialSpawn(difficulty, livingdata);
-        float f = difficulty.getClampedAdditionalDifficulty();
-        setCanPickUpLoot(rand.nextFloat() < 0.55F * f);
+        float additionalDifficulty = difficulty.getClampedAdditionalDifficulty();
+        setCanPickUpLoot(rand.nextFloat() < 0.55F * additionalDifficulty);
 
         if (livingdata == null) {
             livingdata = new EntityCrackedZombie.GroupData(worldObj.rand.nextFloat() < net.minecraftforge.common.ForgeModContainer.zombieBabyChance, worldObj.rand.nextFloat() < 0.05F);
@@ -691,7 +687,7 @@ public class EntityCrackedZombie extends EntityMob {
             }
         }
 
-        setBreakDoorsAItask(rand.nextFloat() < f * 0.1F);
+        setBreakDoorsAItask(isBreakDoorsTaskSet && rand.nextFloat() < additionalDifficulty * 0.1F);
         setEquipmentBasedOnDifficulty(difficulty);
         setEnchantmentBasedOnDifficulty(difficulty);
 
@@ -708,16 +704,16 @@ public class EntityCrackedZombie extends EntityMob {
         }
 
         getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(new AttributeModifier("Random spawn bonus", rand.nextDouble() * 0.05000000074505806D, 0));
-        double d0 = rand.nextDouble() * 1.5D * (double) f;
+        double d0 = rand.nextDouble() * 1.5D * (double) additionalDifficulty;
 
         if (d0 > 1.0D) {
             getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).applyModifier(new AttributeModifier("Random zombie-spawn bonus", d0, 2));
         }
 
-        if (rand.nextFloat() < f * 0.05F) {
+        if (rand.nextFloat() < additionalDifficulty * 0.05F) {
             getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Leader zombie bonus", rand.nextDouble() * 0.25D + 0.5D, 0));
             getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier("Leader zombie bonus", rand.nextDouble() * 3.0D + 1.0D, 2));
-            setBreakDoorsAItask(true);
+            setBreakDoorsAItask(isBreakDoorsTaskSet);
         }
 
         return livingdata;

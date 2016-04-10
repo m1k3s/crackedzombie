@@ -113,8 +113,8 @@ public class ConfigHandler {
 	{
 		try {
 			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
-			zombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawnProb", 5, spawnProbComment).getInt();
-			pigzombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawnProb", 5, pzSpawnProbComment).getInt();
+			zombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawnProb", 15, spawnProbComment).getInt();
+			pigzombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawnProb", 10, pzSpawnProbComment).getInt();
 			zombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawns", false, zombieComment).getBoolean(false);
 			pigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "pigZombieSpawns", false, pigZombieComment).getBoolean(false);
 			spawnCreepers = config.get(Configuration.CATEGORY_GENERAL, "spawnCreepers", false, creeperComment).getBoolean(false);
@@ -128,10 +128,10 @@ public class ConfigHandler {
 			pzSickness = config.get(Configuration.CATEGORY_GENERAL, "pzSickness", false, pzSicknessComment).getBoolean(false);
 			startWithSword = config.get(Configuration.CATEGORY_GENERAL, "startWithSword", false, startWithSwordComment).getBoolean(false);
 			enchantSword = config.get(Configuration.CATEGORY_GENERAL, "enchantSword", false, enchantSwordComment).getBoolean(false);
-			minSpawn = config.get(Configuration.CATEGORY_GENERAL, "minSpawn", 1, minSpawnComment).getInt();
-			maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxSpawn", 5, maxSpawnComment).getInt();
-			minPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "minPZSpawn", 1, minPZSpawnComment).getInt();
-			maxPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxPZSpawn", 5, maxPZSpawnComment).getInt();
+			minSpawn = config.get(Configuration.CATEGORY_GENERAL, "minSpawn", 4, minSpawnComment).getInt();
+			maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxSpawn", 4, maxSpawnComment).getInt();
+			minPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "minPZSpawn", 4, minPZSpawnComment).getInt();
+			maxPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxPZSpawn", 4, maxPZSpawnComment).getInt();
 			torchNoSpawnRadius = config.get(Configuration.CATEGORY_GENERAL, "noSpawnTorchRadius", 3.0, noSpawnRadiusComment).getDouble();
 			allowChildSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowChildSpawns", true, childComment).getBoolean(true);
 			allowPigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowPigZombieSpawns", true, crackedPigZombieComment).getBoolean(true);

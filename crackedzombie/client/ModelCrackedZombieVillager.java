@@ -20,7 +20,7 @@
 //
 package com.crackedzombie.client;
 
-import com.crackedzombie.common.EntityCrackedPigZombie;
+import com.crackedzombie.common.EntityCrackedZombie;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,7 +65,7 @@ public class ModelCrackedZombieVillager extends ModelBiped {
 	{
 		super.setRotationAngles(par1, par2, par3, par4, par5, par6, entity);
 
-		boolean hasTarget = ((entity instanceof EntityCrackedPigZombie) && ((EntityCrackedPigZombie)entity).getHasTarget());
+		boolean hasTarget = ((entity instanceof EntityCrackedZombie) && ((EntityCrackedZombie)entity).getHasTarget());
 
 		float var8 = MathHelper.sin(swingProgress * (float) Math.PI);
 		float var9 = MathHelper.sin((1.0F - (1.0F - swingProgress) * (1.0F - swingProgress)) * (float) Math.PI);
@@ -73,8 +73,8 @@ public class ModelCrackedZombieVillager extends ModelBiped {
 		bipedLeftArm.rotateAngleZ = 0.0F;
 		bipedRightArm.rotateAngleY = -(0.1F - var8 * 0.6F);
 		bipedLeftArm.rotateAngleY = 0.1F - var8 * 0.6F;
-		bipedRightArm.rotateAngleX = hasTarget ? -((float) Math.PI / 1.5F) : 0.0F; //armAngle;
-		bipedLeftArm.rotateAngleX = hasTarget ? -((float) Math.PI / 1.5F) : 0.0F; //armAngle;
+		bipedRightArm.rotateAngleX = hasTarget ? -((float) Math.PI / 1.5F) : 0.0F;
+		bipedLeftArm.rotateAngleX = hasTarget ? -((float) Math.PI / 1.5F) : 0.0F;
 		bipedRightArm.rotateAngleX -= var8 * 1.2F - var9 * 0.4F;
 		bipedLeftArm.rotateAngleX -= var8 * 1.2F - var9 * 0.4F;
 		bipedRightArm.rotateAngleZ += MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
