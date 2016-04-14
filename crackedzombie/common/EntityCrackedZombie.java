@@ -81,6 +81,7 @@ public class EntityCrackedZombie extends EntityMob {
     private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(EntityCrackedZombie.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> ARMS_RAISED = EntityDataManager.createKey(EntityCrackedZombie.class, DataSerializers.BOOLEAN);
     private final EntityAIBreakDoor breakDoor = new EntityAIBreakDoor(this);
+
     private final double noSpawnRadius = ConfigHandler.getTorchNoSpawnRadius();
     private final boolean allowChildSpawns = ConfigHandler.getAllowChildSpawns();
     private final boolean attackPigs = ConfigHandler.getAttackPigs();
@@ -96,6 +97,17 @@ public class EntityCrackedZombie extends EntityMob {
         setSize(0.6F, 1.95F);
     }
 
+    @Override
+    protected void initEntityAI() {
+        tasks.addTask(0, new EntityAISwimming(this));
+        tasks.addTask(2, new EntityAICrackedZombieAttack(this, 1.0D, false));
+        tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
+        tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        tasks.addTask(8, new EntityAILookIdle(this));
+        applyEntityAI();
+    }
+
     @SuppressWarnings("unchecked")
     private void applyEntityAI() {
         tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
@@ -106,19 +118,8 @@ public class EntityCrackedZombie extends EntityMob {
         }
         targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
         if (attackPigs) {
-            targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityPig.class, false));
+            targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityPig.class, true));
         }
-    }
-
-    @Override
-    protected void initEntityAI() {
-        tasks.addTask(0, new EntityAISwimming(this));
-        tasks.addTask(2, new EntityAICrackedZombieAttack(this, 1.0D, false));
-        tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
-        tasks.addTask(7, new EntityAIWander(this, 1.0D));
-        tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        tasks.addTask(8, new EntityAILookIdle(this));
-        applyEntityAI();
     }
 
     @Override
@@ -216,8 +217,7 @@ public class EntityCrackedZombie extends EntityMob {
             int k = MathHelper.floor_double(posZ);
 
             if (entitylivingbase != null && worldObj.getDifficulty() == EnumDifficulty.HARD && (double) rand.nextFloat() < getEntityAttribute(reinforcementChance).getAttributeValue() && worldObj.getGameRules().getBoolean("doMobSpawning")) {
-                EntityCrackedZombie entityzombie;
-                entityzombie = new EntityCrackedZombie(worldObj);
+                EntityCrackedZombie entityzombie = new EntityCrackedZombie(worldObj);
 
                 for (int l = 0; l < 50; ++l) {
                     int i1 = i + MathHelper.getRandomIntegerInRange(rand, 7, 40) * MathHelper.getRandomIntegerInRange(rand, -1, 1);
@@ -231,8 +231,8 @@ public class EntityCrackedZombie extends EntityMob {
                             worldObj.spawnEntityInWorld(entityzombie);
                             entityzombie.setAttackTarget(entitylivingbase);
                             entityzombie.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(entityzombie)), null);
-                            getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Zombie reinforcement caller charge", -0.05000000074505806D, 0));
-                            entityzombie.getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Zombie reinforcement callee charge", -0.05000000074505806D, 0));
+                            getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Zombie reinforcement caller charge", -0.05D, 0));
+                            entityzombie.getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Zombie reinforcement callee charge", -0.05D, 0));
                             break;
                         }
                     }
@@ -297,33 +297,6 @@ public class EntityCrackedZombie extends EntityMob {
 
         super.onLivingUpdate();
     }
-
-//    @Override
-//    protected boolean isValidLightLevel() {
-//        AxisAlignedBB entityAABB = getEntityBoundingBox();
-//        if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
-//            return false;
-//        } else if (ConfigHandler.getNightSpawnOnly()) { // standard zombie spawn
-//            BlockPos blockpos = new BlockPos(posX, getEntityBoundingBox().minY, posZ);
-//
-//            if (worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > rand.nextInt(32)) {
-//                return false;
-//            } else {
-//                int i = worldObj.getLightFromNeighbors(blockpos);
-//
-//                if (worldObj.isThundering()) {
-//                    int j = worldObj.getSkylightSubtracted();
-//                    worldObj.setSkylightSubtracted(10);
-//                    i = worldObj.getLightFromNeighbors(blockpos);
-//                    worldObj.setSkylightSubtracted(j);
-//                }
-//
-//                return i <= rand.nextInt(8);
-//            }
-//        } else {
-//            return true;
-//        }
-//    }
 
     // spawns on grass, sand, dirt, clay and occasionally spawn on stone unless
     // there are torches within the torch no-spawn radius, also won't spawn during
