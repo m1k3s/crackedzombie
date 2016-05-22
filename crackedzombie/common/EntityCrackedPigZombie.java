@@ -71,7 +71,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         }
 
         if (randomSoundDelay > 0 && --randomSoundDelay == 0) {
-            playSound(SoundEvents.entity_zombie_pig_angry, getSoundVolume() * 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+            playSound(SoundEvents.ENTITY_ZOMBIE_PIG_ANGRY, getSoundVolume() * 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
         }
 
         if (angerLevel > 0 && angerTargetUUID != null && getAITarget() == null) {
@@ -153,15 +153,15 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
     }
 
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.entity_zombie_pig_ambient;
+        return SoundEvents.ENTITY_ZOMBIE_PIG_AMBIENT;
     }
 
     protected SoundEvent getHurtSound() {
-        return SoundEvents.entity_zombie_pig_hurt;
+        return SoundEvents.ENTITY_ZOMBIE_PIG_HURT;
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.entity_zombie_pig_death;
+        return SoundEvents.ENTITY_ZOMBIE_PIG_DEATH;
     }
 
     protected ResourceLocation getLootTable() {
@@ -170,7 +170,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
 
     @Override
     protected void setEquipmentBasedOnDifficulty(DifficultyInstance unused) {
-        setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.diamond_sword));
+        setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
     }
 
     @Override

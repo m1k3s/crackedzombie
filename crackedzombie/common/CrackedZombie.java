@@ -23,6 +23,7 @@ import static com.crackedzombie.common.ConfigHandler.updateConfigInfo;
 //import com.google.common.base.Predicates;
 //import com.google.common.collect.Iterators;
 import net.minecraft.entity.monster.*;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -30,7 +31,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,8 +43,8 @@ import java.util.LinkedList;
 
 public class CrackedZombie {
 
-	public static final String mcversion = "1.9";
-	public static final String modversion = "3.4.0";
+	public static final String mcversion = "1.9.4";
+	public static final String modversion = "3.4.1";
 	public static final String modid = "crackedzombiemod";
 	public static final String name = "Cracked Zombie Mod";
 	public static final String zombieName = "CrackedZombie";
@@ -105,7 +105,7 @@ public class CrackedZombie {
 		proxy.info("*** Scanning for available biomes");
 //		BiomeGenBase[] allBiomes = new ArrayList<>(BiomeGenBase.explorationBiomesList).toArray(new BiomeGenBase[BiomeGenBase.explorationBiomesList.size()]);
 //		printBiomeList(allBiomes);
-		BiomeGenBase[] allBiomes = getBiomes(biometypes);
+		Biome[] allBiomes = getBiomes(biometypes);
 
 		int zombieSpawnProb = ConfigHandler.getZombieSpawnProbility();
 		int pigzombieSpawnProb = ConfigHandler.getPigZombieSpawnProbility();
@@ -168,25 +168,25 @@ public class CrackedZombie {
 		}
 	}
 	
-//	public void printBiomeList(BiomeGenBase[] biomes)
+//	public void printBiomeList(Biome[] biomes)
 //	{
-//		for (BiomeGenBase bgb : biomes) {
+//		for (Biome bgb : biomes) {
 //			proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
 //		}
 //	}
 
-	public BiomeGenBase[] getBiomes(BiomeDictionary.Type... types) {
-		LinkedList<BiomeGenBase> list = new LinkedList<>();
+	public Biome[] getBiomes(BiomeDictionary.Type... types) {
+		LinkedList<Biome> list = new LinkedList<>();
 		for (BiomeDictionary.Type t : types) {
-			BiomeGenBase[] biomes = BiomeDictionary.getBiomesForType(t);
-			for (BiomeGenBase bgb : biomes) {
+			Biome[] biomes = BiomeDictionary.getBiomesForType(t);
+			for (Biome bgb : biomes) {
 				if (!list.contains(bgb)) {
 					list.add(bgb);
 					proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
 				}
 			}
 		}
-		return list.toArray(new BiomeGenBase[0]);
+		return list.toArray(new Biome[0]);
 	}
 	
 	// user has changed entries in the GUI config. save the results.

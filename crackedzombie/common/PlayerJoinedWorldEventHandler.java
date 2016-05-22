@@ -76,22 +76,22 @@ public class PlayerJoinedWorldEventHandler {
 		Item item;
 		switch (rand.nextInt(5)) {
 			case 0:
-				item = Items.diamond_sword;
+				item = Items.DIAMOND_SWORD;
 				break;
 			case 1:
-				item = Items.stone_sword;
+				item = Items.STONE_SWORD;
 				break;
 			case 2:
-				item = Items.wooden_sword;
+				item = Items.WOODEN_SWORD;
 				break;
 			case 3:
-				item = Items.iron_sword;
+				item = Items.IRON_SWORD;
 				break;
 			case 4:
-				item = Items.golden_sword;
+				item = Items.GOLDEN_SWORD;
 				break;
 			default:
-				item = Items.iron_sword;
+				item = Items.IRON_SWORD;
 				break;
 		}
 		return item;

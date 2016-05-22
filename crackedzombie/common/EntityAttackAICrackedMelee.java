@@ -4,7 +4,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -16,7 +16,7 @@ public class EntityAttackAICrackedMelee extends EntityAIBase {
     int attackTick;
     double speedTowardsTarget;
     boolean longMemory;
-    PathEntity entityPathEntity;
+    Path entityPathEntity;
     private int delayCounter;
     private double targetX;
     private double targetY;

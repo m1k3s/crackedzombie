@@ -26,7 +26,6 @@ import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.IEntityLivingData;
@@ -40,7 +39,6 @@ import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntityVillager;
@@ -227,7 +225,7 @@ public class EntityCrackedZombie extends EntityMob {
                     if (worldObj.getBlockState(new BlockPos(i1, j1 - 1, k1)).isSideSolid(worldObj, new BlockPos(i1, j1 - 1, k1), net.minecraft.util.EnumFacing.UP) && worldObj.getLightFromNeighbors(new BlockPos(i1, j1, k1)) < 10) {
                         entityzombie.setPosition((double) i1, (double) j1, (double) k1);
 
-                        if (!worldObj.isAnyPlayerWithinRangeAt((double) i1, (double) j1, (double) k1, 7.0D) && worldObj.checkNoEntityCollision(entityzombie.getEntityBoundingBox(), entityzombie) && worldObj.getCubes(entityzombie, entityzombie.getEntityBoundingBox()).isEmpty() && !worldObj.isAnyLiquid(entityzombie.getEntityBoundingBox())) {
+                        if (!worldObj.isAnyPlayerWithinRangeAt((double) i1, (double) j1, (double) k1, 7.0D) && worldObj.checkNoEntityCollision(entityzombie.getEntityBoundingBox(), entityzombie) && worldObj.getCollisionBoxes(entityzombie, entityzombie.getEntityBoundingBox()).isEmpty() && !worldObj.containsAnyLiquid(entityzombie.getEntityBoundingBox())) {
                             worldObj.spawnEntityInWorld(entityzombie);
                             entityzombie.setAttackTarget(entitylivingbase);
                             entityzombie.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(entityzombie)), null);
@@ -326,15 +324,15 @@ public class EntityCrackedZombie extends EntityMob {
             }
         } else {
             boolean notColliding = worldObj.getCollisionBoxes(entityAABB).isEmpty();
-            boolean isLiquid = worldObj.isAnyLiquid(entityAABB);
+            boolean isLiquid = worldObj.containsAnyLiquid(entityAABB);
             // spawns on grass, sand, dirt, clay and very occasionally spawn on stone
             BlockPos bp = new BlockPos(posX, entityAABB.minY - 1.0, posZ);
             Block block = worldObj.getBlockState(bp).getBlock();
-            boolean isGrass = (block == Blocks.grass);
-            boolean isSand = (block == Blocks.sand);
-            boolean isClay = ((block == Blocks.hardened_clay) || (block == Blocks.stained_hardened_clay));
-            boolean isDirt = (block == Blocks.dirt);
-            boolean isStone = (rand.nextBoolean()) && (block == Blocks.stone);
+            boolean isGrass = (block == Blocks.GRASS);
+            boolean isSand = (block == Blocks.SAND);
+            boolean isClay = ((block == Blocks.HARDENED_CLAY) || (block == Blocks.STAINED_HARDENED_CLAY));
+            boolean isDirt = (block == Blocks.DIRT);
+            boolean isStone = (rand.nextBoolean()) && (block == Blocks.STONE);
 
             return (isGrass || isSand || isStone || isClay || isDirt) && notColliding && !isLiquid;
         }
@@ -477,22 +475,22 @@ public class EntityCrackedZombie extends EntityMob {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return isVillager() ? SoundEvents.entity_zombie_villager_ambient : SoundEvents.entity_zombie_ambient;
+        return isVillager() ? SoundEvents.ENTITY_ZOMBIE_VILLAGER_AMBIENT : SoundEvents.ENTITY_ZOMBIE_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound() {
-        return isVillager() ? SoundEvents.entity_zombie_villager_hurt : SoundEvents.entity_zombie_hurt;
+        return isVillager() ? SoundEvents.ENTITY_ZOMBIE_VILLAGER_HURT : SoundEvents.ENTITY_ZOMBIE_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return isVillager() ? SoundEvents.entity_zombie_villager_death : SoundEvents.entity_zombie_death;
+        return isVillager() ? SoundEvents.ENTITY_ZOMBIE_VILLAGER_DEATH : SoundEvents.ENTITY_ZOMBIE_DEATH;
     }
 
     @Override
     protected void playStepSound(BlockPos pos, Block blockIn) {
-        playSound(isVillager() ? SoundEvents.entity_zombie_villager_step : SoundEvents.entity_zombie_step, 0.15F, 1.0F);
+        playSound(isVillager() ? SoundEvents.ENTITY_ZOMBIE_VILLAGER_STEP : SoundEvents.ENTITY_ZOMBIE_STEP, 0.15F, 1.0F);
     }
 
     @Override
@@ -502,7 +500,7 @@ public class EntityCrackedZombie extends EntityMob {
         if (heldItem != null) {
             return heldItem.getItem();
         } else {
-            return Items.rotten_flesh;
+            return Items.ROTTEN_FLESH;
         }
     }
 
@@ -563,16 +561,16 @@ public class EntityCrackedZombie extends EntityMob {
         if (rand.nextFloat() < (worldObj.getDifficulty() == EnumDifficulty.HARD ? 0.05F : 0.01F)) {
             switch (rand.nextInt(4)) {
                 case 0:
-                    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.diamond_sword));
+                    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
                     break;
                 case 1:
-                    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.iron_sword));
+                    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
                     break;
                 case 2:
-                    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.diamond_shovel));
+                    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SHOVEL));
                     break;
                 case 3:
-                    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.iron_shovel));
+                    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SHOVEL));
                     break;
             }
         }
@@ -602,7 +600,7 @@ public class EntityCrackedZombie extends EntityMob {
             }
 
             worldObj.spawnEntityInWorld(entityzombie);
-            worldObj.playAuxSFXAtEntity(null, 1026, new BlockPos((int) posX, (int) posY, (int) posZ), 0);
+            worldObj.playEvent(null, 1026, new BlockPos((int) posX, (int) posY, (int) posZ), 0);
         }
     }
 
@@ -610,7 +608,7 @@ public class EntityCrackedZombie extends EntityMob {
     public void handleStatusUpdate(byte id) {
         if (id == 16) {
             if (!isSilent()) {
-                worldObj.playSound(posX + 0.5D, posY + 0.5D, posZ + 0.5D, SoundEvents.entity_zombie_villager_cure, getSoundCategory(), 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+                worldObj.playSound(posX + 0.5D, posY + 0.5D, posZ + 0.5D, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, getSoundCategory(), 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
             }
         } else {
             super.handleStatusUpdate(id);
@@ -671,7 +669,7 @@ public class EntityCrackedZombie extends EntityMob {
             halloween.set(calendar.get(Calendar.YEAR), Calendar.NOVEMBER, 31);
 
             if (calendar.compareTo(halloween) == 0 && rand.nextFloat() < 0.25F) {
-                setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(rand.nextFloat() < 0.1F ? Blocks.lit_pumpkin : Blocks.pumpkin));
+                setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(rand.nextFloat() < 0.1F ? Blocks.LIT_PUMPKIN : Blocks.PUMPKIN));
                 inventoryArmorDropChances[EntityEquipmentSlot.HEAD.getIndex()] = 0.0F;
             }
         }
@@ -695,8 +693,8 @@ public class EntityCrackedZombie extends EntityMob {
     protected void startConversion(int ticks) {
         conversionTime = ticks;
         getDataManager().set(CONVERTING, true);
-        removePotionEffect(MobEffects.weakness);
-        addPotionEffect(new PotionEffect(MobEffects.damageBoost, ticks, Math.min(worldObj.getDifficulty().getDifficultyId() - 1, 0)));
+        removePotionEffect(MobEffects.WEAKNESS);
+        addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, ticks, Math.min(worldObj.getDifficulty().getDifficultyId() - 1, 0)));
         worldObj.setEntityState(this, (byte) 16);
     }
 
@@ -720,8 +718,8 @@ public class EntityCrackedZombie extends EntityMob {
         }
 
         worldObj.spawnEntityInWorld(entityvillager);
-        entityvillager.addPotionEffect(new PotionEffect(MobEffects.confusion, 200, 0));
-        worldObj.playAuxSFXAtEntity(null, 1027, new BlockPos((int) posX, (int) posY, (int) posZ), 0);
+        entityvillager.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 200, 0));
+        worldObj.playEvent(null, 1027, new BlockPos((int) posX, (int) posY, (int) posZ), 0);
     }
 
     protected int getConversionTimeBoost() {
@@ -735,7 +733,7 @@ public class EntityCrackedZombie extends EntityMob {
                     for (double z = posZ - 4; z < posZ + 4 && count < 14; ++z) {
                         Block block = worldObj.getBlockState(new BlockPos(x, y, z)).getBlock();
 
-                        if (block == Blocks.iron_bars || block == Blocks.bed) {
+                        if (block == Blocks.IRON_BARS || block == Blocks.BED) {
                             if (rand.nextFloat() < 0.3F) {
                                 ++boostTime;
                             }
