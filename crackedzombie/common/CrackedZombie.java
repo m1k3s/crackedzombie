@@ -43,8 +43,8 @@ import java.util.LinkedList;
 
 public class CrackedZombie {
 
-	public static final String mcversion = "1.9.4";
-	public static final String modversion = "3.4.1";
+	public static final String mcversion = "1.10";
+	public static final String modversion = "3.5.0";
 	public static final String modid = "crackedzombiemod";
 	public static final String name = "Cracked Zombie Mod";
 	public static final String zombieName = "CrackedZombie";
