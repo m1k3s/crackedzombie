@@ -52,11 +52,11 @@ public class CrackedZombie {
 	public static final String guifactory = "com.crackedzombie.client.CrackedZombieConfigGUIFactory";
 	private int entityID = 0;
 
-	private BiomeDictionary.Type biometypes[] = {BiomeDictionary.Type.BEACH, BiomeDictionary.Type.COLD, BiomeDictionary.Type.CONIFEROUS, BiomeDictionary.Type.DEAD,
+	private BiomeDictionary.Type biometypes[] = { BiomeDictionary.Type.BEACH, BiomeDictionary.Type.COLD, BiomeDictionary.Type.CONIFEROUS, BiomeDictionary.Type.DEAD,
 			BiomeDictionary.Type.DENSE, BiomeDictionary.Type.DRY, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.HILLS, BiomeDictionary.Type.HOT,
 			BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.LUSH, BiomeDictionary.Type.MESA, BiomeDictionary.Type.MOUNTAIN, BiomeDictionary.Type.MUSHROOM,
 			BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.RIVER, BiomeDictionary.Type.SANDY, BiomeDictionary.Type.SAVANNA, BiomeDictionary.Type.SNOWY,
-			BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.WASTELAND
+			BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.WASTELAND, BiomeDictionary.Type.WATER
 	};
 	
 	@Mod.Instance(modid)
@@ -120,6 +120,7 @@ public class CrackedZombie {
 		} else {
 			proxy.info("*** Not allowing " + pigzombieName + " spawns");
 		}
+		
 		
 		// remove zombie spawning, we are replacing Minecraft zombies with CrackedZombies!
 		if (!ConfigHandler.getZombieSpawns()) {
