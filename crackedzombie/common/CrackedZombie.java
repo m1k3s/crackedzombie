@@ -181,7 +181,7 @@ public class CrackedZombie {
 		for (BiomeDictionary.Type t : types) {
 			Biome[] biomes = BiomeDictionary.getBiomesForType(t);
 			for (Biome bgb : biomes) {
-				if (BiomeDictionary.isBiomeOfType(bgb, Type.END) || BiomeDictionary.isBiomeOfType(bgb, Type.NETHER)) {
+				if (BiomeDictionary.isBiomeOfType(bgb, BiomeDictionary.Type.END) || BiomeDictionary.isBiomeOfType(bgb, BiomeDictionary.Type.NETHER)) {
                     continue;
                 }
 				if (!list.contains(bgb)) {
