@@ -20,8 +20,6 @@
 package com.crackedzombie.common;
 
 import static com.crackedzombie.common.ConfigHandler.updateConfigInfo;
-//import com.google.common.base.Predicates;
-//import com.google.common.collect.Iterators;
 import net.minecraft.entity.monster.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.Mod;
@@ -54,12 +52,12 @@ public class CrackedZombie {
 	private static boolean spawnInNether = ConfigHandler.getSpawnInNether();
 	private static boolean spawnInEnd = ConfigHandler.getSpawnInEnd();
 
-	private BiomeDictionary.Type biometypes[] = { BiomeDictionary.Type.BEACH, BiomeDictionary.Type.COLD, BiomeDictionary.Type.CONIFEROUS, BiomeDictionary.Type.DEAD,
-			BiomeDictionary.Type.DENSE, BiomeDictionary.Type.DRY, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.HILLS, BiomeDictionary.Type.HOT,
-			BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.LUSH, BiomeDictionary.Type.MESA, BiomeDictionary.Type.MOUNTAIN, BiomeDictionary.Type.MUSHROOM,
-			BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.RIVER, BiomeDictionary.Type.SANDY, BiomeDictionary.Type.SAVANNA, BiomeDictionary.Type.SNOWY,
-			BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.WASTELAND, BiomeDictionary.Type.WATER
-	};
+//	private BiomeDictionary.Type biometypes[] = { BiomeDictionary.Type.BEACH, BiomeDictionary.Type.COLD, BiomeDictionary.Type.CONIFEROUS, BiomeDictionary.Type.DEAD,
+//			BiomeDictionary.Type.DENSE, BiomeDictionary.Type.DRY, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.HILLS, BiomeDictionary.Type.HOT,
+//			BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.LUSH, BiomeDictionary.Type.MESA, BiomeDictionary.Type.MOUNTAIN, BiomeDictionary.Type.MUSHROOM,
+//			BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.RIVER, BiomeDictionary.Type.SANDY, BiomeDictionary.Type.SAVANNA, BiomeDictionary.Type.SNOWY,
+//			BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.WASTELAND, BiomeDictionary.Type.WATER
+//	};
 	
 	@Mod.Instance(modid)
 	public static CrackedZombie instance;
@@ -91,7 +89,6 @@ public class CrackedZombie {
 			MinecraftForge.EVENT_BUS.register(new PlayerJoinedWorldEventHandler());
 		}
 		
-//		proxy.registerRenderers();
 		// zombies should spawn in dungeon spawners
 		DungeonHooks.addDungeonMob(zombieName, 200);
 		// add steel swords to the loot. you may need these.
@@ -105,9 +102,7 @@ public class CrackedZombie {
 		BiomeDictionary.registerAllBiomesAndGenerateEvents();
 		
 		proxy.info("*** Scanning for available biomes");
-//		BiomeGenBase[] allBiomes = new ArrayList<>(BiomeGenBase.explorationBiomesList).toArray(new BiomeGenBase[BiomeGenBase.explorationBiomesList.size()]);
-//		printBiomeList(allBiomes);
-		Biome[] allBiomes = getBiomes(biometypes);
+		Biome[] spawnBiomes = getSpawnBiomes(/*biometypes*/);
 
 		int zombieSpawnProb = ConfigHandler.getZombieSpawnProbility();
 		int pigzombieSpawnProb = ConfigHandler.getPigZombieSpawnProbility();
@@ -115,19 +110,18 @@ public class CrackedZombie {
 		int maxSpawn = ConfigHandler.getMaxSpawn();
 		int minPZSpawn = ConfigHandler.getMinPZSpawn();
 		int maxPZSpawn = ConfigHandler.getMaxPZSpawn();
-		EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, allBiomes);
+		EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, spawnBiomes);
 		if (ConfigHandler.getAllowPigZombieSpawns()) {
 			proxy.info("*** Allowing " + pigzombieName + " spawns");
-			EntityRegistry.addSpawn(EntityCrackedPigZombie.class, pigzombieSpawnProb, minPZSpawn, maxPZSpawn, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.addSpawn(EntityCrackedPigZombie.class, pigzombieSpawnProb, minPZSpawn, maxPZSpawn, EnumCreatureType.MONSTER, spawnBiomes);
 		} else {
 			proxy.info("*** Not allowing " + pigzombieName + " spawns");
 		}
-		
-		
+
 		// remove zombie spawning, we are replacing Minecraft zombies with CrackedZombies!
 		if (!ConfigHandler.getZombieSpawns()) {
 			proxy.info("*** Disabling default zombie spawns for all biomes");
-			EntityRegistry.removeSpawn(EntityZombie.class, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.removeSpawn(EntityZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
 			DungeonHooks.removeDungeonMob("Zombie");
 		} else {
 			proxy.info("NOT disabling default zombie spawns, there will be fewer " + zombieName + "s!");
@@ -136,53 +130,49 @@ public class CrackedZombie {
 		// remove pig zombie spawning, we are replacing Minecraft pig zombies with CrackedPigZombies!
 		if (!ConfigHandler.getPigZombieSpawns()) {
 			proxy.info("*** Disabling default pig zombie spawns for all biomes");
-			EntityRegistry.removeSpawn(EntityPigZombie.class, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.removeSpawn(EntityPigZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
 		} else {
 			proxy.info("NOT disabling default zombie spawns, there will be fewer " + pigzombieName + "s!");
 		}
 		
 		// optionally remove creeper, skeleton, enderman, spiders and slime spawns for these biomes
 		if (!ConfigHandler.getSpawnCreepers()) {
-			EntityRegistry.removeSpawn(EntityCreeper.class, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.removeSpawn(EntityCreeper.class, EnumCreatureType.MONSTER, spawnBiomes);
 			proxy.info("*** Removing creeper spawns");
 		}
 		if (!ConfigHandler.getSpawnSkeletons()) {
-			EntityRegistry.removeSpawn(EntitySkeleton.class, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.removeSpawn(EntitySkeleton.class, EnumCreatureType.MONSTER, spawnBiomes);
 			DungeonHooks.removeDungeonMob("Skeleton");
 			proxy.info("*** Removing skeleton spawns and dungeon spawners");
 		}
 		if (!ConfigHandler.getSpawnEnderman()) {
-			EntityRegistry.removeSpawn(EntityEnderman.class, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.removeSpawn(EntityEnderman.class, EnumCreatureType.MONSTER, spawnBiomes);
 			proxy.info("*** Removing enderman spawns");
 		}
 		if (!ConfigHandler.getSpawnSpiders()) {
-			EntityRegistry.removeSpawn(EntitySpider.class, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.removeSpawn(EntitySpider.class, EnumCreatureType.MONSTER, spawnBiomes);
 			DungeonHooks.removeDungeonMob("Spider");
 			proxy.info("*** Removing spider spawns and dungeon spawners");
 		}
 		if (!ConfigHandler.getSpawnSlime()) {
-			EntityRegistry.removeSpawn(EntitySlime.class, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.removeSpawn(EntitySlime.class, EnumCreatureType.MONSTER, spawnBiomes);
 			proxy.info("*** Removing slime spawns");
 		}
 		
 		if (!ConfigHandler.getSpawnWitches()) {
-			EntityRegistry.removeSpawn(EntityWitch.class, EnumCreatureType.MONSTER, allBiomes);
+			EntityRegistry.removeSpawn(EntityWitch.class, EnumCreatureType.MONSTER, spawnBiomes);
 			proxy.info("*** Removing witch spawns");
 		}
 	}
 	
-//	public void printBiomeList(Biome[] biomes)
-//	{
-//		for (Biome bgb : biomes) {
-//			proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
-//		}
-//	}
-
-	public Biome[] getBiomes(BiomeDictionary.Type... types) {
+	public Biome[] getSpawnBiomes(/*BiomeDictionary.Type... types*/) {
 		LinkedList<Biome> list = new LinkedList<>();
-		for (BiomeDictionary.Type t : types) {
+		for (BiomeDictionary.Type t : BiomeDictionary.Type.values()) {
 			Biome[] biomes = BiomeDictionary.getBiomesForType(t);
 			for (Biome bgb : biomes) {
+				if (bgb.getBiomeName().contains("Void")) {
+					continue;
+				}
 				if (BiomeDictionary.isBiomeOfType(bgb, BiomeDictionary.Type.END) && !spawnInEnd) {
 					continue;
 				}
@@ -197,7 +187,7 @@ public class CrackedZombie {
 		}
 		return list.toArray(new Biome[0]);
 	}
-	
+
 	// user has changed entries in the GUI config. save the results.
 	@SuppressWarnings("unused")
 	@SubscribeEvent
