@@ -43,8 +43,8 @@ import java.util.LinkedList;
 
 public class CrackedZombie {
 
-	public static final String mcversion = "1.10";
-	public static final String modversion = "3.5.0";
+	public static final String mcversion = "1.10.2";
+	public static final String modversion = "3.5.2";
 	public static final String modid = "crackedzombiemod";
 	public static final String name = "Cracked Zombie Mod";
 	public static final String zombieName = "CrackedZombie";
@@ -181,6 +181,9 @@ public class CrackedZombie {
 		for (BiomeDictionary.Type t : types) {
 			Biome[] biomes = BiomeDictionary.getBiomesForType(t);
 			for (Biome bgb : biomes) {
+				if (BiomeDictionary.isBiomeOfType(bgb, Type.END) || BiomeDictionary.isBiomeOfType(bgb, Type.NETHER)) {
+                    continue;
+                }
 				if (!list.contains(bgb)) {
 					list.add(bgb);
 					proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
