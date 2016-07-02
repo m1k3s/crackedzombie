@@ -55,6 +55,8 @@ public class ConfigHandler {
 	private static boolean attackPigs;
 	private static boolean attackVillagers;
 	private static boolean nightSpawnOnly;
+	private static boolean spawnInNether;
+	private static boolean spawnInEnd;
 
 	private static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
 				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
@@ -101,6 +103,8 @@ public class ConfigHandler {
     private static final String attackPigsComment = "Attack and kill pigs";
     private static final String attackVillagersComment = "Attack and convert villagers";
 	private static final String nightSpawnOnlyComment = "Spawn cracked zombies at night only";
+	private static final String spawnInNetherComment = "Spawn cracked zombies in the Nether";
+	private static final String spawnInEndComment = "Spawn cracked zombies in the End";
 
 	public static void startConfig(FMLPreInitializationEvent event)
 	{
@@ -142,6 +146,8 @@ public class ConfigHandler {
 			pzAttackDamage = config.get(Configuration.CATEGORY_GENERAL, "pzAttackDamage", 5.0, pzAttackDamageComment).getDouble();
             attackPigs = config.get(Configuration.CATEGORY_GENERAL, "attackPigs", true, attackPigsComment).getBoolean(true);
             attackVillagers = config.get(Configuration.CATEGORY_GENERAL, "attackVillagers", true, attackVillagersComment).getBoolean(true);
+			spawnInNether = config.get(Configuration.CATEGORY_GENERAL, "spawnInNether", true, spawnInNetherComment).getBoolean(true);
+			spawnInEnd = config.get(Configuration.CATEGORY_GENERAL, "spawnInEnd", false, spawnInEndComment).getBoolean(false);
 			nightSpawnOnly = config.get(Configuration.CATEGORY_GENERAL, "nightSpawnOnly", false, nightSpawnOnlyComment).getBoolean(false);
 		} catch (Exception e) {
 			CrackedZombie.proxy.info("failed to load or read the config file");
@@ -300,5 +306,15 @@ public class ConfigHandler {
 	public static boolean getNightSpawnOnly()
 	{
 		return nightSpawnOnly;
+	}
+	
+	public static boolean getSpawnInNether()
+	{
+		return spawnInNether;
+	}
+	
+	public static boolean getSpawnInEnd()
+	{
+		return spawnInEnd;
 	}
 }
