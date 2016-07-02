@@ -580,28 +580,28 @@ public class EntityCrackedZombie extends EntityMob {
     public void onKillEntity(EntityLivingBase entityLiving) {
         super.onKillEntity(entityLiving);
 
-        if ((worldObj.getDifficulty() == EnumDifficulty.NORMAL || worldObj.getDifficulty() == EnumDifficulty.HARD) && entityLiving instanceof EntityVillager) {
-            if (worldObj.getDifficulty() != EnumDifficulty.HARD && rand.nextBoolean()) {
-                return;
-            }
+        // if ((worldObj.getDifficulty() == EnumDifficulty.NORMAL || worldObj.getDifficulty() == EnumDifficulty.HARD) && entityLiving instanceof EntityVillager) {
+            // if (worldObj.getDifficulty() != EnumDifficulty.HARD && rand.nextBoolean()) {
+                // return;
+            // }
 
-            EntityVillager entityvillager = (EntityVillager) entityLiving;
-            EntityCrackedZombie entityzombie = new EntityCrackedZombie(worldObj);
-            entityzombie.copyLocationAndAnglesFrom(entityLiving);
-            worldObj.removeEntity(entityLiving);
-            entityzombie.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(entityzombie)), new EntityCrackedZombie.GroupData(false, true));
-            entityzombie.setVillagerType(entityvillager.getProfession());
-            entityzombie.setChild(entityLiving.isChild());
-            entityzombie.setNoAI(entityvillager.isAIDisabled());
+            // EntityVillager entityvillager = (EntityVillager) entityLiving;
+            // EntityCrackedZombie entityzombie = new EntityCrackedZombie(worldObj);
+            // entityzombie.copyLocationAndAnglesFrom(entityLiving);
+            // worldObj.removeEntity(entityLiving);
+            // entityzombie.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(entityzombie)), new EntityCrackedZombie.GroupData(false, true));
+            // entityzombie.setVillagerType(entityvillager.getProfession());
+            // entityzombie.setChild(entityLiving.isChild());
+            // entityzombie.setNoAI(entityvillager.isAIDisabled());
 
-            if (entityvillager.hasCustomName()) {
-                entityzombie.setCustomNameTag(entityvillager.getCustomNameTag());
-                entityzombie.setAlwaysRenderNameTag(entityvillager.getAlwaysRenderNameTag());
-            }
+            // if (entityvillager.hasCustomName()) {
+                // entityzombie.setCustomNameTag(entityvillager.getCustomNameTag());
+                // entityzombie.setAlwaysRenderNameTag(entityvillager.getAlwaysRenderNameTag());
+            // }
 
-            worldObj.spawnEntityInWorld(entityzombie);
-            worldObj.playEvent(null, 1026, new BlockPos((int) posX, (int) posY, (int) posZ), 0);
-        }
+            // worldObj.spawnEntityInWorld(entityzombie);
+            // worldObj.playEvent(null, 1026, new BlockPos((int) posX, (int) posY, (int) posZ), 0);
+        // }
     }
 
     @SideOnly(Side.CLIENT)
