@@ -51,6 +51,8 @@ public class CrackedZombie {
 	public static final String pigzombieName = "CrackedPigZombie";
 	public static final String guifactory = "com.crackedzombie.client.CrackedZombieConfigGUIFactory";
 	private int entityID = 0;
+	private static boolean spawnInNether = ConfigHandler.getSpawnInNether();
+	private static boolean spawnInEnd = ConfigHandler.getSpawnInEnd();
 
 	private BiomeDictionary.Type biometypes[] = { BiomeDictionary.Type.BEACH, BiomeDictionary.Type.COLD, BiomeDictionary.Type.CONIFEROUS, BiomeDictionary.Type.DEAD,
 			BiomeDictionary.Type.DENSE, BiomeDictionary.Type.DRY, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.HILLS, BiomeDictionary.Type.HOT,
@@ -181,7 +183,10 @@ public class CrackedZombie {
 		for (BiomeDictionary.Type t : types) {
 			Biome[] biomes = BiomeDictionary.getBiomesForType(t);
 			for (Biome bgb : biomes) {
-				if (BiomeDictionary.isBiomeOfType(bgb, BiomeDictionary.Type.END) || BiomeDictionary.isBiomeOfType(bgb, BiomeDictionary.Type.NETHER)) {
+				if (BiomeDictionary.isBiomeOfType(bgb, BiomeDictionary.Type.END) && !spawnInEnd) {
+					continue;
+				}
+				if (BiomeDictionary.isBiomeOfType(bgb, BiomeDictionary.Type.NETHER) && !spawnInNether) {
                     continue;
                 }
 				if (!list.contains(bgb)) {
