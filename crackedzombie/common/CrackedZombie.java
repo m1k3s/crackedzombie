@@ -20,7 +20,7 @@
 package com.crackedzombie.common;
 
 import static com.crackedzombie.common.ConfigHandler.updateConfigInfo;
-import net.minecraft.entity.monster.*;
+
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -85,9 +85,10 @@ public class CrackedZombie {
 	public void Init(FMLInitializationEvent evt)
 	{
 		MinecraftForge.EVENT_BUS.register(CrackedZombie.instance);
-		if (ConfigHandler.getStartWithSword()) {
+//		if (ConfigHandler.getStartWithSword()) {
 			MinecraftForge.EVENT_BUS.register(new PlayerJoinedWorldEventHandler());
-		}
+//		}
+		MinecraftForge.EVENT_BUS.register(new CheckSpawnEvent());
 		
 		// zombies should spawn in dungeon spawners
 		DungeonHooks.addDungeonMob(zombieName, 200);
@@ -119,50 +120,50 @@ public class CrackedZombie {
 		}
 
 		// remove zombie spawning, we are replacing Minecraft zombies with CrackedZombies!
-		if (!ConfigHandler.getZombieSpawns()) {
-			proxy.info("*** Disabling default zombie spawns for all biomes");
-			EntityRegistry.removeSpawn(EntityZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
-			DungeonHooks.removeDungeonMob("Zombie");
-		} else {
-			proxy.info("NOT disabling default zombie spawns, there will be fewer " + zombieName + "s!");
-		}
-
-		// remove pig zombie spawning, we are replacing Minecraft pig zombies with CrackedPigZombies!
-		if (!ConfigHandler.getPigZombieSpawns()) {
-			proxy.info("*** Disabling default pig zombie spawns for all biomes");
-			EntityRegistry.removeSpawn(EntityPigZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
-		} else {
-			proxy.info("NOT disabling default zombie spawns, there will be fewer " + pigzombieName + "s!");
-		}
-		
-		// optionally remove creeper, skeleton, enderman, spiders and slime spawns for these biomes
-		if (!ConfigHandler.getSpawnCreepers()) {
-			EntityRegistry.removeSpawn(EntityCreeper.class, EnumCreatureType.MONSTER, spawnBiomes);
-			proxy.info("*** Removing creeper spawns");
-		}
-		if (!ConfigHandler.getSpawnSkeletons()) {
-			EntityRegistry.removeSpawn(EntitySkeleton.class, EnumCreatureType.MONSTER, spawnBiomes);
-			DungeonHooks.removeDungeonMob("Skeleton");
-			proxy.info("*** Removing skeleton spawns and dungeon spawners");
-		}
-		if (!ConfigHandler.getSpawnEnderman()) {
-			EntityRegistry.removeSpawn(EntityEnderman.class, EnumCreatureType.MONSTER, spawnBiomes);
-			proxy.info("*** Removing enderman spawns");
-		}
-		if (!ConfigHandler.getSpawnSpiders()) {
-			EntityRegistry.removeSpawn(EntitySpider.class, EnumCreatureType.MONSTER, spawnBiomes);
-			DungeonHooks.removeDungeonMob("Spider");
-			proxy.info("*** Removing spider spawns and dungeon spawners");
-		}
-		if (!ConfigHandler.getSpawnSlime()) {
-			EntityRegistry.removeSpawn(EntitySlime.class, EnumCreatureType.MONSTER, spawnBiomes);
-			proxy.info("*** Removing slime spawns");
-		}
-		
-		if (!ConfigHandler.getSpawnWitches()) {
-			EntityRegistry.removeSpawn(EntityWitch.class, EnumCreatureType.MONSTER, spawnBiomes);
-			proxy.info("*** Removing witch spawns");
-		}
+//		if (!ConfigHandler.getZombieSpawns()) {
+//			proxy.info("*** Disabling default zombie spawns for all biomes");
+//			EntityRegistry.removeSpawn(EntityZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
+//			DungeonHooks.removeDungeonMob("Zombie");
+//		} else {
+//			proxy.info("NOT disabling default zombie spawns, there will be fewer " + zombieName + "s!");
+//		}
+//
+//		// remove pig zombie spawning, we are replacing Minecraft pig zombies with CrackedPigZombies!
+//		if (!ConfigHandler.getPigZombieSpawns()) {
+//			proxy.info("*** Disabling default pig zombie spawns for all biomes");
+//			EntityRegistry.removeSpawn(EntityPigZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
+//		} else {
+//			proxy.info("NOT disabling default zombie spawns, there will be fewer " + pigzombieName + "s!");
+//		}
+//
+//		// optionally remove creeper, skeleton, enderman, spiders and slime spawns for these biomes
+//		if (!ConfigHandler.getSpawnCreepers()) {
+//			EntityRegistry.removeSpawn(EntityCreeper.class, EnumCreatureType.MONSTER, spawnBiomes);
+//			proxy.info("*** Removing creeper spawns");
+//		}
+//		if (!ConfigHandler.getSpawnSkeletons()) {
+//			EntityRegistry.removeSpawn(EntitySkeleton.class, EnumCreatureType.MONSTER, spawnBiomes);
+//			DungeonHooks.removeDungeonMob("Skeleton");
+//			proxy.info("*** Removing skeleton spawns and dungeon spawners");
+//		}
+//		if (!ConfigHandler.getSpawnEnderman()) {
+//			EntityRegistry.removeSpawn(EntityEnderman.class, EnumCreatureType.MONSTER, spawnBiomes);
+//			proxy.info("*** Removing enderman spawns");
+//		}
+//		if (!ConfigHandler.getSpawnSpiders()) {
+//			EntityRegistry.removeSpawn(EntitySpider.class, EnumCreatureType.MONSTER, spawnBiomes);
+//			DungeonHooks.removeDungeonMob("Spider");
+//			proxy.info("*** Removing spider spawns and dungeon spawners");
+//		}
+//		if (!ConfigHandler.getSpawnSlime()) {
+//			EntityRegistry.removeSpawn(EntitySlime.class, EnumCreatureType.MONSTER, spawnBiomes);
+//			proxy.info("*** Removing slime spawns");
+//		}
+//
+//		if (!ConfigHandler.getSpawnWitches()) {
+//			EntityRegistry.removeSpawn(EntityWitch.class, EnumCreatureType.MONSTER, spawnBiomes);
+//			proxy.info("*** Removing witch spawns");
+//		}
 	}
 	
 	public Biome[] getSpawnBiomes(/*BiomeDictionary.Type... types*/) {

@@ -33,6 +33,7 @@ public class ConfigHandler {
 	private static boolean spawnSkeletons;
 	private static boolean spawnEnderman;
 	private static boolean spawnSpiders;
+	private static boolean spawnCaveSpiders;
 	private static boolean spawnSlime;
 	private static boolean spawnWitches;
 	private static boolean doorBusting;
@@ -76,6 +77,8 @@ public class ConfigHandler {
 			+ " if you want to spawn skeletons";
 	private static final String endermanComment = "endermanSpawns, set to false to disable enderman spawning, set to true"
 			+ " if you want to spawn enderman";
+	private static final String caveSpiderComment = "caveSpiderSpawns, set to false to disable cave spider spawning, set to true"
+			+ " if you want to spawn cave spiders";
 	private static final String spiderComment = "spiderSpawns, set to false to disable spider spawning, set to true"
 			+ " if you want to spawn spiders";
 	private static final String slimeComment = "slimeSpawns, set to false to disable slime spawning, set to true"
@@ -121,11 +124,12 @@ public class ConfigHandler {
 			pigzombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawnProb", 10, pzSpawnProbComment).getInt();
 			zombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawns", false, zombieComment).getBoolean(false);
 			pigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "pigZombieSpawns", false, pigZombieComment).getBoolean(false);
-			spawnCreepers = config.get(Configuration.CATEGORY_GENERAL, "spawnCreepers", false, creeperComment).getBoolean(false);
-			spawnSkeletons = config.get(Configuration.CATEGORY_GENERAL, "spawnSkeletons", false, skeletonComment).getBoolean(false);
-			spawnEnderman = config.get(Configuration.CATEGORY_GENERAL, "spawnEnderman", false, endermanComment).getBoolean(false);
+			spawnCreepers = config.get(Configuration.CATEGORY_GENERAL, "spawnCreepers", true, creeperComment).getBoolean(true);
+			spawnSkeletons = config.get(Configuration.CATEGORY_GENERAL, "spawnSkeletons", true, skeletonComment).getBoolean(true);
+			spawnEnderman = config.get(Configuration.CATEGORY_GENERAL, "spawnEnderman", true, endermanComment).getBoolean(true);
 			spawnSpiders = config.get(Configuration.CATEGORY_GENERAL, "spawnSpiders", true, spiderComment).getBoolean(true);
-			spawnSlime = config.get(Configuration.CATEGORY_GENERAL, "spawnSlime", false, slimeComment).getBoolean(false);
+			spawnCaveSpiders = config.get(Configuration.CATEGORY_GENERAL, "spawnCaveSpiders", true, caveSpiderComment).getBoolean(true);
+			spawnSlime = config.get(Configuration.CATEGORY_GENERAL, "spawnSlime", true, slimeComment).getBoolean(true);
 			spawnWitches = config.get(Configuration.CATEGORY_GENERAL, "spawnWitches", true, witchComment).getBoolean(true);
 			doorBusting = config.get(Configuration.CATEGORY_GENERAL, "doorBusting", false, doorBustingComment).getBoolean(false);
 			sickness = config.get(Configuration.CATEGORY_GENERAL, "sickness", false, sicknessComment).getBoolean(false);
@@ -176,6 +180,10 @@ public class ConfigHandler {
 	public static boolean getSpawnSpiders()
 	{
 		return spawnSpiders;
+	}
+
+	public static boolean getSpawnCaveSpiders() {
+		return spawnCaveSpiders;
 	}
 	
 	public static boolean getSpawnSlime()

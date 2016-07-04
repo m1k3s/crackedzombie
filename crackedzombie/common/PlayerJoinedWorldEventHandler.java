@@ -20,9 +20,10 @@
 package com.crackedzombie.common;
 
 import java.util.Random;
-import net.minecraft.enchantment.Enchantment;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,68 +33,64 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class PlayerJoinedWorldEventHandler {
-	
-	
-	public PlayerJoinedWorldEventHandler()
-	{
-		CrackedZombie.proxy.info("PlayerJoinedWorldEvent ctor");
-	}
 
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public void onPlayerJoinedEvent(EntityJoinWorldEvent event)
-	{
-		if (event.getEntity() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer)event.getEntity();
-			if (!inventoryContainsSword(player.inventory)) {
-				ItemStack itemstack = new ItemStack(chooseRandomSwordType());
-				if (ConfigHandler.getEnchantSword()) { // you must like this player!
-					itemstack.addEnchantment(Enchantment.getEnchantmentByLocation("unbreaking"), 3);
-					itemstack.addEnchantment(Enchantment.getEnchantmentByLocation("knockback"), 2);
-					itemstack.addEnchantment(Enchantment.getEnchantmentByLocation("flame"), 2);
-				}
-				player.setHeldItem(EnumHand.MAIN_HAND, itemstack);
-			}
-		}
-	}
-	
-	// search inventory for a sword
-	public static boolean inventoryContainsSword(InventoryPlayer inventory)
-	{
-		boolean result = false;
-		for (ItemStack s : inventory.mainInventory) {
-			if (s != null && s.getItem() instanceof ItemSword) {
-				result = true;
-				break;
-			}
-		}
-		return result;
-	}
-	
-	public Item chooseRandomSwordType()
-	{
-		Random rand = new Random();
-		Item item;
-		switch (rand.nextInt(5)) {
-			case 0:
-				item = Items.DIAMOND_SWORD;
-				break;
-			case 1:
-				item = Items.STONE_SWORD;
-				break;
-			case 2:
-				item = Items.WOODEN_SWORD;
-				break;
-			case 3:
-				item = Items.IRON_SWORD;
-				break;
-			case 4:
-				item = Items.GOLDEN_SWORD;
-				break;
-			default:
-				item = Items.IRON_SWORD;
-				break;
-		}
-		return item;
-	}
+
+    public PlayerJoinedWorldEventHandler() {
+        CrackedZombie.proxy.info("EntityJoinedWorldEvent ctor");
+    }
+
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public void onPlayerJoinedEvent(EntityJoinWorldEvent event) {
+        if (event.getEntity() instanceof EntityPlayer && ConfigHandler.getStartWithSword()) {
+            EntityPlayer player = (EntityPlayer) event.getEntity();
+            if (!inventoryContainsSword(player.inventory)) {
+                ItemStack itemstack = new ItemStack(chooseRandomSwordType());
+                if (ConfigHandler.getEnchantSword()) { // you must like this player!
+                    itemstack.addEnchantment(Enchantments.UNBREAKING, 3);
+                    itemstack.addEnchantment(Enchantments.KNOCKBACK, 2);
+                    itemstack.addEnchantment(Enchantments.FLAME, 2);
+                }
+                player.setHeldItem(EnumHand.MAIN_HAND, itemstack);
+            }
+        }
+    }
+
+    // search inventory for a sword
+    private static boolean inventoryContainsSword(InventoryPlayer inventory) {
+        boolean result = false;
+        for (ItemStack s : inventory.mainInventory) {
+            if (s != null && s.getItem() instanceof ItemSword) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public Item chooseRandomSwordType() {
+        Random rand = new Random();
+        Item item;
+        switch (rand.nextInt(5)) {
+            case 0:
+                item = Items.DIAMOND_SWORD;
+                break;
+            case 1:
+                item = Items.STONE_SWORD;
+                break;
+            case 2:
+                item = Items.WOODEN_SWORD;
+                break;
+            case 3:
+                item = Items.IRON_SWORD;
+                break;
+            case 4:
+                item = Items.GOLDEN_SWORD;
+                break;
+            default:
+                item = Items.IRON_SWORD;
+                break;
+        }
+        return item;
+    }
 }
