@@ -21,6 +21,7 @@ package com.crackedzombie.common;
 
 import static com.crackedzombie.common.ConfigHandler.updateConfigInfo;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -36,6 +37,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.LinkedList;
+import java.util.Set;
 
 @Mod( modid = CrackedZombie.modid, name = CrackedZombie.name, version = CrackedZombie.modversion, guiFactory = CrackedZombie.guifactory )
 
@@ -75,8 +77,8 @@ public class CrackedZombie {
 	{
 		ConfigHandler.startConfig(event);
 
-		EntityRegistry.registerModEntity(EntityCrackedZombie.class, zombieName, entityID++, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
-		EntityRegistry.registerModEntity(EntityCrackedPigZombie.class, pigzombieName, entityID, CrackedZombie.instance, 80, 3, true, 0x799C45, 0x00AFAF);
+		EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.modid, zombieName), EntityCrackedZombie.class, zombieName, entityID++, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
+		EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.modid, pigzombieName), EntityCrackedPigZombie.class, pigzombieName, entityID, CrackedZombie.instance, 80, 3, true, 0x799C45, 0x00AFAF);
 		proxy.registerRenderers();
 	}
 
@@ -91,7 +93,7 @@ public class CrackedZombie {
 		MinecraftForge.EVENT_BUS.register(new CheckSpawnEvent());
 		
 		// zombies should spawn in dungeon spawners
-		DungeonHooks.addDungeonMob(zombieName, 200);
+		DungeonHooks.addDungeonMob(new ResourceLocation(CrackedZombie.modid, zombieName), 200);
 		// add steel swords to the loot. you may need these.
 //		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(Items.iron_sword), 1, 1, 4));
 	}
@@ -100,8 +102,8 @@ public class CrackedZombie {
     @Mod.EventHandler
 	public void PostInit(FMLPostInitializationEvent event)
 	{
-		BiomeDictionary.registerAllBiomesAndGenerateEvents();
-		
+//		BiomeDictionary.registerAllBiomesAndGenerateEvents();
+
 		proxy.info("*** Scanning for available biomes");
 		Biome[] spawnBiomes = getSpawnBiomes(/*biometypes*/);
 
@@ -168,16 +170,16 @@ public class CrackedZombie {
 	
 	public Biome[] getSpawnBiomes(/*BiomeDictionary.Type... types*/) {
 		LinkedList<Biome> list = new LinkedList<>();
-		for (BiomeDictionary.Type t : BiomeDictionary.Type.values()) {
-			Biome[] biomes = BiomeDictionary.getBiomesForType(t);
+//		for (BiomeDictionary.Type t : BiomeDictionary.Type.getType(Biome.EXPLORATION_BIOMES_LIST)) {
+			Set<Biome> biomes = Biome.EXPLORATION_BIOMES_LIST; //BiomeDictionary.getBiomes();
 			for (Biome bgb : biomes) {
-				if (bgb.getBiomeName().contains("Void")) {
+				if (bgb.getBiomeName().equalsIgnoreCase("void")) {
 					continue;
 				}
-				if (BiomeDictionary.isBiomeOfType(bgb, BiomeDictionary.Type.END) && !spawnInEnd) {
+				if (bgb.getBiomeName().equalsIgnoreCase("end") && !spawnInEnd) {
 					continue;
 				}
-				if (BiomeDictionary.isBiomeOfType(bgb, BiomeDictionary.Type.NETHER) && !spawnInNether) {
+				if (bgb.getBiomeName().equalsIgnoreCase("nether") && !spawnInNether) {
                     continue;
                 }
 				if (!list.contains(bgb)) {
@@ -185,7 +187,7 @@ public class CrackedZombie {
 					proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
 				}
 			}
-		}
+//		}
 		return list.toArray(new Biome[0]);
 	}
 

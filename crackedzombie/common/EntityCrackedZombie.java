@@ -323,7 +323,7 @@ public class EntityCrackedZombie extends EntityMob {
                 return lightFromNeighbors <= rand.nextInt(8);
             }
         } else {
-            boolean notColliding = worldObj.getCollisionBoxes(entityAABB).isEmpty();
+            boolean notColliding = worldObj.getCollisionBoxes(this, entityAABB).isEmpty();
             boolean isLiquid = worldObj.containsAnyLiquid(entityAABB);
             // spawns on grass, sand, dirt, clay and very occasionally spawn on stone
             BlockPos bp = new BlockPos(posX, entityAABB.minY - 1.0, posZ);
