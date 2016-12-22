@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 
 public class EntityAttackAICrackedMelee extends EntityAIBase {
-    World worldObj;
+    World world;
     protected EntityCreature attacker;
     int attackTick;
     double speedTowardsTarget;
@@ -27,7 +27,7 @@ public class EntityAttackAICrackedMelee extends EntityAIBase {
 
     public EntityAttackAICrackedMelee(EntityCreature creature, double speedIn, boolean useLongMemory) {
         attacker = creature;
-        worldObj = creature.worldObj;
+        world = creature.world;
         speedTowardsTarget = speedIn;
         longMemory = useLongMemory;
         setMutexBits(3);

@@ -49,7 +49,7 @@ public class PlayerJoinedWorldEventHandler {
                 if (ConfigHandler.getEnchantSword()) { // you must like this player!
                     itemstack.addEnchantment(Enchantments.UNBREAKING, 3);
                     itemstack.addEnchantment(Enchantments.KNOCKBACK, 2);
-                    itemstack.addEnchantment(Enchantments.FLAME, 2);
+                    itemstack.addEnchantment(Enchantments.FIRE_ASPECT, 2);
                 }
                 player.setHeldItem(EnumHand.MAIN_HAND, itemstack);
             }
@@ -68,7 +68,7 @@ public class PlayerJoinedWorldEventHandler {
         return result;
     }
 
-    public Item chooseRandomSwordType() {
+    private Item chooseRandomSwordType() {
         Random rand = new Random();
         Item item;
         switch (rand.nextInt(5)) {

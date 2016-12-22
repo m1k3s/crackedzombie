@@ -75,7 +75,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         }
 
         if (angerLevel > 0 && angerTargetUUID != null && getAITarget() == null) {
-            EntityPlayer entityplayer = worldObj.getPlayerEntityByUUID(angerTargetUUID);
+            EntityPlayer entityplayer = world.getPlayerEntityByUUID(angerTargetUUID);
             setRevengeTarget(entityplayer);
             attackingPlayer = entityplayer;
             recentlyHit = getRevengeTimer();
@@ -103,7 +103,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
 
         if (s.length() > 0) {
             angerTargetUUID = UUID.fromString(s);
-            EntityPlayer entityplayer = worldObj.getPlayerEntityByUUID(angerTargetUUID);
+            EntityPlayer entityplayer = world.getPlayerEntityByUUID(angerTargetUUID);
             setRevengeTarget(entityplayer);
 
             if (entityplayer != null) {
