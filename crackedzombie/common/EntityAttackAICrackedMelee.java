@@ -11,12 +11,12 @@ import net.minecraft.world.World;
 
 
 public class EntityAttackAICrackedMelee extends EntityAIBase {
-    World world;
+    private World world;
     protected EntityCreature attacker;
     int attackTick;
-    double speedTowardsTarget;
-    boolean longMemory;
-    Path entityPathEntity;
+    private double speedTowardsTarget;
+    private boolean longMemory;
+    private Path entityPathEntity;
     private int delayCounter;
     private double targetX;
     private double targetY;

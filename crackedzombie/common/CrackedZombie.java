@@ -42,8 +42,8 @@ import java.util.Set;
 
 public class CrackedZombie {
 
-    public static final String mcversion = "1.11";
-    public static final String modversion = "3.6.0";
+    public static final String mcversion = "1.11.2";
+    public static final String modversion = "3.6.2";
     public static final String modid = "crackedzombiemod";
     public static final String name = "Cracked Zombie Mod";
     public static final String zombieName = "CrackedZombie";
@@ -140,5 +140,12 @@ public class CrackedZombie {
             updateConfigInfo();
         }
     }
+
+//    @SubscribeEvent
+//    public void onLootTableLoad(LootTableLoadEvent event) {
+//        if (event.getName().equals(LootTableList.CHESTS_SIMPLE_DUNGEON)) {
+//            event.getTable().addPool(new LootPool(new WeightedRandom.Item), );
+//        }
+//    }
 
 }
