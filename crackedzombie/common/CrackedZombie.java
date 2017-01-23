@@ -46,8 +46,8 @@ public class CrackedZombie {
     public static final String modversion = "3.6.2";
     public static final String modid = "crackedzombiemod";
     public static final String name = "Cracked Zombie Mod";
-    public static final String zombieName = "CrackedZombie";
-    public static final String pigzombieName = "CrackedPigZombie";
+    public static final String zombieName = "crackedzombie";
+    public static final String pigzombieName = "crackedpigzombie";
     public static final String guifactory = "com.crackedzombie.client.CrackedZombieConfigGUIFactory";
     private int entityID = 0;
     private static boolean spawnInNether = ConfigHandler.getSpawnInNether();
