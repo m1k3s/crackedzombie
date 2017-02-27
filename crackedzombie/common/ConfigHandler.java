@@ -58,6 +58,7 @@ public class ConfigHandler {
 	private static boolean nightSpawnOnly;
 	private static boolean spawnInNether;
 	private static boolean spawnInEnd;
+	private static boolean isImmuneToFire;
 
 	private static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
 				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
@@ -108,6 +109,7 @@ public class ConfigHandler {
 	private static final String nightSpawnOnlyComment = "Spawn cracked zombies at night only";
 	private static final String spawnInNetherComment = "Spawn cracked zombies in the Nether";
 	private static final String spawnInEndComment = "Spawn cracked zombies in the End";
+	private static final String isImmuneToFireComment = "whether or not the pig zombies are immune to fire";
 
 	public static void startConfig(FMLPreInitializationEvent event)
 	{
@@ -153,6 +155,7 @@ public class ConfigHandler {
             spawnInNether = config.get(Configuration.CATEGORY_GENERAL, "spawnInNether", true, spawnInNetherComment).getBoolean(true);
 			spawnInEnd = config.get(Configuration.CATEGORY_GENERAL, "spawnInEnd", false, spawnInEndComment).getBoolean(false);
 			nightSpawnOnly = config.get(Configuration.CATEGORY_GENERAL, "nightSpawnOnly", false, nightSpawnOnlyComment).getBoolean(false);
+			isImmuneToFire = config.get(Configuration.CATEGORY_GENERAL, "isImmuneToFire", true, isImmuneToFireComment).getBoolean(true);
 		} catch (Exception e) {
 			CrackedZombie.proxy.info("failed to load or read the config file");
 		} finally {
@@ -161,7 +164,11 @@ public class ConfigHandler {
 			}
 		}
 	}
-	
+
+	public static boolean getIsImmuneToFire() {
+		return isImmuneToFire;
+	}
+
 	public static boolean getSpawnCreepers()
 	{
 		return spawnCreepers;

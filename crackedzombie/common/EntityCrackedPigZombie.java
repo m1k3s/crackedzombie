@@ -30,7 +30,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
 
     public EntityCrackedPigZombie(World worldIn) {
         super(worldIn);
-        isImmuneToFire = true;
+        isImmuneToFire = ConfigHandler.getIsImmuneToFire();
     }
 
     public void setRevengeTarget(EntityLivingBase livingBase) {
