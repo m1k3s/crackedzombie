@@ -34,9 +34,10 @@ import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.LinkedList;
-import java.util.Set;
+import java.util.List;
 
 @Mod(modid = CrackedZombie.modid, name = CrackedZombie.name, version = CrackedZombie.modversion, guiFactory = CrackedZombie.guifactory)
 
@@ -77,7 +78,7 @@ public class CrackedZombie {
     @Mod.EventHandler
     public void Init(FMLInitializationEvent evt) {
         MinecraftForge.EVENT_BUS.register(CrackedZombie.instance);
-        MinecraftForge.EVENT_BUS.register(new PlayerJoinedWorldEventHandler());
+        MinecraftForge.EVENT_BUS.register(new PlayerLoggedInEvent());
         MinecraftForge.EVENT_BUS.register(new CheckSpawnEvent());
 
         // zombies should spawn in dungeon spawners
@@ -90,7 +91,7 @@ public class CrackedZombie {
     @Mod.EventHandler
     public void PostInit(FMLPostInitializationEvent event) {
         proxy.info("*** Scanning for available biomes");
-        Biome[] spawnBiomes = getSpawnBiomes(/*biometypes*/);
+        Biome[] spawnBiomes = getSpawnBiomes();
 
         int zombieSpawnProb = ConfigHandler.getZombieSpawnProbility();
         int pigzombieSpawnProb = ConfigHandler.getPigZombieSpawnProbility();
@@ -109,7 +110,7 @@ public class CrackedZombie {
 
     public Biome[] getSpawnBiomes() {
         LinkedList<Biome> list = new LinkedList<>();
-        Set<Biome> biomes = Biome.EXPLORATION_BIOMES_LIST;
+        List<Biome> biomes = ForgeRegistries.BIOMES.getValues();
         for (Biome bgb : biomes) {
             if (bgb.getBiomeName().equalsIgnoreCase("void")) {
                 continue;

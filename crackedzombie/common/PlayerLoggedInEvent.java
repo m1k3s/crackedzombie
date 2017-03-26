@@ -21,37 +21,33 @@ package com.crackedzombie.common;
 
 import java.util.Random;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
-public class PlayerJoinedWorldEventHandler {
+public class PlayerLoggedInEvent {
 
-
-    public PlayerJoinedWorldEventHandler() {
+    PlayerLoggedInEvent() {
         CrackedZombie.proxy.info("EntityJoinedWorldEvent ctor");
     }
 
     @SuppressWarnings("unused")
     @SubscribeEvent
-    public void onPlayerJoinedEvent(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof EntityPlayer && ConfigHandler.getStartWithSword()) {
-            EntityPlayer player = (EntityPlayer) event.getEntity();
-            if (!inventoryContainsSword(player.inventory)) {
+    public void OnPlayerLoginEvent(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.player != null && ConfigHandler.getStartWithSword()) {
+            if (!inventoryContainsSword(event.player.inventory)) {
                 ItemStack itemstack = new ItemStack(chooseRandomSwordType());
-                if (ConfigHandler.getEnchantSword()) { // you must like this player!
+                if (ConfigHandler.getEnchantSword()) {
                     itemstack.addEnchantment(Enchantments.UNBREAKING, 3);
                     itemstack.addEnchantment(Enchantments.KNOCKBACK, 2);
                     itemstack.addEnchantment(Enchantments.FIRE_ASPECT, 2);
                 }
-                player.setHeldItem(EnumHand.MAIN_HAND, itemstack);
+                event.player.inventory.addItemStackToInventory(itemstack);
             }
         }
     }
