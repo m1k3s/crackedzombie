@@ -61,18 +61,18 @@ public class ConfigHandler {
 	private static boolean spawnInEnd;
 	private static boolean isImmuneToFire;
 
-	private static final String generalComments = CrackedZombie.name + " Config\nMichael Sheppard (crackedEgg)\n"
-				+ "For Minecraft Version " + CrackedZombie.mcversion + "\n";
+	private static final String generalComments = CrackedZombie.NAME + " Config\nMichael Sheppard (crackedEgg)\n"
+				+ "For Minecraft Version " + CrackedZombie.MCVERSION + "\n";
 	private static final String spawnProbComment = "zombieSpawnProb adjust to probability of zombies spawning\n"
 			+ "The higher the number the more likely zombies will spawn.";
 	private static final String pzSpawnProbComment = "pigzombieSpawnProb adjust to probability of pigzombies spawning\n"
 			+ "The higher the number the more likely pigzombies will spawn.";
 	private static final String zombieComment = "zombieSpawns allows/disallows vanilla zombies spawns, default is false,\n"
-			+ " no vanilla minecraft zombies will spawn. Only the " + CrackedZombie.zombieName + "s will spawn.\n"
-			+ " If set to true, fewer " + CrackedZombie.zombieName + "s will spawn.";
+			+ " no vanilla minecraft zombies will spawn. Only the " + CrackedZombie.ZOMBIE_NAME + "s will spawn.\n"
+			+ " If set to true, fewer " + CrackedZombie.ZOMBIE_NAME + "s will spawn.";
 	private static final String pigZombieComment = "pigZombieSpawns allows/disallows vanilla pig zombies spawns, default is false,\n"
-			+ " no vanilla minecraft pig zombies will spawn. Only the " + CrackedZombie.pigzombieName + "s will spawn.\n"
-			+ " If set to true, fewer " + CrackedZombie.pigzombieName + "s will spawn.";
+			+ " no vanilla minecraft pig zombies will spawn. Only the " + CrackedZombie.PIGZOMBIE_NAME + "s will spawn.\n"
+			+ " If set to true, fewer " + CrackedZombie.PIGZOMBIE_NAME + "s will spawn.";
 	private static final String creeperComment = "creeperSpawns, set to false to disable creeper spawning, set to true"
 			+ " if you want to spawn creepers";
 	private static final String skeletonComment = "skeletonSpawns, set to false to disable skeleton spawning, set to true"

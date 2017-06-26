@@ -40,27 +40,27 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import java.util.LinkedList;
 import java.util.List;
 
-@Mod(modid = CrackedZombie.modid, name = CrackedZombie.name, version = CrackedZombie.modversion, guiFactory = CrackedZombie.guifactory)
+@Mod(modid = CrackedZombie.MODID, name = CrackedZombie.NAME, version = CrackedZombie.MODVERSION, guiFactory = CrackedZombie.GUIFACTORY)
 
 public class CrackedZombie {
 
-    public static final String mcversion = "1.11.2";
-    public static final String modversion = "3.6.2";
-    public static final String modid = "crackedzombiemod";
-    public static final String name = "Cracked Zombie Mod";
-    public static final String zombieName = "crackedzombie";
-    public static final String pigzombieName = "crackedpigzombie";
-    public static final String guifactory = "com.crackedzombie.client.CrackedZombieConfigGUIFactory";
+    public static final String MCVERSION = "1.11.2";
+    public static final String MODVERSION = "3.6.2";
+    public static final String MODID = "crackedzombiemod";
+    public static final String NAME = "Cracked Zombie Mod";
+    public static final String ZOMBIE_NAME = "crackedzombie";
+    public static final String PIGZOMBIE_NAME = "crackedpigzombie";
+    public static final String GUIFACTORY = "com.crackedzombie.client.CrackedZombieConfigGUIFactory";
     private int entityID = 0;
     private static boolean spawnInNether = ConfigHandler.getSpawnInNether();
     private static boolean spawnInEnd = ConfigHandler.getSpawnInEnd();
 
-    @Mod.Instance(modid)
+    @Mod.Instance(MODID)
     public static CrackedZombie instance;
 
     @SidedProxy(
-            clientSide = "com.crackedzombie.client.ClientProxyCrackedZombie",
-            serverSide = "com.crackedzombie.common.CommonProxyCrackedZombie"
+        clientSide = "com.crackedzombie.client.ClientProxyCrackedZombie",
+        serverSide = "com.crackedzombie.common.CommonProxyCrackedZombie"
     )
 
     public static CommonProxyCrackedZombie proxy;
@@ -70,8 +70,8 @@ public class CrackedZombie {
     public void preInit(FMLPreInitializationEvent event) {
         ConfigHandler.startConfig(event);
 
-        EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.modid, zombieName), EntityCrackedZombie.class, zombieName, entityID++, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
-        EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.modid, pigzombieName), EntityCrackedPigZombie.class, pigzombieName, entityID, CrackedZombie.instance, 80, 3, true, 0x799C45, 0x00AFAF);
+        EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.MODID, ZOMBIE_NAME), EntityCrackedZombie.class, ZOMBIE_NAME, entityID++, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
+        EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.MODID, PIGZOMBIE_NAME), EntityCrackedPigZombie.class, PIGZOMBIE_NAME, entityID, CrackedZombie.instance, 80, 3, true, 0x799C45, 0x00AFAF);
         proxy.registerRenderers();
     }
 
@@ -83,7 +83,7 @@ public class CrackedZombie {
         MinecraftForge.EVENT_BUS.register(new CheckSpawnEvent());
 
         // zombies should spawn in dungeon spawners
-        DungeonHooks.addDungeonMob(new ResourceLocation(CrackedZombie.modid, zombieName), 200);
+        DungeonHooks.addDungeonMob(new ResourceLocation(CrackedZombie.MODID, ZOMBIE_NAME), 200);
         // add steel swords to the loot. you may need these.
 //		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(Items.iron_sword), 1, 1, 4));
     }
@@ -102,10 +102,10 @@ public class CrackedZombie {
         int maxPZSpawn = ConfigHandler.getMaxPZSpawn();
         EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, spawnBiomes);
         if (ConfigHandler.getAllowPigZombieSpawns()) {
-            proxy.info("*** Allowing " + pigzombieName + " spawns");
+            proxy.info("*** Allowing " + PIGZOMBIE_NAME + " spawns");
             EntityRegistry.addSpawn(EntityCrackedPigZombie.class, pigzombieSpawnProb, minPZSpawn, maxPZSpawn, EnumCreatureType.MONSTER, spawnBiomes);
         } else {
-            proxy.info("*** Not allowing " + pigzombieName + " spawns");
+            proxy.info("*** Not allowing " + PIGZOMBIE_NAME + " spawns");
         }
     }
 
@@ -134,11 +134,11 @@ public class CrackedZombie {
     @SuppressWarnings("unused")
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(CrackedZombie.modid)) {
+        if (event.getModID().equals(CrackedZombie.MODID)) {
             if (event.isRequiresMcRestart()) {
                 CrackedZombie.proxy.info("The configuration changes require a Minecraft restart!");
             }
-            CrackedZombie.proxy.info("Configuration changes have been updated for the " + CrackedZombie.name);
+            CrackedZombie.proxy.info("Configuration changes have been updated for the " + CrackedZombie.NAME);
             updateConfigInfo();
         }
     }

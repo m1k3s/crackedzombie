@@ -20,12 +20,12 @@
  */
 package com.crackedzombie.common;
 
-import net.minecraftforge.fml.common.FMLLog;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class CommonProxyCrackedZombie {
 	
-	private static final Logger logger = FMLLog.getLogger();
+	private static final Logger logger = LogManager.getLogger(CrackedZombie.MODID);
 
 	public void registerRenderers()
 	{
