@@ -27,10 +27,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 
+import javax.annotation.Nonnull;
+
 @SideOnly(Side.CLIENT)
 public class ModelCrackedZombie extends ModelBiped {
 
-	private float armAngle;
+//	private float armAngle;
 
 	public ModelCrackedZombie()
 	{
@@ -43,7 +45,7 @@ public class ModelCrackedZombie extends ModelBiped {
 	}
 
 	@Override
-	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity entity)
+	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, @Nonnull Entity entity)
 	{
 		super.setRotationAngles(par1, par2, par3, par4, par5, par6, entity);
 

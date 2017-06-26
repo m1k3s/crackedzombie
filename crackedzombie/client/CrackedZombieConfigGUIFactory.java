@@ -35,9 +35,13 @@ public class CrackedZombieConfigGUIFactory implements IModGuiFactory {
 	}
 
 	@Override
-	public Class<? extends GuiScreen> mainConfigGuiClass()
-	{
-		return CrackedZombieConfigGUI.class;
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen) {
+		return new CrackedZombieConfigGUI(parentScreen);
 	}
 
 	@Override
@@ -46,10 +50,5 @@ public class CrackedZombieConfigGUIFactory implements IModGuiFactory {
 		return null;
 	}
 
-	@Override
-	public IModGuiFactory.RuntimeOptionGuiHandler getHandlerFor(IModGuiFactory.RuntimeOptionCategoryElement roce)
-	{
-		return null;
-	}
-	
+
 }

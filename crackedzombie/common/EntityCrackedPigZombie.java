@@ -52,6 +52,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
     public EntityCrackedPigZombie(World worldIn) {
         super(worldIn);
         isImmuneToFire = ConfigHandler.getIsImmuneToFire();
+        applyEntityAI();
     }
 
     public void setRevengeTarget(EntityLivingBase livingBase) {
@@ -79,28 +80,28 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
     }
 
     protected void updateAITasks() {
-        IAttributeInstance iattributeinstance = getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-
-        if (isAngry()) {
-            if (!isChild() && !iattributeinstance.hasModifier(ATTACK_SPEED_BOOST_MODIFIER)) {
-                iattributeinstance.applyModifier(ATTACK_SPEED_BOOST_MODIFIER);
-            }
-
-            --angerLevel;
-        } else if (iattributeinstance.hasModifier(ATTACK_SPEED_BOOST_MODIFIER)) {
-            iattributeinstance.removeModifier(ATTACK_SPEED_BOOST_MODIFIER);
-        }
-
-        if (randomSoundDelay > 0 && --randomSoundDelay == 0) {
-            playSound(SoundEvents.ENTITY_ZOMBIE_PIG_ANGRY, getSoundVolume() * 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
-        }
-
-        if (angerLevel > 0 && angerTargetUUID != null && getAITarget() == null) {
-            EntityPlayer entityplayer = world.getPlayerEntityByUUID(angerTargetUUID);
-            setRevengeTarget(entityplayer);
-            attackingPlayer = entityplayer;
-            recentlyHit = getRevengeTimer();
-        }
+//        IAttributeInstance iattributeinstance = getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+//
+//        if (isAngry()) {
+//            if (!isChild() && !iattributeinstance.hasModifier(ATTACK_SPEED_BOOST_MODIFIER)) {
+//                iattributeinstance.applyModifier(ATTACK_SPEED_BOOST_MODIFIER);
+//            }
+//
+//            --angerLevel;
+//        } else if (iattributeinstance.hasModifier(ATTACK_SPEED_BOOST_MODIFIER)) {
+//            iattributeinstance.removeModifier(ATTACK_SPEED_BOOST_MODIFIER);
+//        }
+//
+//        if (randomSoundDelay > 0 && --randomSoundDelay == 0) {
+//            playSound(SoundEvents.ENTITY_ZOMBIE_PIG_ANGRY, getSoundVolume() * 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+//        }
+//
+//        if (angerLevel > 0 && angerTargetUUID != null && getAITarget() == null) {
+//            EntityPlayer entityplayer = world.getPlayerEntityByUUID(angerTargetUUID);
+//            setRevengeTarget(entityplayer);
+//            attackingPlayer = entityplayer;
+//            recentlyHit = getRevengeTimer();
+//        }
 
         super.updateAITasks();
     }
@@ -150,7 +151,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         if (isEntityInvulnerable(source)) {
             return false;
         } else {
-            Entity entity = source.getEntity();
+            Entity entity = source.getTrueSource();
 
             if (entity instanceof EntityPlayer) {
                 becomeAngryAt(entity);

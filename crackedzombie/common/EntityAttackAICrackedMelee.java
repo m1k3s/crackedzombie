@@ -113,7 +113,7 @@ public class EntityAttackAICrackedMelee extends EntityAIBase {
                 delayCounter += failedPathFindingPenalty;
                 if (attacker.getNavigator().getPath() != null) {
                     net.minecraft.pathfinding.PathPoint finalPathPoint = attacker.getNavigator().getPath().getFinalPathPoint();
-                    if (finalPathPoint != null && entitylivingbase.getDistanceSq(finalPathPoint.xCoord, finalPathPoint.yCoord, finalPathPoint.zCoord) < 1)
+                    if (finalPathPoint != null && entitylivingbase.getDistanceSq(finalPathPoint.x, finalPathPoint.y, finalPathPoint.z) < 1)
                         failedPathFindingPenalty = 0;
                     else
                         failedPathFindingPenalty += 10;

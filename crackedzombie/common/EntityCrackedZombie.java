@@ -70,6 +70,8 @@ import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class EntityCrackedZombie extends EntityMob {
 
     protected static final IAttribute reinforcementChance = (new RangedAttribute(null, "zombie.spawnReinforcements", 0.0D, 0.0D, 1.0D)).setDescription("Spawn Reinforcements Chance");
@@ -207,8 +209,8 @@ public class EntityCrackedZombie extends EntityMob {
         if (super.attackEntityFrom(source, amount)) {
             EntityLivingBase entitylivingbase = getAttackTarget();
 
-            if (entitylivingbase == null && source.getEntity() instanceof EntityLivingBase) {
-                entitylivingbase = (EntityLivingBase) source.getEntity();
+            if (entitylivingbase == null && source.getTrueSource() instanceof EntityLivingBase) {
+                entitylivingbase = (EntityLivingBase) source.getTrueSource();
             }
 
             int i = MathHelper.floor(posX);
@@ -267,7 +269,7 @@ public class EntityCrackedZombie extends EntityMob {
     @Override
     public void onLivingUpdate() {
         if (world.isDaytime() && !world.isRemote && !isChild()) {
-            float brightness = getBrightness(1.0F);
+            float brightness = getBrightness();
             BlockPos blockpos = getRidingEntity() instanceof EntityBoat ? (new BlockPos(posX, (double) Math.round(posY), posZ)).up() : new BlockPos(posX, (double) Math.round(posY), posZ);
             boolean setFire = false;
 
@@ -480,11 +482,6 @@ public class EntityCrackedZombie extends EntityMob {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
-        return isVillager() ? SoundEvents.ENTITY_ZOMBIE_VILLAGER_HURT : SoundEvents.ENTITY_ZOMBIE_HURT;
-    }
-
-    @Override
     protected SoundEvent getDeathSound() {
         return isVillager() ? SoundEvents.ENTITY_ZOMBIE_VILLAGER_DEATH : SoundEvents.ENTITY_ZOMBIE_DEATH;
     }
@@ -505,6 +502,7 @@ public class EntityCrackedZombie extends EntityMob {
         }
     }
 
+    @Nonnull
     @Override
     public EnumCreatureAttribute getCreatureAttribute() {
         return EnumCreatureAttribute.UNDEAD;
@@ -663,7 +661,7 @@ public class EntityCrackedZombie extends EntityMob {
         setEquipmentBasedOnDifficulty(difficulty);
         setEnchantmentBasedOnDifficulty(difficulty);
 
-        if (getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null) {
+        if (getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()) {
             Calendar calendar = Calendar.getInstance();//world.getCurrentDate();
             Calendar halloween = Calendar.getInstance();
             halloween.clear();
