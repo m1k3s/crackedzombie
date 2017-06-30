@@ -136,11 +136,11 @@ public class EntityCrackedZombie extends EntityMob {
     // used in model rendering, arms hang down when wandering about
     // arms go up when attacking another entity, i.e., has a target.
     public boolean getHasTarget() {
-        float attackDistance = 16.0F;
-        return isAttackableEntity(this, attackDistance);
+        return isAttackableEntity(this);
     }
 
-    public boolean isAttackableEntity(EntityLivingBase entityLiving, double distance) {
+    public boolean isAttackableEntity(EntityLivingBase entityLiving) {
+        float distance = 16.0f;
         List list = world.getEntitiesWithinAABB(EntityLivingBase.class, getEntityBoundingBox().expand(distance, 4.0D, distance));
 
         for (Object aList : list) {
@@ -205,7 +205,7 @@ public class EntityCrackedZombie extends EntityMob {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
+    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
         if (super.attackEntityFrom(source, amount)) {
             EntityLivingBase entitylivingbase = getAttackTarget();
 

@@ -45,25 +45,26 @@ public class ModelCrackedZombie extends ModelBiped {
 	}
 
 	@Override
-	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, @Nonnull Entity entity)
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, @Nonnull Entity entity)
 	{
-		super.setRotationAngles(par1, par2, par3, par4, par5, par6, entity);
+		super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entity);
 
-		boolean hasTarget = ((entity instanceof EntityCrackedZombie) && ((EntityCrackedZombie)entity).getHasTarget());
+		boolean hasTarget = ((entity instanceof EntityCrackedZombie) && ((EntityCrackedZombie)entity).isArmsRaised());
 		float rightArmRotation = MathHelper.sin(swingProgress * (float) Math.PI);
 		float leftARmRotation = MathHelper.sin((1.0F - (1.0F - swingProgress) * (1.0F - swingProgress)) * (float) Math.PI);
 		bipedRightArm.rotateAngleZ = 0.0F;
 		bipedLeftArm.rotateAngleZ = 0.0F;
 		bipedRightArm.rotateAngleY = -(0.1F - rightArmRotation * 0.6F);
 		bipedLeftArm.rotateAngleY = 0.1F - rightArmRotation * 0.6F;
-		bipedRightArm.rotateAngleX = hasTarget ? -((float) Math.PI / 1.5F) : 0.0F; //armAngle;
-		bipedLeftArm.rotateAngleX = hasTarget ? -((float) Math.PI / 1.5F) : 0.0F; //armAngle;
-		bipedRightArm.rotateAngleX -= rightArmRotation * 1.2F - leftARmRotation * 0.4F;
-		bipedLeftArm.rotateAngleX -= rightArmRotation * 1.2F - leftARmRotation * 0.4F;
-		bipedRightArm.rotateAngleZ += MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
-		bipedLeftArm.rotateAngleZ -= MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
-		bipedRightArm.rotateAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
-		bipedLeftArm.rotateAngleX -= MathHelper.sin(par3 * 0.067F) * 0.05F;
+		float angle = -(float) Math.PI / (hasTarget ? 1.5f : 0.5f);
+		bipedRightArm.rotateAngleX = angle;
+		bipedLeftArm.rotateAngleX = angle;
+		bipedRightArm.rotateAngleX += rightArmRotation * 1.2F - leftARmRotation * 0.4F;
+		bipedLeftArm.rotateAngleX += rightArmRotation * 1.2F - leftARmRotation * 0.4F;
+		bipedRightArm.rotateAngleZ += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+		bipedLeftArm.rotateAngleZ -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+		bipedRightArm.rotateAngleX += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+		bipedLeftArm.rotateAngleX -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
 	}
 
 }
