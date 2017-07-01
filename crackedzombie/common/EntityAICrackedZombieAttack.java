@@ -21,8 +21,11 @@
 
 package com.crackedzombie.common;
 
-public class EntityAICrackedZombieAttack extends EntityAttackAICrackedMelee {
+import net.minecraft.entity.ai.EntityAIAttackMelee;
+
+public class EntityAICrackedZombieAttack extends EntityAIAttackMelee {
     private final EntityCrackedZombie entityCrackedZombie;
+    private int attackTimer;
 
     public EntityAICrackedZombieAttack(EntityCrackedZombie crackedZombie, double speed, boolean memory) {
         super(crackedZombie, speed, memory);
@@ -31,6 +34,7 @@ public class EntityAICrackedZombieAttack extends EntityAttackAICrackedMelee {
 
     public void startExecuting() {
         super.startExecuting();
+        attackTimer = 0;
     }
 
     public void resetTask() {
@@ -40,8 +44,9 @@ public class EntityAICrackedZombieAttack extends EntityAttackAICrackedMelee {
 
     public void updateTask() {
         super.updateTask();
+        ++attackTimer;
 
-        if (entityCrackedZombie.getHasTarget()) {
+        if (attackTimer >= 5 && attackTick < 10) {
             entityCrackedZombie.setArmsRaised(true);
         } else {
             entityCrackedZombie.setArmsRaised(false);

@@ -32,8 +32,6 @@ import javax.annotation.Nonnull;
 @SideOnly(Side.CLIENT)
 public class ModelCrackedZombie extends ModelBiped {
 
-//	private float armAngle;
-
 	public ModelCrackedZombie()
 	{
 		this(0.0F, false);
