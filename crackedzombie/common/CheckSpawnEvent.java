@@ -36,6 +36,10 @@ public class CheckSpawnEvent {
         Event.Result result = Event.Result.DEFAULT;
         Entity entity = event.getEntity();
 
+        if (entity instanceof EntityCrackedZombie) {
+            result = Event.Result.ALLOW;
+        }
+
         if (entity instanceof EntityZombie && !ConfigHandler.getZombieSpawns()) {
             result = Event.Result.DENY;
         }
@@ -72,6 +76,18 @@ public class CheckSpawnEvent {
             result = Event.Result.DENY;
         }
 
+        event.setResult(result);
+        return result;
+    }
+
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public Event.Result onDespawnEvent(LivingSpawnEvent.AllowDespawn event) {
+        Event.Result result = Event.Result.DEFAULT;
+
+        if (event.getEntity() instanceof EntityCrackedZombie) {
+            result = Event.Result.DENY;
+        }
         event.setResult(result);
         return result;
     }

@@ -24,6 +24,9 @@ import static com.crackedzombie.common.ConfigHandler.updateConfigInfo;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeEnd;
+import net.minecraft.world.biome.BiomeHell;
+import net.minecraft.world.biome.BiomeVoid;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -113,18 +116,18 @@ public class CrackedZombie {
         LinkedList<Biome> list = new LinkedList<>();
         List<Biome> biomes = ForgeRegistries.BIOMES.getValues();
         for (Biome bgb : biomes) {
-            if (bgb.getBiomeName().equalsIgnoreCase("void")) {
+            if (bgb instanceof BiomeVoid) {
                 continue;
             }
-            if (bgb.getBiomeName().equalsIgnoreCase("end") && !spawnInEnd) {
+            if (bgb instanceof BiomeEnd && !spawnInEnd) {
                 continue;
             }
-            if (bgb.getBiomeName().equalsIgnoreCase("nether") && !spawnInNether) {
+            if (bgb instanceof BiomeHell && !spawnInNether) {
                 continue;
             }
             if (!list.contains(bgb)) {
                 list.add(bgb);
-                proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
+                //proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
             }
         }
         return list.toArray(new Biome[0]);

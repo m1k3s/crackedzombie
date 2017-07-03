@@ -71,7 +71,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class EntityCrackedZombie extends EntityMob {
 
@@ -119,9 +118,9 @@ public class EntityCrackedZombie extends EntityMob {
             targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
         }
         targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
-//        if (attackPigs) {
-//            targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityPig.class, true));
-//        }
+        if (attackPigs) {
+            targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityPig.class, true));
+        }
     }
 
     @Override
@@ -136,52 +135,52 @@ public class EntityCrackedZombie extends EntityMob {
 
     // used in model rendering, arms hang down when wandering about
     // arms go up when attacking another entity, i.e., has a target.
-    public boolean getHasTarget() {
-        final float distance = 16.0f;
-        return isAttackableEntity(this, distance);
-    }
+//    public boolean getHasTarget() {
+//        final float distance = 16.0f;
+//        return isAttackableEntity(this, distance);
+//    }
 
-    public boolean isAttackableEntity(EntityLivingBase entityLiving, final float distance) {
-//        List<EntityLivingBase> list = world.getEntitiesWithinAABB(EntityLivingBase.class, getEntityBoundingBox().expand(distance, 4.0D, distance));
-        List<EntityLivingBase> zlist = world.getEntitiesWithinAABB(EntityLivingBase.class,
-                getEntityBoundingBox().expand(distance, 4.0, distance), EntitySelectors.CAN_AI_TARGET);
+//    public boolean isAttackableEntity(EntityLivingBase entityLiving, final float distance) {
+////        List<EntityLivingBase> list = world.getEntitiesWithinAABB(EntityLivingBase.class, getEntityBoundingBox().expand(distance, 4.0D, distance));
+//        List<EntityLivingBase> zlist = world.getEntitiesWithinAABB(EntityLivingBase.class,
+//                getEntityBoundingBox().expand(distance, 4.0, distance), EntitySelectors.CAN_AI_TARGET);
+//
+//        for (Object aList : zlist) {
+//            Entity entity = (Entity) aList;
+//            EntityLivingBase target = (EntityLivingBase) entity;
+//            if (isGoodTarget(target)) {
+//                double dist = target.getDistanceSq(entityLiving.posX, entityLiving.posY, entityLiving.posZ);
+//                if (dist < distance * distance) {
+//                    setArmsRaised(true);
+//                    return true;
+//                }
+//            } else {
+//                setArmsRaised(false);
+//            }
+//        }
+//        return false;
+//    }
 
-        for (Object aList : zlist) {
-            Entity entity = (Entity) aList;
-            EntityLivingBase target = (EntityLivingBase) entity;
-            if (isGoodTarget(target)) {
-                double dist = target.getDistanceSq(entityLiving.posX, entityLiving.posY, entityLiving.posZ);
-                if (dist < distance * distance) {
-                    setArmsRaised(true);
-                    return true;
-                }
-            } else {
-                setArmsRaised(false);
-            }
-        }
-        return false;
-    }
-
-    public boolean isGoodTarget(EntityLivingBase target) {
-        if (target == null || target == this || !target.isEntityAlive()) {
-            return false;
-        } else {
-            boolean player = (target instanceof EntityPlayer);
-            boolean villager = attackVillagers && (target instanceof EntityVillager);
-//            boolean pig = attackPigs && (target instanceof EntityPig);
-
-            if (player) {
-                if (((EntityPlayer) target).capabilities.isCreativeMode) {
-                    return false;
-                }
-            }
-            if ((player || villager/* || pig*/) && canEntityBeSeen(target)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+//    public boolean isGoodTarget(EntityLivingBase target) {
+//        if (target == null || target == this || !target.isEntityAlive()) {
+//            return false;
+//        } else {
+//            boolean player = (target instanceof EntityPlayer);
+//            boolean villager = attackVillagers && (target instanceof EntityVillager);
+////            boolean pig = attackPigs && (target instanceof EntityPig);
+//
+//            if (player) {
+//                if (((EntityPlayer) target).capabilities.isCreativeMode) {
+//                    return false;
+//                }
+//            }
+//            if ((player || villager/* || pig*/) && canEntityBeSeen(target)) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
 
     public void setArmsRaised(boolean armsRaised) {
         getDataManager().set(ARMS_RAISED, armsRaised);
@@ -196,13 +195,16 @@ public class EntityCrackedZombie extends EntityMob {
         return isBreakDoorsTaskSet;
     }
 
-    public void setBreakDoorsAItask(boolean breakDoorsAItask) {
-        ((PathNavigateGround) getNavigator()).setBreakDoors(breakDoorsAItask);
+    public void setBreakDoorsAItask(boolean enabled) {
+        if (isBreakDoorsTaskSet != enabled) {
+            isBreakDoorsTaskSet = enabled;
+            ((PathNavigateGround) getNavigator()).setBreakDoors(enabled);
 
-        if (breakDoorsAItask) {
-            tasks.addTask(1, breakDoor);
-        } else {
-            tasks.removeTask(breakDoor);
+            if (enabled) {
+                tasks.addTask(1, breakDoor);
+            } else {
+                tasks.removeTask(breakDoor);
+            }
         }
     }
 

@@ -30,10 +30,13 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
@@ -107,8 +110,27 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         }
     }
 
+    @Override
     public boolean attackEntityAsMob(Entity entity) {
-        return super.attackEntityAsMob(entity);
+        if (super.attackEntityAsMob(entity)) {
+            if (entity instanceof EntityLivingBase) {
+                byte strength = 0;
+
+                if (world.getDifficulty() == EnumDifficulty.NORMAL) {
+                    strength = 7;
+                } else if (world.getDifficulty() == EnumDifficulty.HARD) {
+                    strength = 15;
+                }
+                if (ConfigHandler.getPZSickness()) {
+                    Potion poison = Potion.getPotionFromResourceLocation("poison");
+                    if (poison != null) {
+                        ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(poison, strength * 20, 0));
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean attackEntityFrom(DamageSource source, float amount) {
@@ -127,7 +149,6 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
 
     private void becomeAngryAt(Entity entity) {
         angerLevel = 400 + rand.nextInt(400);
-//        randomSoundDelay = rand.nextInt(40);
 
         if (entity instanceof EntityLivingBase) {
             setRevengeTarget((EntityLivingBase) entity);
