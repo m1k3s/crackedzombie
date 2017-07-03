@@ -1,22 +1,23 @@
-//  
-//  =====GPL=============================================================
-//  This program is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; version 2 dated June, 1991.
-// 
-//  This program is distributed in the hope that it will be useful, 
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-// 
-//  You should have received a copy of the GNU General Public License
-//  along with this program;  if not, write to the Free Software
-//  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
-//  =====================================================================
-//
-//
-// Copyright 2011-2015 Michael Sheppard (crackedEgg)
-//
+/*
+ * CrackedZombieConfigGUIFactory.java
+ *
+ *  Copyright (c) 2017 Michael Sheppard
+ *
+ * =====GPL=============================================================
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses.
+ * =====================================================================
+ */
 package com.crackedzombie.client;
 
 import java.util.Set;
@@ -24,6 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;
 
+@SuppressWarnings("unused")
 public class CrackedZombieConfigGUIFactory implements IModGuiFactory {
 
 	@Override
@@ -33,9 +35,13 @@ public class CrackedZombieConfigGUIFactory implements IModGuiFactory {
 	}
 
 	@Override
-	public Class<? extends GuiScreen> mainConfigGuiClass()
-	{
-		return CrackedZombieConfigGUI.class;
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen) {
+		return new CrackedZombieConfigGUI(parentScreen);
 	}
 
 	@Override
@@ -44,10 +50,5 @@ public class CrackedZombieConfigGUIFactory implements IModGuiFactory {
 		return null;
 	}
 
-	@Override
-	public IModGuiFactory.RuntimeOptionGuiHandler getHandlerFor(IModGuiFactory.RuntimeOptionCategoryElement roce)
-	{
-		return null;
-	}
-	
+
 }

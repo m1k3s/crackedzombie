@@ -1,53 +1,76 @@
+/*
+ * EntityCrackedPigZombie.java
+ *
+ *  Copyright (c) 2017 Michael Sheppard
+ *
+ * =====GPL=============================================================
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses.
+ * =====================================================================
+ */
+
 package com.crackedzombie.common;
 
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 public class EntityCrackedPigZombie extends EntityCrackedZombie {
-    private static final UUID UUIDstring = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
-    private static final AttributeModifier runningModifier = (new AttributeModifier(UUIDstring, "Attacking speed boost", 0.05D, 0)).setSaved(false);
     private int angerLevel;
-    private int randomSoundDelay;
-    private UUID revengeTarget;
+    private UUID angerTargetUUID;
 
     public EntityCrackedPigZombie(World worldIn) {
         super(worldIn);
-        isImmuneToFire = true;
+        isImmuneToFire = ConfigHandler.getIsImmuneToFire();
+        applyEntityAI();
     }
 
     public void setRevengeTarget(EntityLivingBase livingBase) {
         super.setRevengeTarget(livingBase);
 
         if (livingBase != null) {
-            revengeTarget = livingBase.getUniqueID();
+            angerTargetUUID = livingBase.getUniqueID();
         }
     }
 
     protected void applyEntityAI() {
-        targetTasks.addTask(1, new EntityCrackedPigZombie.AIHurtByAggressor());
-        targetTasks.addTask(2, new EntityCrackedPigZombie.AITargetAggressor());
+        targetTasks.addTask(1, new EntityCrackedPigZombie.AIHurtByAggressor(this));
+        targetTasks.addTask(2, new EntityCrackedPigZombie.AITargetAggressor(this));
     }
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(reinforcements).setBaseValue(0.0D);
-        getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(ConfigHandler.getPZMovementSpeed());
-        getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(ConfigHandler.getPZAttackDamage());
+        getEntityAttribute(reinforcementChance).setBaseValue(0.0D);
+        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(ConfigHandler.getPZMovementSpeed());
+        getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(ConfigHandler.getPZAttackDamage());
     }
 
     public void onUpdate() {
@@ -55,46 +78,16 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
     }
 
     protected void updateAITasks() {
-        IAttributeInstance iattributeinstance = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-
-        if (isAngry()) {
-            if (!isChild() && !iattributeinstance.func_180374_a(runningModifier)) {
-                iattributeinstance.applyModifier(runningModifier);
-            }
-
-            --angerLevel;
-        } else if (iattributeinstance.func_180374_a(runningModifier)) {
-            iattributeinstance.removeModifier(runningModifier);
-        }
-
-        if (randomSoundDelay > 0 && --randomSoundDelay == 0) {
-            playSound("mob.zombiepig.zpigangry", getSoundVolume() * 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
-        }
-
-        if (angerLevel > 0 && revengeTarget != null && getAITarget() == null) {
-            EntityPlayer entityplayer = worldObj.getPlayerEntityByUUID(revengeTarget);
-            setRevengeTarget(entityplayer);
-            attackingPlayer = entityplayer;
-            recentlyHit = getRevengeTimer();
-        }
-
         super.updateAITasks();
     }
 
-    public boolean getCanSpawnHere() {
-        return worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
-    }
-
-    public boolean handleLavaMovement() {
-        return worldObj.checkNoEntityCollision(getEntityBoundingBox(), this) && worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox()).isEmpty() && !worldObj.isAnyLiquid(getEntityBoundingBox());
-    }
 
     public void writeEntityToNBT(NBTTagCompound tagCompound) {
         super.writeEntityToNBT(tagCompound);
         tagCompound.setShort("Anger", (short) angerLevel);
 
-        if (revengeTarget != null) {
-            tagCompound.setString("HurtBy", revengeTarget.toString());
+        if (angerTargetUUID != null) {
+            tagCompound.setString("HurtBy", angerTargetUUID.toString());
         } else {
             tagCompound.setString("HurtBy", "");
         }
@@ -106,8 +99,8 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         String s = tagCompund.getString("HurtBy");
 
         if (s.length() > 0) {
-            revengeTarget = UUIDstring.fromString(s);
-            EntityPlayer entityplayer = worldObj.getPlayerEntityByUUID(revengeTarget);
+            angerTargetUUID = UUID.fromString(s);
+            EntityPlayer entityplayer = world.getPlayerEntityByUUID(angerTargetUUID);
             setRevengeTarget(entityplayer);
 
             if (entityplayer != null) {
@@ -116,25 +109,35 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
             }
         }
     }
-    
-	public boolean attackEntityAsMob(Entity entity)
-	{
-		if (super.attackEntityAsMob(entity)) {
-			if (entity instanceof EntityLivingBase) {
-				if (!ConfigHandler.getPZSickness()) {
-					((EntityLivingBase) entity).removePotionEffect(Potion.poison.id);
-				}
-			}
-			return true;
-		}
-		return false;
-	}
+
+    @Override
+    public boolean attackEntityAsMob(Entity entity) {
+        if (super.attackEntityAsMob(entity)) {
+            if (entity instanceof EntityLivingBase) {
+                byte strength = 0;
+
+                if (world.getDifficulty() == EnumDifficulty.NORMAL) {
+                    strength = 7;
+                } else if (world.getDifficulty() == EnumDifficulty.HARD) {
+                    strength = 15;
+                }
+                if (ConfigHandler.getPZSickness()) {
+                    Potion poison = Potion.getPotionFromResourceLocation("poison");
+                    if (poison != null) {
+                        ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(poison, strength * 20, 0));
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 
     public boolean attackEntityFrom(DamageSource source, float amount) {
         if (isEntityInvulnerable(source)) {
             return false;
         } else {
-            Entity entity = source.getEntity();
+            Entity entity = source.getTrueSource();
 
             if (entity instanceof EntityPlayer) {
                 becomeAngryAt(entity);
@@ -146,7 +149,6 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
 
     private void becomeAngryAt(Entity entity) {
         angerLevel = 400 + rand.nextInt(400);
-        randomSoundDelay = rand.nextInt(40);
 
         if (entity instanceof EntityLivingBase) {
             setRevengeTarget((EntityLivingBase) entity);
@@ -157,73 +159,55 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         return angerLevel > 0;
     }
 
-    protected String getLivingSound() {
-        return "mob.zombiepig.zpig";
-    }
-
-    protected String getHurtSound() {
-        return "mob.zombiepig.zpighurt";
-    }
-
-    protected String getDeathSound() {
-        return "mob.zombiepig.zpigdeath";
-    }
-
-    protected void dropFewItems(boolean drop, int chance) {
-        int j = rand.nextInt(2 + chance);
-        int k;
-
-        for (k = 0; k < j; ++k) {
-            dropItem(Items.rotten_flesh, 1);
-        }
-
-        j = rand.nextInt(2 + chance);
-
-        for (k = 0; k < j; ++k) {
-            dropItem(Items.gold_nugget, 1);
-        }
-    }
-
-    public boolean interact(EntityPlayer player) {
-        return false;
-    }
-
-    protected void addRandomArmor() {
-        dropItem(Items.gold_ingot, 1);
-    }
-
-    protected void func_180481_a(DifficultyInstance unused) {
-        setCurrentItemOrArmor(0, new ItemStack(Items.diamond_sword));
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_ZOMBIE_PIG_AMBIENT;
     }
 
     @Override
-    public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficultyInstance, IEntityLivingData livingdata) {
-        super.onSpawnFirstTime(difficultyInstance, livingdata);
-        setVillager(false);
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_ZOMBIE_PIG_DEATH;
+    }
+
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootTableList.ENTITIES_ZOMBIE_PIGMAN;
+    }
+
+    @Override
+    protected void setEquipmentBasedOnDifficulty(DifficultyInstance unused) {
+        setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
+    }
+
+    @Override
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
+        super.onInitialSpawn(difficulty, livingdata);
+        setToNotVillager();
         return livingdata;
     }
 
-    class AIHurtByAggressor extends EntityAIHurtByTarget {
-        public AIHurtByAggressor() {
-            super(EntityCrackedPigZombie.this, true, new Class[0]);
+    static class AIHurtByAggressor extends EntityAIHurtByTarget {
+        public AIHurtByAggressor(EntityCrackedPigZombie crackedPigZombie) {
+            super(crackedPigZombie, true);
         }
 
-        protected void func_179446_a(EntityCreature entityCreature, EntityLivingBase entityLivingBase) {
-            super.func_179446_a(entityCreature, entityLivingBase);
+        protected void setEntityAttackTarget(EntityCreature creatureIn, @Nonnull EntityLivingBase entityLivingBaseIn) {
+            super.setEntityAttackTarget(creatureIn, entityLivingBaseIn);
 
-            if (entityCreature instanceof EntityPigZombie) {
-                ((EntityCrackedPigZombie) entityCreature).becomeAngryAt(entityLivingBase);
+            if (creatureIn instanceof EntityCrackedPigZombie) {
+                ((EntityCrackedPigZombie) creatureIn).becomeAngryAt(entityLivingBaseIn);
             }
         }
     }
 
-    class AITargetAggressor extends EntityAINearestAttackableTarget {
-        public AITargetAggressor() {
-            super(EntityCrackedPigZombie.this, EntityPlayer.class, true);
+    @SuppressWarnings("unchecked")
+    static class AITargetAggressor extends EntityAINearestAttackableTarget {
+        public AITargetAggressor(EntityCrackedPigZombie crackedPigZombie) {
+            super(crackedPigZombie, EntityPlayer.class, true);
         }
 
         public boolean shouldExecute() {
-            return ((EntityPigZombie) taskOwner).isAngry() && super.shouldExecute();
+            return ((EntityCrackedPigZombie) taskOwner).isAngry() && super.shouldExecute();
         }
     }
 }
