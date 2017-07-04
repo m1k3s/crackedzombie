@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockTorch;
+//import net.minecraft.block.BlockTorch;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -83,7 +83,7 @@ public class EntityCrackedZombie extends EntityMob {
     private static final DataParameter<Boolean> ARMS_RAISED = EntityDataManager.createKey(EntityCrackedZombie.class, DataSerializers.BOOLEAN);
     private final EntityAIBreakDoor breakDoor = new EntityAIBreakDoor(this);
 
-    private final double noSpawnRadius = ConfigHandler.getTorchNoSpawnRadius();
+//    private final double noSpawnRadius = ConfigHandler.getTorchNoSpawnRadius();
     private final boolean allowChildSpawns = ConfigHandler.getAllowChildSpawns();
     private final boolean attackPigs = ConfigHandler.getAttackPigs();
     private final boolean attackVillagers = ConfigHandler.getAttackVillagers();
@@ -313,9 +313,10 @@ public class EntityCrackedZombie extends EntityMob {
     public boolean getCanSpawnHere() {
         AxisAlignedBB entityAABB = getEntityBoundingBox();
 
-        if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
-            return false;
-        } else if (ConfigHandler.getNightSpawnOnly()) { // standard zombie spawn
+        //if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
+        //    return false;
+        //} else
+        if (ConfigHandler.getNightSpawnOnly()) { // standard zombie spawn
             BlockPos blockpos = new BlockPos(posX, entityAABB.minY, posZ);
 
             if (world.getLightFor(EnumSkyBlock.SKY, blockpos) > rand.nextInt(32)) {
@@ -349,28 +350,28 @@ public class EntityCrackedZombie extends EntityMob {
     }
 
     // the aabb sould be the entity's boundingbox
-    public boolean foundNearbyTorches(AxisAlignedBB aabb) {
-        boolean result = false;
-
-        int xMin = MathHelper.floor(aabb.minX - noSpawnRadius);
-        int xMax = MathHelper.floor(aabb.maxX + noSpawnRadius);
-        int yMin = MathHelper.floor(aabb.minY - noSpawnRadius);
-        int yMax = MathHelper.floor(aabb.maxY + noSpawnRadius);
-        int zMin = MathHelper.floor(aabb.minZ - noSpawnRadius);
-        int zMax = MathHelper.floor(aabb.maxZ + noSpawnRadius);
-
-        for (int x = xMin; x <= xMax; x++) {
-            for (int y = yMin; y <= yMax; y++) {
-                for (int z = zMin; z <= zMax; z++) {
-                    Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
-                    if (block instanceof BlockTorch) {
-                        result = true;
-                    }
-                }
-            }
-        }
-        return result;
-    }
+//    public boolean foundNearbyTorches(AxisAlignedBB aabb) {
+//        boolean result = false;
+//
+//        int xMin = MathHelper.floor(aabb.minX - noSpawnRadius);
+//        int xMax = MathHelper.floor(aabb.maxX + noSpawnRadius);
+//        int yMin = MathHelper.floor(aabb.minY - noSpawnRadius);
+//        int yMax = MathHelper.floor(aabb.maxY + noSpawnRadius);
+//        int zMin = MathHelper.floor(aabb.minZ - noSpawnRadius);
+//        int zMax = MathHelper.floor(aabb.maxZ + noSpawnRadius);
+//
+//        for (int x = xMin; x <= xMax; x++) {
+//            for (int y = yMin; y <= yMax; y++) {
+//                for (int z = zMin; z <= zMax; z++) {
+//                    Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
+//                    if (block instanceof BlockTorch) {
+//                        result = true;
+//                    }
+//                }
+//            }
+//        }
+//        return result;
+//    }
 
     @Override
     protected void entityInit() {

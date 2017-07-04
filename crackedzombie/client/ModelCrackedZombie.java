@@ -54,7 +54,7 @@ public class ModelCrackedZombie extends ModelBiped {
 		bipedLeftArm.rotateAngleZ = 0.0F;
 		bipedRightArm.rotateAngleY = -(0.1F - rightArmRotation * 0.6F);
 		bipedLeftArm.rotateAngleY = 0.1F - rightArmRotation * 0.6F;
-		float angle = -(float) Math.PI / (hasTarget ? 1.5f : 0.5f);
+		float angle = hasTarget ? -((float) Math.PI / 1.5F) : 0.0F;
 		bipedRightArm.rotateAngleX = angle;
 		bipedLeftArm.rotateAngleX = angle;
 		bipedRightArm.rotateAngleX += rightArmRotation * 1.2F - leftARmRotation * 0.4F;
