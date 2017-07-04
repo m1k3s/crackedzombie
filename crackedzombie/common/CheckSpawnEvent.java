@@ -21,14 +21,21 @@
 
 package com.crackedzombie.common;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockTorch;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
 public class CheckSpawnEvent {
+    double noSpawnRadius = ConfigHandler.getTorchNoSpawnRadius();
 
     @SuppressWarnings("unused")
     @SubscribeEvent
@@ -37,7 +44,12 @@ public class CheckSpawnEvent {
         Entity entity = event.getEntity();
 
         if (entity instanceof EntityCrackedZombie) {
-            result = Event.Result.ALLOW;
+            AxisAlignedBB entityAABB = entity.getEntityBoundingBox();
+            if (noSpawnRadius > 0.0 && foundNearbyTorches(entity.world, entityAABB)) {
+                result = Event.Result.DENY;
+            } else {
+                result = Event.Result.ALLOW;
+            }
         }
 
         if (entity instanceof EntityZombie && !ConfigHandler.getZombieSpawns()) {
@@ -89,6 +101,30 @@ public class CheckSpawnEvent {
             result = Event.Result.DENY;
         }
         event.setResult(result);
+        return result;
+    }
+
+    // the aabb sould be the entity's boundingbox
+    public boolean foundNearbyTorches(World world, AxisAlignedBB aabb) {
+        boolean result = false;
+
+        int xMin = MathHelper.floor(aabb.minX - noSpawnRadius);
+        int xMax = MathHelper.floor(aabb.maxX + noSpawnRadius);
+        int yMin = MathHelper.floor(aabb.minY - noSpawnRadius);
+        int yMax = MathHelper.floor(aabb.maxY + noSpawnRadius);
+        int zMin = MathHelper.floor(aabb.minZ - noSpawnRadius);
+        int zMax = MathHelper.floor(aabb.maxZ + noSpawnRadius);
+
+        for (int x = xMin; x <= xMax; x++) {
+            for (int y = yMin; y <= yMax; y++) {
+                for (int z = zMin; z <= zMax; z++) {
+                    Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
+                    if (block instanceof BlockTorch) {
+                        result = true;
+                    }
+                }
+            }
+        }
         return result;
     }
 }
