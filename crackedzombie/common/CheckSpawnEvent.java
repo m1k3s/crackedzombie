@@ -47,47 +47,16 @@ public class CheckSpawnEvent {
             AxisAlignedBB entityAABB = entity.getEntityBoundingBox();
             if (noSpawnRadius > 0.0 && foundNearbyTorches(entity.world, entityAABB)) {
                 result = Event.Result.DENY;
-            } else {
-                result = Event.Result.ALLOW;
             }
         }
-
-        if (entity instanceof EntityZombie && !ConfigHandler.getZombieSpawns()) {
+        if (entity instanceof EntityZombie && !ConfigHandler.allowVanillaZombieSpawns()) {
+            result = Event.Result.DENY;
+        }
+        if (entity instanceof EntityPigZombie && !ConfigHandler.allowVanillaPigzombieSpawns()) {
             result = Event.Result.DENY;
         }
 
-        if (entity instanceof EntityPigZombie && !ConfigHandler.getPigZombieSpawns()) {
-            result = Event.Result.DENY;
-        }
-
-        if (entity instanceof EntityCreeper && !ConfigHandler.getSpawnCreepers()) {
-            result = Event.Result.DENY;
-        }
-
-        if (entity instanceof EntitySkeleton && !ConfigHandler.getSpawnSkeletons()) {
-            result = Event.Result.DENY;
-        }
-
-        if (entity instanceof EntityEnderman && !ConfigHandler.getSpawnEnderman()) {
-            result = Event.Result.DENY;
-        }
-
-        if (entity instanceof EntitySpider && !ConfigHandler.getSpawnSpiders()) {
-            result = Event.Result.DENY;
-        }
-
-        if (entity instanceof EntityCaveSpider && !ConfigHandler.getSpawnCaveSpiders()) {
-            result = Event.Result.DENY;
-        }
-
-        if (entity instanceof EntitySlime && !ConfigHandler.getSpawnSlime()) {
-            result = Event.Result.DENY;
-        }
-
-        if (entity instanceof EntityWitch && !ConfigHandler.getSpawnWitches()) {
-            result = Event.Result.DENY;
-        }
-
+//        CrackedZombie.proxy.info(entity.getName() + " spawn status: " + result.toString());
         event.setResult(result);
         return result;
     }
@@ -100,11 +69,12 @@ public class CheckSpawnEvent {
         if (event.getEntity() instanceof EntityCrackedZombie) {
             result = Event.Result.DENY;
         }
+//        CrackedZombie.proxy.info(event.getEntity().getName() + " despawn status: " + result.toString());
         event.setResult(result);
         return result;
     }
 
-    // the aabb sould be the entity's boundingbox
+    // the aabb should be the entity's boundingbox
     public boolean foundNearbyTorches(World world, AxisAlignedBB aabb) {
         boolean result = false;
 

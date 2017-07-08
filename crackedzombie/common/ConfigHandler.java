@@ -21,7 +21,9 @@
 package com.crackedzombie.common;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class ConfigHandler {
 	
@@ -30,13 +32,6 @@ public class ConfigHandler {
 	private static int pigzombieSpawnProb;
 	private static boolean zombieSpawns;
 	private static boolean pigZombieSpawns;
-	private static boolean spawnCreepers;
-	private static boolean spawnSkeletons;
-	private static boolean spawnEnderman;
-	private static boolean spawnSpiders;
-	private static boolean spawnCaveSpiders;
-	private static boolean spawnSlime;
-	private static boolean spawnWitches;
 	private static boolean doorBusting;
 	private static boolean sickness;
 	private static boolean pzSickness;
@@ -73,20 +68,6 @@ public class ConfigHandler {
 	private static final String pigZombieComment = "pigZombieSpawns allows/disallows vanilla pig zombies spawns, default is false,\n"
 			+ " no vanilla minecraft pig zombies will spawn. Only the " + CrackedZombie.PIGZOMBIE_NAME + "s will spawn.\n"
 			+ " If set to true, fewer " + CrackedZombie.PIGZOMBIE_NAME + "s will spawn.";
-	private static final String creeperComment = "creeperSpawns, set to false to disable creeper spawning, set to true"
-			+ " if you want to spawn creepers";
-	private static final String skeletonComment = "skeletonSpawns, set to false to disable skeleton spawning, set to true"
-			+ " if you want to spawn skeletons";
-	private static final String endermanComment = "endermanSpawns, set to false to disable enderman spawning, set to true"
-			+ " if you want to spawn enderman";
-	private static final String caveSpiderComment = "caveSpiderSpawns, set to false to disable cave spider spawning, set to true"
-			+ " if you want to spawn cave spiders";
-	private static final String spiderComment = "spiderSpawns, set to false to disable spider spawning, set to true"
-			+ " if you want to spawn spiders";
-	private static final String slimeComment = "slimeSpawns, set to false to disable slime spawning, set to true"
-			+ " if you want to spawn slimes";
-	private static final String witchComment = "witchSpawns, set to false to disable witch spawning, set to true"
-			+ " if you want to spawn witches";
 	private static final String doorBustingComment = "doorBusting, set to true to have zombies try to break down doors,"
 			+ " otherwise set to false. It's quieter.";
 	private static final String crackedPigZombieComment = "allow CrackedPigZombies to spawn";
@@ -127,13 +108,6 @@ public class ConfigHandler {
 			pigzombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawnProb", 10, pzSpawnProbComment).getInt();
 			zombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawns", false, zombieComment).getBoolean(false);
 			pigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "pigZombieSpawns", false, pigZombieComment).getBoolean(false);
-			spawnCreepers = config.get(Configuration.CATEGORY_GENERAL, "spawnCreepers", true, creeperComment).getBoolean(true);
-			spawnSkeletons = config.get(Configuration.CATEGORY_GENERAL, "spawnSkeletons", true, skeletonComment).getBoolean(true);
-			spawnEnderman = config.get(Configuration.CATEGORY_GENERAL, "spawnEnderman", true, endermanComment).getBoolean(true);
-			spawnSpiders = config.get(Configuration.CATEGORY_GENERAL, "spawnSpiders", true, spiderComment).getBoolean(true);
-			spawnCaveSpiders = config.get(Configuration.CATEGORY_GENERAL, "spawnCaveSpiders", true, caveSpiderComment).getBoolean(true);
-			spawnSlime = config.get(Configuration.CATEGORY_GENERAL, "spawnSlime", true, slimeComment).getBoolean(true);
-			spawnWitches = config.get(Configuration.CATEGORY_GENERAL, "spawnWitches", true, witchComment).getBoolean(true);
 			doorBusting = config.get(Configuration.CATEGORY_GENERAL, "doorBusting", false, doorBustingComment).getBoolean(false);
 			sickness = config.get(Configuration.CATEGORY_GENERAL, "sickness", false, sicknessComment).getBoolean(false);
 			pzSickness = config.get(Configuration.CATEGORY_GENERAL, "pzSickness", false, pzSicknessComment).getBoolean(false);
@@ -160,7 +134,7 @@ public class ConfigHandler {
 		} catch (Exception e) {
 			CrackedZombie.proxy.info("failed to load or read the config file");
 		} finally {
-			if (config.hasChanged()) {
+			if (config.hasChanged() && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
 				config.save();
 			}
 		}
@@ -170,40 +144,6 @@ public class ConfigHandler {
 		return isImmuneToFire;
 	}
 
-	public static boolean getSpawnCreepers()
-	{
-		return spawnCreepers;
-	}
-	
-	public static boolean getSpawnSkeletons()
-	{
-		return spawnSkeletons;
-	}
-	
-	public static boolean getSpawnEnderman()
-	{
-		return spawnEnderman;
-	}
-	
-	public static boolean getSpawnSpiders()
-	{
-		return spawnSpiders;
-	}
-
-	public static boolean getSpawnCaveSpiders() {
-		return spawnCaveSpiders;
-	}
-	
-	public static boolean getSpawnSlime()
-	{
-		return spawnSlime;
-	}
-	
-	public static boolean getSpawnWitches()
-	{
-		return spawnWitches;
-	}
-	
 	public static int getMinSpawn()
 	{
 		return minSpawn;
@@ -234,12 +174,12 @@ public class ConfigHandler {
 		return pigzombieSpawnProb;
 	}
 	
-	public static boolean getZombieSpawns()
+	public static boolean allowVanillaZombieSpawns()
 	{
 		return zombieSpawns;
 	}
 
-	public static boolean getPigZombieSpawns()
+	public static boolean allowVanillaPigzombieSpawns()
 	{
 		return pigZombieSpawns;
 	}

@@ -20,13 +20,14 @@
  */
 package com.crackedzombie.common;
 
-import static com.crackedzombie.common.ConfigHandler.updateConfigInfo;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEnd;
 import net.minecraft.world.biome.BiomeHell;
 import net.minecraft.world.biome.BiomeVoid;
+import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -36,14 +37,13 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.LinkedList;
 import java.util.List;
 
-@Mod(modid = CrackedZombie.MODID, name = CrackedZombie.NAME, version = CrackedZombie.MODVERSION, guiFactory = CrackedZombie.GUIFACTORY)
+@Mod(modid = CrackedZombie.MODID, name = CrackedZombie.NAME, version = CrackedZombie.MODVERSION)
 
 public class CrackedZombie {
 
@@ -53,10 +53,10 @@ public class CrackedZombie {
     public static final String NAME = "Cracked Zombie Mod";
     public static final String ZOMBIE_NAME = "crackedzombie";
     public static final String PIGZOMBIE_NAME = "crackedpigzombie";
-    public static final String GUIFACTORY = "com.crackedzombie.client.CrackedZombieConfigGUIFactory";
     private int entityID = 0;
     private static boolean spawnInNether = ConfigHandler.getSpawnInNether();
     private static boolean spawnInEnd = ConfigHandler.getSpawnInEnd();
+    public static ResourceLocation CHESTS_ABANDONED_MINESHAFT = LootTableList.register(new ResourceLocation(MODID, "abandoned_mineshaft"));
 
     @Mod.Instance(MODID)
     public static CrackedZombie instance;
@@ -133,16 +133,11 @@ public class CrackedZombie {
         return list.toArray(new Biome[0]);
     }
 
-    // user has changed entries in the GUI config. save the results.
     @SuppressWarnings("unused")
     @SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(CrackedZombie.MODID)) {
-            if (event.isRequiresMcRestart()) {
-                CrackedZombie.proxy.info("The configuration changes require a Minecraft restart!");
-            }
-            CrackedZombie.proxy.info("Configuration changes have been updated for the " + CrackedZombie.NAME);
-            updateConfigInfo();
+    public void onLootTableLoad(LootTableLoadEvent event) {
+        if (event.getName().equals(LootTableList.CHESTS_ABANDONED_MINESHAFT)) {
+            event.setTable(event.getLootTableManager().getLootTableFromLocation(CrackedZombie.CHESTS_ABANDONED_MINESHAFT));
         }
     }
 
