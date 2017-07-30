@@ -394,10 +394,10 @@ public class EntityCrackedZombie extends EntityMob {
         return armor;
     }
 
-    @Override
-    protected boolean canDespawn() {
-        return false;
-    }
+//    @Override
+//    protected boolean canDespawn() {
+//        return false;
+//    }
 
     @Override
     public boolean isChild() {
