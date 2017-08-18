@@ -56,8 +56,8 @@ import java.util.List;
 
 public class CrackedZombie {
 
-    public static final String MCVERSION = "1.12";
-    public static final String MODVERSION = "3.7.0";
+    public static final String MCVERSION = "1.12.1";
+    public static final String MODVERSION = "3.8.1";
     public static final String MODID = "crackedzombiemod";
     public static final String NAME = "Cracked Zombie Mod";
     public static final String ZOMBIE_NAME = "crackedzombie";
