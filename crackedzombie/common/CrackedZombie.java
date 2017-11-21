@@ -20,13 +20,22 @@
  */
 package com.crackedzombie.common;
 
-import static com.crackedzombie.common.ConfigHandler.updateConfigInfo;
 
+import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEnd;
 import net.minecraft.world.biome.BiomeHell;
 import net.minecraft.world.biome.BiomeVoid;
+import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryItem;
+import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.functions.LootFunction;
+import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -36,27 +45,27 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.LinkedList;
 import java.util.List;
 
-@Mod(modid = CrackedZombie.MODID, name = CrackedZombie.NAME, version = CrackedZombie.MODVERSION, guiFactory = CrackedZombie.GUIFACTORY)
+@Mod(modid = CrackedZombie.MODID, name = CrackedZombie.NAME, version = CrackedZombie.MODVERSION)
 
 public class CrackedZombie {
 
-    public static final String MCVERSION = "1.12";
-    public static final String MODVERSION = "3.7.0";
+    public static final String MCVERSION = "1.12.1";
+    public static final String MODVERSION = "3.8.1";
     public static final String MODID = "crackedzombiemod";
     public static final String NAME = "Cracked Zombie Mod";
     public static final String ZOMBIE_NAME = "crackedzombie";
     public static final String PIGZOMBIE_NAME = "crackedpigzombie";
-    public static final String GUIFACTORY = "com.crackedzombie.client.CrackedZombieConfigGUIFactory";
     private int entityID = 0;
     private static boolean spawnInNether = ConfigHandler.getSpawnInNether();
     private static boolean spawnInEnd = ConfigHandler.getSpawnInEnd();
+    public static LootEntry iron_sword = new LootEntryItem(Items.IRON_SWORD, 100, 50, new LootFunction[0], new LootCondition[0], "iron_sword");
 
     @Mod.Instance(MODID)
     public static CrackedZombie instance;
@@ -83,12 +92,10 @@ public class CrackedZombie {
     public void Init(FMLInitializationEvent evt) {
         MinecraftForge.EVENT_BUS.register(CrackedZombie.instance);
         MinecraftForge.EVENT_BUS.register(new PlayerLoggedInEvent());
-        MinecraftForge.EVENT_BUS.register(new CheckSpawnEvent());
+//        MinecraftForge.EVENT_BUS.register(new CheckSpawnEvent());
 
         // zombies should spawn in dungeon spawners
         DungeonHooks.addDungeonMob(new ResourceLocation(CrackedZombie.MODID, ZOMBIE_NAME), 200);
-        // add steel swords to the loot. you may need these.
-//		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(Items.iron_sword), 1, 1, 4));
     }
 
     @SuppressWarnings("unused")
@@ -104,11 +111,18 @@ public class CrackedZombie {
         int minPZSpawn = ConfigHandler.getMinPZSpawn();
         int maxPZSpawn = ConfigHandler.getMaxPZSpawn();
         EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, spawnBiomes);
-        if (ConfigHandler.getAllowPigZombieSpawns()) {
+        if (ConfigHandler.getAllowCrackedPigZombieSpawns()) {
             proxy.info("*** Allowing " + PIGZOMBIE_NAME + " spawns");
             EntityRegistry.addSpawn(EntityCrackedPigZombie.class, pigzombieSpawnProb, minPZSpawn, maxPZSpawn, EnumCreatureType.MONSTER, spawnBiomes);
         } else {
             proxy.info("*** Not allowing " + PIGZOMBIE_NAME + " spawns");
+        }
+
+        if (!ConfigHandler.allowVanillaZombieSpawns()) {
+            EntityRegistry.removeSpawn(EntityZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
+        }
+        if (!ConfigHandler.allowVanillaPigzombieSpawns()) {
+            EntityRegistry.removeSpawn(EntityPigZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
         }
     }
 
@@ -127,23 +141,20 @@ public class CrackedZombie {
             }
             if (!list.contains(bgb)) {
                 list.add(bgb);
-                //proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
+                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                    proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
+                }
             }
         }
         return list.toArray(new Biome[0]);
     }
 
-    // user has changed entries in the GUI config. save the results.
     @SuppressWarnings("unused")
     @SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(CrackedZombie.MODID)) {
-            if (event.isRequiresMcRestart()) {
-                CrackedZombie.proxy.info("The configuration changes require a Minecraft restart!");
-            }
-            CrackedZombie.proxy.info("Configuration changes have been updated for the " + CrackedZombie.NAME);
-            updateConfigInfo();
+    public void onLootTableLoad(LootTableLoadEvent event) {
+        if (event.getName().equals(LootTableList.CHESTS_ABANDONED_MINESHAFT)) {
+            event.getTable().getPool("main").addEntry(iron_sword);
         }
     }
-
+    
 }

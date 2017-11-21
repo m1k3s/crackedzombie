@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
-//import net.minecraft.block.BlockTorch;
+import net.minecraft.block.BlockTorch;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -83,7 +84,7 @@ public class EntityCrackedZombie extends EntityMob {
     private static final DataParameter<Boolean> ARMS_RAISED = EntityDataManager.createKey(EntityCrackedZombie.class, DataSerializers.BOOLEAN);
     private final EntityAIBreakDoor breakDoor = new EntityAIBreakDoor(this);
 
-//    private final double noSpawnRadius = ConfigHandler.getTorchNoSpawnRadius();
+    private final double noSpawnRadius = ConfigHandler.getTorchNoSpawnRadius();
     private final boolean allowChildSpawns = ConfigHandler.getAllowChildSpawns();
     private final boolean attackPigs = ConfigHandler.getAttackPigs();
     private final boolean attackVillagers = ConfigHandler.getAttackVillagers();
@@ -115,11 +116,11 @@ public class EntityCrackedZombie extends EntityMob {
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, EntityCrackedPigZombie.class));
         targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
         if (attackVillagers) {
-            targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
-        }
-        targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
+			targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
+		}
+        targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
         if (attackPigs) {
-            targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityPig.class, true));
+            targetTasks.addTask(5, new EntityAINearestAttackableTarget(this, EntityPig.class, true));
         }
     }
 
@@ -191,9 +192,9 @@ public class EntityCrackedZombie extends EntityMob {
         return getDataManager().get(ARMS_RAISED);
     }
 
-    public boolean isBreakDoorsTaskSet() {
-        return isBreakDoorsTaskSet;
-    }
+//    public boolean isBreakDoorsTaskSet() {
+//        return isBreakDoorsTaskSet;
+//    }
 
     public void setBreakDoorsAItask(boolean enabled) {
         if (isBreakDoorsTaskSet != enabled) {
@@ -313,10 +314,9 @@ public class EntityCrackedZombie extends EntityMob {
     public boolean getCanSpawnHere() {
         AxisAlignedBB entityAABB = getEntityBoundingBox();
 
-        //if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
-        //    return false;
-        //} else
-        if (ConfigHandler.getNightSpawnOnly()) { // standard zombie spawn
+        if (noSpawnRadius > 0.0 && foundNearbyTorches(entityAABB)) {
+            return false;
+        } else if (ConfigHandler.getNightSpawnOnly()) { // standard zombie spawn
             BlockPos blockpos = new BlockPos(posX, entityAABB.minY, posZ);
 
             if (world.getLightFor(EnumSkyBlock.SKY, blockpos) > rand.nextInt(32)) {
@@ -333,6 +333,7 @@ public class EntityCrackedZombie extends EntityMob {
 
                 return lightFromNeighbors <= rand.nextInt(8);
             }
+
         } else {
             boolean notColliding = world.getCollisionBoxes(this, entityAABB).isEmpty();
             boolean isLiquid = world.containsAnyLiquid(entityAABB);
@@ -349,29 +350,29 @@ public class EntityCrackedZombie extends EntityMob {
         }
     }
 
-    // the aabb sould be the entity's boundingbox
-//    public boolean foundNearbyTorches(AxisAlignedBB aabb) {
-//        boolean result = false;
-//
-//        int xMin = MathHelper.floor(aabb.minX - noSpawnRadius);
-//        int xMax = MathHelper.floor(aabb.maxX + noSpawnRadius);
-//        int yMin = MathHelper.floor(aabb.minY - noSpawnRadius);
-//        int yMax = MathHelper.floor(aabb.maxY + noSpawnRadius);
-//        int zMin = MathHelper.floor(aabb.minZ - noSpawnRadius);
-//        int zMax = MathHelper.floor(aabb.maxZ + noSpawnRadius);
-//
-//        for (int x = xMin; x <= xMax; x++) {
-//            for (int y = yMin; y <= yMax; y++) {
-//                for (int z = zMin; z <= zMax; z++) {
-//                    Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
-//                    if (block instanceof BlockTorch) {
-//                        result = true;
-//                    }
-//                }
-//            }
-//        }
-//        return result;
-//    }
+    // the aabb should be the entity's boundingbox
+    public boolean foundNearbyTorches(AxisAlignedBB aabb) {
+        boolean result = false;
+
+        int xMin = MathHelper.floor(aabb.minX - noSpawnRadius);
+        int xMax = MathHelper.floor(aabb.maxX + noSpawnRadius);
+        int yMin = MathHelper.floor(aabb.minY - noSpawnRadius);
+        int yMax = MathHelper.floor(aabb.maxY + noSpawnRadius);
+        int zMin = MathHelper.floor(aabb.minZ - noSpawnRadius);
+        int zMax = MathHelper.floor(aabb.maxZ + noSpawnRadius);
+
+        for (int x = xMin; x <= xMax; x++) {
+            for (int y = yMin; y <= yMax; y++) {
+                for (int z = zMin; z <= zMax; z++) {
+                    Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
+                    if (block instanceof BlockTorch) {
+                        result = true;
+                    }
+                }
+            }
+        }
+        return result;
+    }
 
     @Override
     protected void entityInit() {
@@ -393,10 +394,10 @@ public class EntityCrackedZombie extends EntityMob {
         return armor;
     }
 
-    @Override
-    protected boolean canDespawn() {
-        return false;
-    }
+//    @Override
+//    protected boolean canDespawn() {
+//        return false;
+//    }
 
     @Override
     public boolean isChild() {
@@ -536,7 +537,7 @@ public class EntityCrackedZombie extends EntityMob {
         }
 
         tagCompound.setInteger("ConversionTime", isConverting() ? conversionTime : -1);
-        tagCompound.setBoolean("CanBreakDoors", isBreakDoorsTaskSet());
+        tagCompound.setBoolean("CanBreakDoors", isBreakDoorsTaskSet);
     }
 
     @Override
@@ -671,7 +672,7 @@ public class EntityCrackedZombie extends EntityMob {
         if (rand.nextFloat() < additionalDifficulty * 0.05F) {
             getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Leader zombie bonus", rand.nextDouble() * 0.25D + 0.5D, 0));
             getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier("Leader zombie bonus", rand.nextDouble() * 3.0D + 1.0D, 2));
-            setBreakDoorsAItask(isBreakDoorsTaskSet);
+            setBreakDoorsAItask(true);
         }
 
         return livingdata;
