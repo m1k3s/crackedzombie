@@ -88,6 +88,7 @@ public class EntityCrackedZombie extends EntityMob {
     private final boolean allowChildSpawns = ConfigHandler.getAllowChildSpawns();
     private final boolean attackPigs = ConfigHandler.getAttackPigs();
     private final boolean attackVillagers = ConfigHandler.getAttackVillagers();
+    private final boolean nightSpawnOnly = ConfigHandler.getNightSpawnOnly();
 
     private boolean isBreakDoorsTaskSet = ConfigHandler.getDoorBusting();
     private int conversionTime = 0;
@@ -118,9 +119,9 @@ public class EntityCrackedZombie extends EntityMob {
         if (attackVillagers) {
 			targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
 		}
-        targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
+        targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
         if (attackPigs) {
-            targetTasks.addTask(5, new EntityAINearestAttackableTarget(this, EntityPig.class, true));
+            targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityPig.class, true));
         }
     }
 
@@ -282,7 +283,7 @@ public class EntityCrackedZombie extends EntityMob {
             boolean setFire = false;
 
             if (brightness > 0.5F && rand.nextFloat() * 30.0F < (brightness - 0.4F) * 2.0F && world.canSeeSky(blockpos)) {
-                if (ConfigHandler.getNightSpawnOnly()) {
+                if (nightSpawnOnly) {
                     setFire = true;
                 }
                 ItemStack itemstack = getItemStackFromSlot(EntityEquipmentSlot.HEAD);
