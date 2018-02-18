@@ -49,8 +49,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 @Mod(modid = CrackedZombie.MODID, name = CrackedZombie.NAME, version = CrackedZombie.MODVERSION)
 
@@ -128,7 +128,7 @@ public class CrackedZombie {
 
     public Biome[] getSpawnBiomes() {
         LinkedList<Biome> list = new LinkedList<>();
-        List<Biome> biomes = ForgeRegistries.BIOMES.getValues();
+        Collection<Biome> biomes = ForgeRegistries.BIOMES.getValuesCollection();
         for (Biome bgb : biomes) {
             if (bgb instanceof BiomeVoid) {
                 continue;
@@ -146,7 +146,7 @@ public class CrackedZombie {
                 }
             }
         }
-        return list.toArray(new Biome[0]);
+        return list.toArray(new Biome[list.size()]);
     }
 
     @SuppressWarnings("unused")
