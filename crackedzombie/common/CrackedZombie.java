@@ -21,19 +21,18 @@
 package com.crackedzombie.common;
 
 
+import net.minecraft.entity.monster.EntityHusk;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeEnd;
-import net.minecraft.world.biome.BiomeHell;
-import net.minecraft.world.biome.BiomeVoid;
+import net.minecraft.world.biome.*;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryItem;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -62,6 +61,7 @@ public class CrackedZombie {
     public static final String NAME = "Cracked Zombie Mod";
     public static final String ZOMBIE_NAME = "crackedzombie";
     public static final String PIGZOMBIE_NAME = "crackedpigzombie";
+    public static final String HUSK_NAME = "crackedhusk";
     private int entityID = 0;
     private static boolean spawnInNether = ConfigHandler.getSpawnInNether();
     private static boolean spawnInEnd = ConfigHandler.getSpawnInEnd();
@@ -71,8 +71,8 @@ public class CrackedZombie {
     public static CrackedZombie instance;
 
     @SidedProxy(
-        clientSide = "com.crackedzombie.client.ClientProxyCrackedZombie",
-        serverSide = "com.crackedzombie.common.CommonProxyCrackedZombie"
+            clientSide = "com.crackedzombie.client.ClientProxyCrackedZombie",
+            serverSide = "com.crackedzombie.common.CommonProxyCrackedZombie"
     )
 
     public static CommonProxyCrackedZombie proxy;
@@ -82,8 +82,9 @@ public class CrackedZombie {
     public void preInit(FMLPreInitializationEvent event) {
         ConfigHandler.startConfig(event);
 
-        EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.MODID, ZOMBIE_NAME), EntityCrackedZombie.class, ZOMBIE_NAME, entityID++, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
-        EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.MODID, PIGZOMBIE_NAME), EntityCrackedPigZombie.class, PIGZOMBIE_NAME, entityID, CrackedZombie.instance, 80, 3, true, 0x799C45, 0x00AFAF);
+        EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.MODID, ZOMBIE_NAME), EntityCrackedZombie.class, ZOMBIE_NAME, entityID, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
+        EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.MODID, PIGZOMBIE_NAME), EntityCrackedPigZombie.class, PIGZOMBIE_NAME, ++entityID, CrackedZombie.instance, 80, 3, true, 0x799C45, 0x00AFAF);
+        EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.MODID, HUSK_NAME), EntityCrackedHusk.class, HUSK_NAME, ++entityID, CrackedZombie.instance, 80, 3, true, 0x799C45, 0xcc5454);
         proxy.registerRenderers();
     }
 
@@ -92,7 +93,6 @@ public class CrackedZombie {
     public void Init(FMLInitializationEvent evt) {
         MinecraftForge.EVENT_BUS.register(CrackedZombie.instance);
         MinecraftForge.EVENT_BUS.register(new PlayerLoggedInEvent());
-//        MinecraftForge.EVENT_BUS.register(new CheckSpawnEvent());
 
         // zombies should spawn in dungeon spawners
         DungeonHooks.addDungeonMob(new ResourceLocation(CrackedZombie.MODID, ZOMBIE_NAME), 200);
@@ -103,6 +103,7 @@ public class CrackedZombie {
     public void PostInit(FMLPostInitializationEvent event) {
         proxy.info("*** Scanning for available biomes");
         Biome[] spawnBiomes = getSpawnBiomes();
+        Biome[] desertBiomes = getBiomesFromTypes(BiomeDictionary.Type.DRY, BiomeDictionary.Type.HOT, BiomeDictionary.Type.SANDY);
 
         int zombieSpawnProb = ConfigHandler.getZombieSpawnProbility();
         int pigzombieSpawnProb = ConfigHandler.getPigZombieSpawnProbility();
@@ -110,6 +111,10 @@ public class CrackedZombie {
         int maxSpawn = ConfigHandler.getMaxSpawn();
         int minPZSpawn = ConfigHandler.getMinPZSpawn();
         int maxPZSpawn = ConfigHandler.getMaxPZSpawn();
+        int minHuskSpawn = ConfigHandler.getMinHuskSpawn();
+        int maxHuskSpawn = ConfigHandler.getMaxHuskSpawn();
+        int huskspawnProb = ConfigHandler.getHuskSpawnProb();
+
         EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, spawnBiomes);
         if (ConfigHandler.getAllowCrackedPigZombieSpawns()) {
             proxy.info("*** Allowing " + PIGZOMBIE_NAME + " spawns");
@@ -117,12 +122,18 @@ public class CrackedZombie {
         } else {
             proxy.info("*** Not allowing " + PIGZOMBIE_NAME + " spawns");
         }
-
+        if (ConfigHandler.allowCrackedHuskSpawns()) {
+            proxy.info("*** Allowing " + HUSK_NAME + " spawns");
+            EntityRegistry.addSpawn(EntityCrackedHusk.class, huskspawnProb, minHuskSpawn, maxHuskSpawn, EnumCreatureType.MONSTER, desertBiomes);
+        }
         if (!ConfigHandler.allowVanillaZombieSpawns()) {
             EntityRegistry.removeSpawn(EntityZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
         }
         if (!ConfigHandler.allowVanillaPigzombieSpawns()) {
             EntityRegistry.removeSpawn(EntityPigZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
+        }
+        if (!ConfigHandler.allowCrackedHuskSpawns()) {
+            EntityRegistry.removeSpawn(EntityHusk.class, EnumCreatureType.MONSTER, desertBiomes);
         }
     }
 
@@ -149,6 +160,24 @@ public class CrackedZombie {
         return list.toArray(new Biome[list.size()]);
     }
 
+    private Biome[] getBiomesFromTypes(BiomeDictionary.Type... types) {
+        LinkedList<Biome> list = new LinkedList<>();
+        Collection<Biome> biomes = ForgeRegistries.BIOMES.getValuesCollection();
+        for (Biome biome : biomes) {
+            int count = types.length;
+            int shouldAdd = 0;
+            for (BiomeDictionary.Type t : types) {
+                if (BiomeDictionary.hasType(biome, t)) {
+                    shouldAdd++;
+                }
+            }
+            if (!list.contains(biome) && shouldAdd == count) {
+                list.add(biome);
+            }
+        }
+        return list.toArray(new Biome[list.size()]);
+    }
+
     @SuppressWarnings("unused")
     @SubscribeEvent
     public void onLootTableLoad(LootTableLoadEvent event) {
@@ -156,5 +185,5 @@ public class CrackedZombie {
             event.getTable().getPool("main").addEntry(iron_sword);
         }
     }
-    
+
 }

@@ -21,17 +21,17 @@
 package com.crackedzombie.common;
 
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class ConfigHandler {
 
     public static Configuration config;
     private static int zombieSpawnProb;
     private static int pigzombieSpawnProb;
+    private static int huskSpawnProb;
     private static boolean vanillaZombieSpawns;
-    private static boolean vanillapigZombieSpawns;
+    private static boolean vanillaPigZombieSpawns;
+    private static boolean vanillaHuskSpawns;
     private static boolean doorBusting;
     private static boolean sickness;
     private static boolean pzSickness;
@@ -41,9 +41,12 @@ public class ConfigHandler {
     private static int maxSpawn;
     private static int minPZSpawn;
     private static int maxPZSpawn;
+    private static int minHuskSpawn;
+    private static int maxHuskSpawn;
     private static double torchNoSpawnRadius;
     private static boolean allowChildSpawns;
     private static boolean allowCrackedPigZombieSpawns;
+    private static boolean allowCrackedHuskSpawns;
     private static double followRange;
     private static double moveSpeed;
     private static double attackDamage;
@@ -65,7 +68,7 @@ public class ConfigHandler {
     private static final String vanillaZombieComment = "vanillaZombieSpawns allows/disallows vanilla zombies spawns, default is false,\n"
             + " no vanilla minecraft zombies will spawn. Only the " + CrackedZombie.ZOMBIE_NAME + "s will spawn.\n"
             + " If set to true, fewer " + CrackedZombie.ZOMBIE_NAME + "s will spawn.";
-    private static final String vanillaPigZombieComment = "vanillapigZombieSpawns allows/disallows vanilla pig zombies spawns, default is false,\n"
+    private static final String vanillaPigZombieComment = "vanillaPigZombieSpawns allows/disallows vanilla pig zombies spawns, default is false,\n"
             + " no vanilla minecraft pig zombies will spawn. Only the " + CrackedZombie.PIGZOMBIE_NAME + "s will spawn.\n"
             + " If set to true, fewer " + CrackedZombie.PIGZOMBIE_NAME + "s will spawn.";
     private static final String doorBustingComment = "doorBusting, set to true to have zombies try to break down doors,"
@@ -92,6 +95,13 @@ public class ConfigHandler {
     private static final String spawnInNetherComment = "Spawn cracked zombies in the Nether";
     private static final String spawnInEndComment = "Spawn cracked zombies in the End";
     private static final String isImmuneToFireComment = "whether or not the pig zombies are immune to fire";
+    private static final String minHuskSpawnComment = "minSpawn, minimum number of crackedHusks per spawn event";
+    private static final String maxHuskSpawnComment = "maxSpawn, maximum number of crackedHusks per spawn event";
+    private static final String spawnHuskProbComment = "HuskSpawnProb adjust to probability of Husks spawning\n"
+            + "The higher the number the more likely Husks will spawn.";
+    private static final String crackedHuskZombieComment = "allow CrackedHusks to spawn";
+    private static final String vanillaHuskSpawnComment = "vanillaHuskSpawns allows/disallows vanilla husk spawns, default is false,\n"
+            + " no vanilla minecraft husks will spawn. Only the " + CrackedZombie.HUSK_NAME + "s will spawn.\n";
 
     public static void startConfig(FMLPreInitializationEvent event) {
         config = new Configuration(event.getSuggestedConfigurationFile());
@@ -105,7 +115,7 @@ public class ConfigHandler {
             zombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawnProb", 12, spawnProbComment).getInt();
             pigzombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawnProb", 12, pzSpawnProbComment).getInt();
             vanillaZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "vanillaZombieSpawns", false, vanillaZombieComment).getBoolean(false);
-            vanillapigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "vanillapigZombieSpawns", false, vanillaPigZombieComment).getBoolean(false);
+            vanillaPigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "vanillaPigZombieSpawns", false, vanillaPigZombieComment).getBoolean(false);
             doorBusting = config.get(Configuration.CATEGORY_GENERAL, "doorBusting", false, doorBustingComment).getBoolean(false);
             sickness = config.get(Configuration.CATEGORY_GENERAL, "sickness", false, sicknessComment).getBoolean(false);
             pzSickness = config.get(Configuration.CATEGORY_GENERAL, "pzSickness", false, pzSicknessComment).getBoolean(false);
@@ -129,6 +139,12 @@ public class ConfigHandler {
             spawnInEnd = config.get(Configuration.CATEGORY_GENERAL, "spawnInEnd", false, spawnInEndComment).getBoolean(false);
             nightSpawnOnly = config.get(Configuration.CATEGORY_GENERAL, "nightSpawnOnly", false, nightSpawnOnlyComment).getBoolean(false);
             isImmuneToFire = config.get(Configuration.CATEGORY_GENERAL, "isImmuneToFire", true, isImmuneToFireComment).getBoolean(true);
+            minHuskSpawn = config.get(Configuration.CATEGORY_GENERAL, "minHuskSpawn", 1, minHuskSpawnComment).getInt();
+            maxHuskSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxHuskSpawn", 4, maxHuskSpawnComment).getInt();
+            huskSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "huskSpawnProb", 12, spawnHuskProbComment).getInt();
+            allowCrackedHuskSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowCrackedHuskSpawns", true, crackedHuskZombieComment).getBoolean(true);
+            vanillaHuskSpawns = config.get(Configuration.CATEGORY_GENERAL, "vanillaHuskSpawns", false, vanillaHuskSpawnComment).getBoolean(false);
+
         } catch (Exception e) {
             CrackedZombie.proxy.info("failed to load or read the config file");
         } finally {
@@ -171,7 +187,7 @@ public class ConfigHandler {
     }
 
     public static boolean allowVanillaPigzombieSpawns() {
-        return vanillapigZombieSpawns;
+        return vanillaPigZombieSpawns;
     }
 
     public static boolean getDoorBusting() {
@@ -244,5 +260,25 @@ public class ConfigHandler {
 
     public static boolean getSpawnInEnd() {
         return spawnInEnd;
+    }
+
+    public static int getMinHuskSpawn() {
+        return minHuskSpawn;
+    }
+
+    public static int getMaxHuskSpawn() {
+        return maxHuskSpawn;
+    }
+
+    public static int getHuskSpawnProb() {
+        return huskSpawnProb;
+    }
+
+    public static boolean allowCrackedHuskSpawns() {
+        return allowCrackedHuskSpawns;
+    }
+
+    public static boolean allowVanillaHuskSpawns() {
+        return vanillaHuskSpawns;
     }
 }

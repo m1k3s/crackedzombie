@@ -21,6 +21,7 @@
 package com.crackedzombie.client;
 
 import com.crackedzombie.common.CommonProxyCrackedZombie;
+import com.crackedzombie.common.EntityCrackedHusk;
 import com.crackedzombie.common.EntityCrackedPigZombie;
 import com.crackedzombie.common.EntityCrackedZombie;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -28,11 +29,11 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 @SuppressWarnings("unused,unchecked")
 public class ClientProxyCrackedZombie extends CommonProxyCrackedZombie {
 
-	@Override
-	public void registerRenderers()
-	{
-		RenderingRegistry.registerEntityRenderingHandler(EntityCrackedZombie.class, RenderCrackedZombie::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityCrackedPigZombie.class, RenderCrackedPigZombie::new);
-	}
-	
+    @Override
+    public void registerRenderers() {
+        RenderingRegistry.registerEntityRenderingHandler(EntityCrackedZombie.class, RenderCrackedZombie::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityCrackedPigZombie.class, RenderCrackedPigZombie::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityCrackedHusk.class, RenderCrackedHusk::new);
+    }
+
 }
