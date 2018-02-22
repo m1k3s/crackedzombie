@@ -102,8 +102,9 @@ public class CrackedZombie {
     @Mod.EventHandler
     public void PostInit(FMLPostInitializationEvent event) {
         proxy.info("*** Scanning for available biomes");
-        Biome[] spawnBiomes = getSpawnBiomes();
+        Biome[] spawnBiomes = getAllSpawnBiomes();
         Biome[] desertBiomes = getBiomesFromTypes(BiomeDictionary.Type.DRY, BiomeDictionary.Type.HOT, BiomeDictionary.Type.SANDY);
+        Biome[] notDesertBiomes = excludeBiomesWithTypes(BiomeDictionary.Type.DRY, BiomeDictionary.Type.HOT, BiomeDictionary.Type.SANDY);
 
         int zombieSpawnProb = ConfigHandler.getZombieSpawnProbility();
         int pigzombieSpawnProb = ConfigHandler.getPigZombieSpawnProbility();
@@ -115,7 +116,7 @@ public class CrackedZombie {
         int maxHuskSpawn = ConfigHandler.getMaxHuskSpawn();
         int huskspawnProb = ConfigHandler.getHuskSpawnProb();
 
-        EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, spawnBiomes);
+        EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, notDesertBiomes);
         if (ConfigHandler.getAllowCrackedPigZombieSpawns()) {
             proxy.info("*** Allowing " + PIGZOMBIE_NAME + " spawns");
             EntityRegistry.addSpawn(EntityCrackedPigZombie.class, pigzombieSpawnProb, minPZSpawn, maxPZSpawn, EnumCreatureType.MONSTER, spawnBiomes);
@@ -137,7 +138,7 @@ public class CrackedZombie {
         }
     }
 
-    public Biome[] getSpawnBiomes() {
+    private Biome[] getAllSpawnBiomes() {
         LinkedList<Biome> list = new LinkedList<>();
         Collection<Biome> biomes = ForgeRegistries.BIOMES.getValuesCollection();
         for (Biome bgb : biomes) {
@@ -153,7 +154,7 @@ public class CrackedZombie {
             if (!list.contains(bgb)) {
                 list.add(bgb);
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                    proxy.info("  >>> Including biome " + bgb.getBiomeName() + " for spawning");
+                    proxy.info("  >>> getAllSpawnBiomes: " + bgb.getBiomeName());
                 }
             }
         }
@@ -173,6 +174,27 @@ public class CrackedZombie {
             }
             if (!list.contains(biome) && shouldAdd == count) {
                 list.add(biome);
+                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                    proxy.info("  >>> getBiomesFromTypes: " + biome.getBiomeName());
+                }
+            }
+        }
+        return list.toArray(new Biome[list.size()]);
+    }
+
+    private Biome[] excludeBiomesWithTypes(BiomeDictionary.Type... types) {
+        LinkedList<Biome> list = new LinkedList<>();
+        Collection<Biome> biomes = ForgeRegistries.BIOMES.getValuesCollection();
+        for (Biome biome : biomes) {
+            for (BiomeDictionary.Type t : types) {
+                if (!BiomeDictionary.hasType(biome, t)) {
+                    if (!list.contains(biome)) {
+                        list.add(biome);
+                        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                            proxy.info("  >>> excludeBiomesWithTypes: " + biome.getBiomeName());
+                        }
+                    }
+                }
             }
         }
         return list.toArray(new Biome[list.size()]);
