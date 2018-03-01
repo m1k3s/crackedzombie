@@ -25,8 +25,9 @@ import com.crackedzombie.common.EntityCrackedPigZombie;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
-import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
 
 public class RenderCrackedPigZombie extends RenderBiped<EntityCrackedPigZombie> {
 
@@ -44,7 +45,7 @@ public class RenderCrackedPigZombie extends RenderBiped<EntityCrackedPigZombie> 
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityCrackedPigZombie zombie)
+    protected ResourceLocation getEntityTexture(@Nonnull EntityCrackedPigZombie zombie)
     {
         return crackedPigZombieSkin;
     }

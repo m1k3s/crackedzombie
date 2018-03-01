@@ -29,6 +29,8 @@ public class ConfigHandler {
     private static int zombieSpawnProb;
     private static int pigzombieSpawnProb;
     private static int huskSpawnProb;
+    private static int giantZombieSpawnFactor;
+    private static double giantZombieScale;
     private static boolean vanillaZombieSpawns;
     private static boolean vanillaPigZombieSpawns;
     private static boolean vanillaHuskSpawns;
@@ -47,6 +49,7 @@ public class ConfigHandler {
     private static boolean allowChildSpawns;
     private static boolean allowCrackedPigZombieSpawns;
     private static boolean allowCrackedHuskSpawns;
+    private static boolean allowGiantCrackedZombieSpawns;
     private static double followRange;
     private static double moveSpeed;
     private static double attackDamage;
@@ -58,6 +61,7 @@ public class ConfigHandler {
     private static boolean spawnInNether;
     private static boolean spawnInEnd;
     private static boolean isImmuneToFire;
+    private static boolean pzAlwaysAttackPlayers;
 
     private static final String generalComments = CrackedZombie.NAME + " Config\nMichael Sheppard (crackedEgg)\n"
             + "For Minecraft Version " + CrackedZombie.MCVERSION + "\n";
@@ -101,7 +105,14 @@ public class ConfigHandler {
             + "The higher the number the more likely Husks will spawn.";
     private static final String crackedHuskZombieComment = "allow CrackedHusks to spawn";
     private static final String vanillaHuskSpawnComment = "vanillaHuskSpawns allows/disallows vanilla husk spawns, default is false,\n"
-            + " no vanilla minecraft husks will spawn. Only the " + CrackedZombie.HUSK_NAME + "s will spawn.\n";
+            + " no vanilla minecraft husks will spawn. Only the " + CrackedZombie.HUSK_NAME + "s will spawn.\n"
+            + " If set to true, fewer " + CrackedZombie.HUSK_NAME + "s will spawn.";
+    private static final String giantSpawnFactorComment = "giantzombieSpawnFactor this factor determines chance of giantzombies spawning\n"
+            + "The lower the number the more likely giantzombies will spawn.";
+    private static final String allowGiantZombieSpawnComment = "allow giantCrackedZombies to spawn";
+    private static final String giantZombieScaleComment = "scale factor for the giant crackedzombie";
+    private static final String pzAlwaysAttckComment = "if true the pigzombies will always attack players\n"
+            + "Otherwise the pigzombies will only attack if provoked";
 
     public static void startConfig(FMLPreInitializationEvent event) {
         config = new Configuration(event.getSuggestedConfigurationFile());
@@ -113,7 +124,7 @@ public class ConfigHandler {
         try {
             config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, generalComments);
             zombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "zombieSpawnProb", 12, spawnProbComment).getInt();
-            pigzombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawnProb", 12, pzSpawnProbComment).getInt();
+            pigzombieSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "pigzombieSpawnProb", 6, pzSpawnProbComment).getInt();
             vanillaZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "vanillaZombieSpawns", false, vanillaZombieComment).getBoolean(false);
             vanillaPigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "vanillaPigZombieSpawns", false, vanillaPigZombieComment).getBoolean(false);
             doorBusting = config.get(Configuration.CATEGORY_GENERAL, "doorBusting", false, doorBustingComment).getBoolean(false);
@@ -121,10 +132,10 @@ public class ConfigHandler {
             pzSickness = config.get(Configuration.CATEGORY_GENERAL, "pzSickness", false, pzSicknessComment).getBoolean(false);
             startWithSword = config.get(Configuration.CATEGORY_GENERAL, "startWithSword", false, startWithSwordComment).getBoolean(false);
             enchantSword = config.get(Configuration.CATEGORY_GENERAL, "enchantSword", false, enchantSwordComment).getBoolean(false);
-            minSpawn = config.get(Configuration.CATEGORY_GENERAL, "minSpawn", 4, minSpawnComment).getInt();
+            minSpawn = config.get(Configuration.CATEGORY_GENERAL, "minSpawn", 1, minSpawnComment).getInt();
             maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxSpawn", 4, maxSpawnComment).getInt();
-            minPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "minPZSpawn", 4, minPZSpawnComment).getInt();
-            maxPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxPZSpawn", 4, maxPZSpawnComment).getInt();
+            minPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "minPZSpawn", 1, minPZSpawnComment).getInt();
+            maxPZSpawn = config.get(Configuration.CATEGORY_GENERAL, "maxPZSpawn", 3, maxPZSpawnComment).getInt();
             torchNoSpawnRadius = config.get(Configuration.CATEGORY_GENERAL, "noSpawnTorchRadius", 3.0, noSpawnRadiusComment).getDouble();
             allowChildSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowChildSpawns", true, childComment).getBoolean(true);
             allowCrackedPigZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowCrackedPigZombieSpawns", true, crackedPigZombieComment).getBoolean(true);
@@ -144,6 +155,10 @@ public class ConfigHandler {
             huskSpawnProb = config.get(Configuration.CATEGORY_GENERAL, "huskSpawnProb", 12, spawnHuskProbComment).getInt();
             allowCrackedHuskSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowCrackedHuskSpawns", true, crackedHuskZombieComment).getBoolean(true);
             vanillaHuskSpawns = config.get(Configuration.CATEGORY_GENERAL, "vanillaHuskSpawns", false, vanillaHuskSpawnComment).getBoolean(false);
+            giantZombieSpawnFactor = config.get(Configuration.CATEGORY_GENERAL, "giantZombieSpawnFactor", 30, giantSpawnFactorComment).getInt();
+            allowGiantCrackedZombieSpawns = config.get(Configuration.CATEGORY_GENERAL, "allowGiantCrackedZombieSpawns", true, allowGiantZombieSpawnComment).getBoolean();
+            giantZombieScale = config.get(Configuration.CATEGORY_GENERAL, "giantZombieScale", 1.25, giantZombieScaleComment).getDouble();
+            pzAlwaysAttackPlayers = config.get(Configuration.CATEGORY_GENERAL, "pzAlwaysAttackPlayers", true, pzAlwaysAttckComment).getBoolean();
 
         } catch (Exception e) {
             CrackedZombie.proxy.info("failed to load or read the config file");
@@ -270,7 +285,7 @@ public class ConfigHandler {
         return maxHuskSpawn;
     }
 
-    public static int getHuskSpawnProb() {
+    public static int getHuskSpawnProbability() {
         return huskSpawnProb;
     }
 
@@ -280,5 +295,21 @@ public class ConfigHandler {
 
     public static boolean allowVanillaHuskSpawns() {
         return vanillaHuskSpawns;
+    }
+
+    public static int getGiantZombieSpawnFactor() {
+        return giantZombieSpawnFactor;
+    }
+
+    public static boolean allowGiantCrackedZombieSpawns() {
+        return allowGiantCrackedZombieSpawns;
+    }
+
+    public static double getGiantZombieScale() {
+        return giantZombieScale;
+    }
+
+    public static boolean isPzAlwaysAttackPlayers() {
+        return pzAlwaysAttackPlayers;
     }
 }

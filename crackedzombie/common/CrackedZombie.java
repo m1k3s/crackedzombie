@@ -108,15 +108,17 @@ public class CrackedZombie {
 
         int zombieSpawnProb = ConfigHandler.getZombieSpawnProbility();
         int pigzombieSpawnProb = ConfigHandler.getPigZombieSpawnProbility();
+        int huskspawnProb = ConfigHandler.getHuskSpawnProbability();
         int minSpawn = ConfigHandler.getMinSpawn();
         int maxSpawn = ConfigHandler.getMaxSpawn();
         int minPZSpawn = ConfigHandler.getMinPZSpawn();
         int maxPZSpawn = ConfigHandler.getMaxPZSpawn();
         int minHuskSpawn = ConfigHandler.getMinHuskSpawn();
         int maxHuskSpawn = ConfigHandler.getMaxHuskSpawn();
-        int huskspawnProb = ConfigHandler.getHuskSpawnProb();
+
 
         EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, notDesertBiomes);
+
         if (ConfigHandler.getAllowCrackedPigZombieSpawns()) {
             proxy.info("*** Allowing " + PIGZOMBIE_NAME + " spawns");
             EntityRegistry.addSpawn(EntityCrackedPigZombie.class, pigzombieSpawnProb, minPZSpawn, maxPZSpawn, EnumCreatureType.MONSTER, spawnBiomes);
@@ -133,7 +135,7 @@ public class CrackedZombie {
         if (!ConfigHandler.allowVanillaPigzombieSpawns()) {
             EntityRegistry.removeSpawn(EntityPigZombie.class, EnumCreatureType.MONSTER, spawnBiomes);
         }
-        if (!ConfigHandler.allowCrackedHuskSpawns()) {
+        if (!ConfigHandler.allowVanillaHuskSpawns()) {
             EntityRegistry.removeSpawn(EntityHusk.class, EnumCreatureType.MONSTER, desertBiomes);
         }
     }

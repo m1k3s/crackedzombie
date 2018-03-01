@@ -24,6 +24,9 @@ package com.crackedzombie.common;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -44,7 +47,11 @@ import javax.annotation.Nonnull;
 import java.util.UUID;
 
 public class EntityCrackedPigZombie extends EntityCrackedZombie {
+
+    private static final UUID ATTACK_SPEED_BOOST_MODIFIER_UUID = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
+    private static final AttributeModifier ATTACK_SPEED_BOOST_MODIFIER = (new AttributeModifier(ATTACK_SPEED_BOOST_MODIFIER_UUID, "Attacking speed boost", 0.05D, 0)).setSaved(false);
     private int angerLevel;
+    private int randomSoundDelay;
     private UUID angerTargetUUID;
 
     public EntityCrackedPigZombie(World worldIn) {
@@ -61,26 +68,50 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
     protected void applyEntityAI() {
+        if (ConfigHandler.isPzAlwaysAttackPlayers()) {
+            targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+        }
         targetTasks.addTask(1, new EntityCrackedPigZombie.AIHurtByAggressor(this));
         targetTasks.addTask(2, new EntityCrackedPigZombie.AITargetAggressor(this));
+        targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
     }
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(reinforcementChance).setBaseValue(0.0D);
+        getEntityAttribute(REINFORCEMENTS_CHANCE).setBaseValue(0.0D);
         getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(ConfigHandler.getPZMovementSpeed());
         getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(ConfigHandler.getPZAttackDamage());
     }
 
-    public void onUpdate() {
-        super.onUpdate();
-    }
-
     protected void updateAITasks() {
+        IAttributeInstance iattributeinstance = getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+
+        if (isAngry()) {
+            if (!isChild() && !iattributeinstance.hasModifier(ATTACK_SPEED_BOOST_MODIFIER)) {
+                iattributeinstance.applyModifier(ATTACK_SPEED_BOOST_MODIFIER);
+            }
+
+            --angerLevel;
+        } else if (iattributeinstance.hasModifier(ATTACK_SPEED_BOOST_MODIFIER)) {
+            iattributeinstance.removeModifier(ATTACK_SPEED_BOOST_MODIFIER);
+        }
+
+        if (randomSoundDelay > 0 && --randomSoundDelay == 0) {
+            playSound(SoundEvents.ENTITY_ZOMBIE_PIG_ANGRY, getSoundVolume() * 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+        }
+
+        if (angerLevel > 0 && angerTargetUUID != null && getRevengeTarget() == null) {
+            EntityPlayer entityplayer = world.getPlayerEntityByUUID(angerTargetUUID);
+            setRevengeTarget(entityplayer);
+            attackingPlayer = entityplayer;
+            recentlyHit = getRevengeTimer();
+        }
+
         super.updateAITasks();
     }
-
 
     public void writeEntityToNBT(NBTTagCompound tagCompound) {
         super.writeEntityToNBT(tagCompound);
@@ -149,6 +180,7 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
 
     private void becomeAngryAt(Entity entity) {
         angerLevel = 400 + rand.nextInt(400);
+        randomSoundDelay = rand.nextInt(40);
 
         if (entity instanceof EntityLivingBase) {
             setRevengeTarget((EntityLivingBase) entity);

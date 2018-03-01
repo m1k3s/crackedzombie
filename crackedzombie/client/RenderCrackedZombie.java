@@ -21,12 +21,14 @@
 package com.crackedzombie.client;
 
 import com.crackedzombie.common.EntityCrackedZombie;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.util.ResourceLocation;
+
 
 @SideOnly(Side.CLIENT)
 public class RenderCrackedZombie extends RenderBiped<EntityCrackedZombie> {
@@ -43,6 +45,13 @@ public class RenderCrackedZombie extends RenderBiped<EntityCrackedZombie> {
             }
         };
         addLayer(layerbipedarmor);
+    }
+
+    @Override
+    protected void preRenderCallback(EntityCrackedZombie entity, float f) {
+        double scale = entity.getScaleFactor();
+        GlStateManager.scale(scale, scale, scale);
+        super.preRenderCallback(entity, f);
     }
 
     @Override

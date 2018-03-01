@@ -75,29 +75,41 @@ import javax.annotation.Nullable;
 
 public class EntityCrackedZombie extends EntityMob {
 
-    protected static final IAttribute reinforcementChance = (new RangedAttribute(null, "zombie.spawnReinforcements", 0.0D, 0.0D, 1.0D)).setDescription("Spawn Reinforcements Chance");
-    private static final UUID babySpeedBoostUUID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
-    private static final AttributeModifier babySpeedBoostModifier = new AttributeModifier(babySpeedBoostUUID, "Baby speed boost", 0.5D, 1);
+    protected static final IAttribute REINFORCEMENTS_CHANCE = (new RangedAttribute(null, "zombie.spawnReinforcements", 0.0D, 0.0D, 1.0D)).setDescription("Spawn Reinforcements Chance");
+    private static final UUID BABY_SPEED_BOOST_UUID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
+    private static final AttributeModifier BABY_SPEED_BOOST = new AttributeModifier(BABY_SPEED_BOOST_UUID, "Baby speed boost", 0.5D, 1);
     private static final DataParameter<Boolean> IS_CHILD = EntityDataManager.createKey(EntityCrackedZombie.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> VILLAGER_TYPE = EntityDataManager.createKey(EntityCrackedZombie.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(EntityCrackedZombie.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> ARMS_RAISED = EntityDataManager.createKey(EntityCrackedZombie.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_GIANT = EntityDataManager.createKey(EntityCrackedZombie.class, DataSerializers.BOOLEAN);
     private final EntityAIBreakDoor breakDoor = new EntityAIBreakDoor(this);
 
     private final double noSpawnRadius = ConfigHandler.getTorchNoSpawnRadius();
     private final boolean allowChildSpawns = ConfigHandler.getAllowChildSpawns();
-    private final boolean attackPigs = ConfigHandler.getAttackPigs();
-    private final boolean attackVillagers = ConfigHandler.getAttackVillagers();
-    private final boolean nightSpawnOnly = ConfigHandler.getNightSpawnOnly();
 
-    private boolean isBreakDoorsTaskSet = ConfigHandler.getDoorBusting();
+    private boolean isBreakDoorsTaskSet;
+    private boolean allowDoorBreaking = ConfigHandler.getDoorBusting();
     private int conversionTime = 0;
     private float zombieWidth = -1.0f;
     private float zombieHeight;
+    private final float scaleFactor;
 
     public EntityCrackedZombie(World world) {
         super(world);
-        setSize(0.6F, 1.95F);
+
+        if (ConfigHandler.allowGiantCrackedZombieSpawns() && (rand.nextInt(ConfigHandler.getGiantZombieSpawnFactor()) == 1)) {
+            scaleFactor = (float) ConfigHandler.getGiantZombieScale();
+            getDataManager().set(IS_GIANT, true);
+        } else {
+            scaleFactor = 1.0f;
+            getDataManager().set(IS_GIANT, false);
+        }
+        setSize(0.6F * scaleFactor, 1.95F * scaleFactor);
+    }
+
+    public float getScaleFactor() {
+        return scaleFactor;
     }
 
     @Override
@@ -105,34 +117,48 @@ public class EntityCrackedZombie extends EntityMob {
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(2, new EntityAICrackedZombieAttack(this, 1.0D, false));
         tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
-        tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1.0D));
         tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         tasks.addTask(8, new EntityAILookIdle(this));
         applyEntityAI();
     }
 
     @SuppressWarnings("unchecked")
-    private void applyEntityAI() {
+    protected void applyEntityAI() {
         tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, EntityCrackedPigZombie.class));
         targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
-        if (attackVillagers) {
-            targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
+        if (ConfigHandler.getAttackVillagers()) {
+            targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, true, true));
         }
         targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
-        if (attackPigs) {
-            targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityPig.class, true));
+        if (ConfigHandler.getAttackPigs()) {
+            targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityPig.class, true, true));
         }
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(ConfigHandler.getFollowRange()); // follow range
-        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(ConfigHandler.getMovementSpeed()); // movement speed
-        getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(ConfigHandler.getAttackDamage());  // attack damage
-        getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D); // armor strength
-        getAttributeMap().registerAttribute(reinforcementChance).setBaseValue(rand.nextDouble() * 0.1); // reinforcements
+        getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(ConfigHandler.getFollowRange());
+        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(ConfigHandler.getMovementSpeed());
+        if (isGiant()) {
+            getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(ConfigHandler.getAttackDamage() + 3);
+        } else {
+            getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(ConfigHandler.getAttackDamage());
+        }
+        getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
+        getAttributeMap().registerAttribute(REINFORCEMENTS_CHANCE).setBaseValue(rand.nextDouble() * 0.1);
+    }
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        getDataManager().register(IS_CHILD, false);
+        getDataManager().register(VILLAGER_TYPE, 0);
+        getDataManager().register(CONVERTING, false);
+        getDataManager().register(ARMS_RAISED, false);
+        getDataManager().register(IS_GIANT, false);
     }
 
     public void setArmsRaised(boolean armsRaised) {
@@ -142,6 +168,14 @@ public class EntityCrackedZombie extends EntityMob {
     @SideOnly(Side.CLIENT)
     public boolean isArmsRaised() {
         return getDataManager().get(ARMS_RAISED);
+    }
+
+    public boolean isGiant() {
+        return getDataManager().get(IS_GIANT);
+    }
+
+    public boolean isBreakDoorsTaskSet() {
+        return isBreakDoorsTaskSet;
     }
 
     public void setBreakDoorsAItask(boolean enabled) {
@@ -170,7 +204,7 @@ public class EntityCrackedZombie extends EntityMob {
             int j = MathHelper.floor(posY);
             int k = MathHelper.floor(posZ);
 
-            if (entitylivingbase != null && world.getDifficulty() == EnumDifficulty.HARD && (double) rand.nextFloat() < getEntityAttribute(reinforcementChance).getAttributeValue() && world.getGameRules().getBoolean("doMobSpawning")) {
+            if (entitylivingbase != null && world.getDifficulty() == EnumDifficulty.HARD && (double) rand.nextFloat() < getEntityAttribute(REINFORCEMENTS_CHANCE).getAttributeValue() && world.getGameRules().getBoolean("doMobSpawning")) {
                 EntityCrackedZombie entityzombie = new EntityCrackedZombie(world);
 
                 for (int l = 0; l < 50; ++l) {
@@ -185,8 +219,8 @@ public class EntityCrackedZombie extends EntityMob {
                             world.spawnEntity(entityzombie);
                             entityzombie.setAttackTarget(entitylivingbase);
                             entityzombie.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entityzombie)), null);
-                            getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Zombie reinforcement caller charge", -0.05D, 0));
-                            entityzombie.getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Zombie reinforcement callee charge", -0.05D, 0));
+                            getEntityAttribute(REINFORCEMENTS_CHANCE).applyModifier(new AttributeModifier("Zombie reinforcement caller charge", -0.05D, 0));
+                            entityzombie.getEntityAttribute(REINFORCEMENTS_CHANCE).applyModifier(new AttributeModifier("Zombie reinforcement callee charge", -0.05D, 0));
                             break;
                         }
                     }
@@ -227,12 +261,10 @@ public class EntityCrackedZombie extends EntityMob {
         if (world.isDaytime() && !world.isRemote && !isChild()) {
             float brightness = getBrightness();
             BlockPos blockpos = getRidingEntity() instanceof EntityBoat ? (new BlockPos(posX, (double) Math.round(posY), posZ)).up() : new BlockPos(posX, (double) Math.round(posY), posZ);
-            boolean setFire = false;
+            boolean setFire;
 
             if (brightness > 0.5F && rand.nextFloat() * 30.0F < (brightness - 0.4F) * 2.0F && world.canSeeSky(blockpos)) {
-                if (nightSpawnOnly) {
-                    setFire = true;
-                }
+                setFire = ConfigHandler.getNightSpawnOnly();
                 ItemStack itemstack = getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
                 if (!itemstack.isEmpty()) {
@@ -281,7 +313,6 @@ public class EntityCrackedZombie extends EntityMob {
 
                 return lightFromNeighbors <= rand.nextInt(8);
             }
-
         } else {
             boolean notColliding = world.getCollisionBoxes(this, entityAABB).isEmpty();
             boolean isLiquid = world.containsAnyLiquid(entityAABB);
@@ -323,20 +354,14 @@ public class EntityCrackedZombie extends EntityMob {
     }
 
     @Override
-    protected void entityInit() {
-        super.entityInit();
-        getDataManager().register(IS_CHILD, false);
-        getDataManager().register(VILLAGER_TYPE, 0);
-        getDataManager().register(CONVERTING, false);
-        getDataManager().register(ARMS_RAISED, false);
-    }
-
-    @Override
     public int getTotalArmorValue() {
         int armor = super.getTotalArmorValue() + 2;
 
         if (armor > 20) {
             armor = 20;
+        }
+        if (isGiant()) {
+            armor += 5;
         }
 
         return armor;
@@ -353,15 +378,15 @@ public class EntityCrackedZombie extends EntityMob {
     }
 
     public void setChild(boolean childZombie) {
-        if (allowChildSpawns) {
+        if (allowChildSpawns && !isGiant()) {
             getDataManager().set(IS_CHILD, childZombie);
 
             if (world != null && !world.isRemote) {
                 IAttributeInstance iattributeinstance = getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-                iattributeinstance.removeModifier(babySpeedBoostModifier);
+                iattributeinstance.removeModifier(BABY_SPEED_BOOST);
 
                 if (childZombie) {
-                    iattributeinstance.applyModifier(babySpeedBoostModifier);
+                    iattributeinstance.applyModifier(BABY_SPEED_BOOST);
                 }
             }
             setChildSize(childZombie);
@@ -485,7 +510,7 @@ public class EntityCrackedZombie extends EntityMob {
         }
 
         tagCompound.setInteger("ConversionTime", isConverting() ? conversionTime : -1);
-        tagCompound.setBoolean("CanBreakDoors", isBreakDoorsTaskSet);
+        tagCompound.setBoolean("CanBreakDoors", isBreakDoorsTaskSet());
     }
 
     @Override
@@ -594,7 +619,7 @@ public class EntityCrackedZombie extends EntityMob {
             }
         }
 
-        setBreakDoorsAItask(isBreakDoorsTaskSet && rand.nextFloat() < additionalDifficulty * 0.1F);
+        setBreakDoorsAItask(allowDoorBreaking && rand.nextFloat() < additionalDifficulty * 0.1F);
         setEquipmentBasedOnDifficulty(difficulty);
         setEnchantmentBasedOnDifficulty(difficulty);
 
@@ -618,9 +643,9 @@ public class EntityCrackedZombie extends EntityMob {
         }
 
         if (rand.nextFloat() < additionalDifficulty * 0.05F) {
-            getEntityAttribute(reinforcementChance).applyModifier(new AttributeModifier("Leader zombie bonus", rand.nextDouble() * 0.25D + 0.5D, 0));
+            getEntityAttribute(REINFORCEMENTS_CHANCE).applyModifier(new AttributeModifier("Leader zombie bonus", rand.nextDouble() * 0.25D + 0.5D, 0));
             getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier("Leader zombie bonus", rand.nextDouble() * 3.0D + 1.0D, 2));
-            setBreakDoorsAItask(true);
+            setBreakDoorsAItask(allowDoorBreaking);
         }
 
         return livingdata;

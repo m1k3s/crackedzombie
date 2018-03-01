@@ -20,10 +20,7 @@
  */
 package com.crackedzombie.client;
 
-import com.crackedzombie.common.CommonProxyCrackedZombie;
-import com.crackedzombie.common.EntityCrackedHusk;
-import com.crackedzombie.common.EntityCrackedPigZombie;
-import com.crackedzombie.common.EntityCrackedZombie;
+import com.crackedzombie.common.*;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 @SuppressWarnings("unused,unchecked")
