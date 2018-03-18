@@ -73,6 +73,8 @@ public class EntityCrackedPigZombie extends EntityCrackedZombie {
     protected void applyEntityAI() {
         if (ConfigHandler.isPzAlwaysAttackPlayers()) {
             targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+        } else {
+            targetTasks.addTask(1, new EntityAIMoveCloserToPlayer(this, 1.0, 16.0f));
         }
         targetTasks.addTask(1, new EntityCrackedPigZombie.AIHurtByAggressor(this));
         targetTasks.addTask(2, new EntityCrackedPigZombie.AITargetAggressor(this));

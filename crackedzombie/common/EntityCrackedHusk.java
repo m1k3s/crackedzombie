@@ -54,14 +54,16 @@ public class EntityCrackedHusk extends EntityCrackedZombie {
 
     @Override
     public boolean attackEntityAsMob(Entity entityIn) {
-        boolean flag = super.attackEntityAsMob(entityIn);
+        boolean shouldAttackAsMob = super.attackEntityAsMob(entityIn);
 
-        if (flag && this.getHeldItemMainhand().isEmpty() && entityIn instanceof EntityLivingBase) {
-            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
-            ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.HUNGER, 140 * (int) f));
+        if (shouldAttackAsMob && getHeldItemMainhand().isEmpty() && entityIn instanceof EntityLivingBase) {
+            if (ConfigHandler.getHuskHunger()) {
+                float additionalDifficulty = world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
+                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.HUNGER, 140 * (int) additionalDifficulty));
+            }
         }
 
-        return flag;
+        return shouldAttackAsMob;
     }
 
     @SuppressWarnings("unused")

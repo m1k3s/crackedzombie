@@ -24,13 +24,26 @@ import com.crackedzombie.common.*;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 @SuppressWarnings("unused,unchecked")
-public class ClientProxyCrackedZombie extends CommonProxyCrackedZombie {
+public class ClientProxyCrackedZombie implements IProxy {
 
-    @Override
     public void registerRenderers() {
         RenderingRegistry.registerEntityRenderingHandler(EntityCrackedZombie.class, RenderCrackedZombie::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityCrackedPigZombie.class, RenderCrackedPigZombie::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityCrackedHusk.class, RenderCrackedHusk::new);
     }
 
+    @Override
+    public void preInit() {
+        registerRenderers();
+    }
+
+    @Override
+    public void Init() {
+
+    }
+
+    @Override
+    public void postInit() {
+
+    }
 }

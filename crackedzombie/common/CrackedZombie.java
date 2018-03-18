@@ -47,6 +47,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -66,6 +68,7 @@ public class CrackedZombie {
     private static boolean spawnInNether = ConfigHandler.getSpawnInNether();
     private static boolean spawnInEnd = ConfigHandler.getSpawnInEnd();
     public static LootEntry iron_sword = new LootEntryItem(Items.IRON_SWORD, 100, 50, new LootFunction[0], new LootCondition[0], "iron_sword");
+    private static final Logger logger = LogManager.getLogger(CrackedZombie.MODID);
 
     @Mod.Instance(MODID)
     public static CrackedZombie instance;
@@ -75,7 +78,7 @@ public class CrackedZombie {
             serverSide = "com.crackedzombie.common.CommonProxyCrackedZombie"
     )
 
-    public static CommonProxyCrackedZombie proxy;
+    public static IProxy proxy;
 
     @SuppressWarnings("unused")
     @Mod.EventHandler
@@ -85,7 +88,7 @@ public class CrackedZombie {
         EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.MODID, ZOMBIE_NAME), EntityCrackedZombie.class, ZOMBIE_NAME, entityID, CrackedZombie.instance, 80, 3, true, 0x00AFAF, 0x799C45);
         EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.MODID, PIGZOMBIE_NAME), EntityCrackedPigZombie.class, PIGZOMBIE_NAME, ++entityID, CrackedZombie.instance, 80, 3, true, 0x799C45, 0x00AFAF);
         EntityRegistry.registerModEntity(new ResourceLocation(CrackedZombie.MODID, HUSK_NAME), EntityCrackedHusk.class, HUSK_NAME, ++entityID, CrackedZombie.instance, 80, 3, true, 0x799C45, 0xcc5454);
-        proxy.registerRenderers();
+        proxy.preInit();
     }
 
     @SuppressWarnings("unused")
@@ -101,7 +104,7 @@ public class CrackedZombie {
     @SuppressWarnings("unused")
     @Mod.EventHandler
     public void PostInit(FMLPostInitializationEvent event) {
-        proxy.info("*** Scanning for available biomes");
+        info("*** Scanning for available biomes");
         Biome[] spawnBiomes = getAllSpawnBiomes();
         Biome[] desertBiomes = getBiomesFromTypes(BiomeDictionary.Type.DRY, BiomeDictionary.Type.HOT, BiomeDictionary.Type.SANDY);
         Biome[] notDesertBiomes = excludeBiomesWithTypes(BiomeDictionary.Type.DRY, BiomeDictionary.Type.HOT, BiomeDictionary.Type.SANDY);
@@ -120,13 +123,13 @@ public class CrackedZombie {
         EntityRegistry.addSpawn(EntityCrackedZombie.class, zombieSpawnProb, minSpawn, maxSpawn, EnumCreatureType.MONSTER, notDesertBiomes);
 
         if (ConfigHandler.getAllowCrackedPigZombieSpawns()) {
-            proxy.info("*** Allowing " + PIGZOMBIE_NAME + " spawns");
+            info("*** Allowing " + PIGZOMBIE_NAME + " spawns");
             EntityRegistry.addSpawn(EntityCrackedPigZombie.class, pigzombieSpawnProb, minPZSpawn, maxPZSpawn, EnumCreatureType.MONSTER, spawnBiomes);
         } else {
-            proxy.info("*** Not allowing " + PIGZOMBIE_NAME + " spawns");
+            info("*** Not allowing " + PIGZOMBIE_NAME + " spawns");
         }
         if (ConfigHandler.allowCrackedHuskSpawns()) {
-            proxy.info("*** Allowing " + HUSK_NAME + " spawns");
+            info("*** Allowing " + HUSK_NAME + " spawns");
             EntityRegistry.addSpawn(EntityCrackedHusk.class, huskspawnProb, minHuskSpawn, maxHuskSpawn, EnumCreatureType.MONSTER, desertBiomes);
         }
         if (!ConfigHandler.allowVanillaZombieSpawns()) {
@@ -156,7 +159,7 @@ public class CrackedZombie {
             if (!list.contains(bgb)) {
                 list.add(bgb);
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                    proxy.info("  >>> getAllSpawnBiomes: " + bgb.getBiomeName());
+                    info("  >>> getAllSpawnBiomes: " + bgb.getBiomeName());
                 }
             }
         }
@@ -177,7 +180,7 @@ public class CrackedZombie {
             if (!list.contains(biome) && shouldAdd == count) {
                 list.add(biome);
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                    proxy.info("  >>> getBiomesFromTypes: " + biome.getBiomeName());
+                    info("  >>> getBiomesFromTypes: " + biome.getBiomeName());
                 }
             }
         }
@@ -193,7 +196,7 @@ public class CrackedZombie {
                     if (!list.contains(biome)) {
                         list.add(biome);
                         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                            proxy.info("  >>> excludeBiomesWithTypes: " + biome.getBiomeName());
+                            info("  >>> excludeBiomesWithTypes: " + biome.getBiomeName());
                         }
                     }
                 }
@@ -208,6 +211,11 @@ public class CrackedZombie {
         if (event.getName().equals(LootTableList.CHESTS_ABANDONED_MINESHAFT)) {
             event.getTable().getPool("main").addEntry(iron_sword);
         }
+    }
+
+    public void info(String s)
+    {
+        logger.info(s);
     }
 
 }

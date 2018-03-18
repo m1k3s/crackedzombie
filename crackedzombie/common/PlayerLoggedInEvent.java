@@ -34,7 +34,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 public class PlayerLoggedInEvent {
 
     PlayerLoggedInEvent() {
-        CrackedZombie.proxy.info("EntityJoinedWorldEvent ctor");
+        CrackedZombie.instance.info("EntityJoinedWorldEvent ctor");
     }
 
     @SuppressWarnings("unused")
