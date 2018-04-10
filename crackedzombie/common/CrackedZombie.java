@@ -75,7 +75,7 @@ public class CrackedZombie {
 
     @SidedProxy(
             clientSide = "com.crackedzombie.client.ClientProxyCrackedZombie",
-            serverSide = "com.crackedzombie.common.CommonProxyCrackedZombie"
+            serverSide = "com.crackedzombie.common.ServerProxyCrackedZombie"
     )
 
     public static IProxy proxy;
@@ -163,7 +163,7 @@ public class CrackedZombie {
                 }
             }
         }
-        return list.toArray(new Biome[list.size()]);
+        return list.toArray(new Biome[0]);
     }
 
     private Biome[] getBiomesFromTypes(BiomeDictionary.Type... types) {
@@ -184,7 +184,7 @@ public class CrackedZombie {
                 }
             }
         }
-        return list.toArray(new Biome[list.size()]);
+        return list.toArray(new Biome[0]);
     }
 
     private Biome[] excludeBiomesWithTypes(BiomeDictionary.Type... types) {
@@ -202,7 +202,7 @@ public class CrackedZombie {
                 }
             }
         }
-        return list.toArray(new Biome[list.size()]);
+        return list.toArray(new Biome[0]);
     }
 
     @SuppressWarnings("unused")
